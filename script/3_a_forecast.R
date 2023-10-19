@@ -220,12 +220,12 @@ auto_analysis_function <- function(i){
      
      max_value <- max(outcome_plot_2[,-1], max_case, na.rm = T)
      min_value <- min(outcome_plot_2[,-1], na.rm = T)
-     diff_value_1 <- round(sum(outcome_data$mean, na.rm = T) - sum(outcome_data$value, na.rm = T))
-     diff_color_1 <- ifelse(diff_value_1 > 0, "#00A08750", "#DC000050")
      
      outcome_plot_2 <- outcome_plot_2 |> 
           mutate_at(vars(contains('er')), as.numeric)
      outcome_data <- full_join(outcome_plot_2, outcome_plot_1)
+     diff_value_1 <- round(sum(outcome_data$mean, na.rm = T) - sum(outcome_data$value, na.rm = T))
+     diff_color_1 <- ifelse(diff_value_1 > 0, "#00A08750", "#DC000050")
      
      write.xlsx(outcome_data,
                 paste0('./outcome/appendix/data/PHSMs/', datafile_class$disease_name[i], '.xlsx'))
@@ -296,7 +296,7 @@ clusterEvalQ(cl, {
 })
 
 clusterExport(cl, c('datafile_analysis', 'datafile_class',
-                    'forcast_length', 'split_date', 'train_length', 'split_date_2',
+                    'forcast_length', 'split_date', 'train_length', 'split_date_1',
                     'fill_color', 'func_rmse', 'theme_set', 'scientific_10'), 
               envir = environment())
 outcome <- parLapply(cl, 1:24, auto_analysis_function)
