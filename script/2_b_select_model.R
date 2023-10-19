@@ -57,7 +57,7 @@ disease_name <- c('Pertussis', 'HCV', 'HEV',
 
 # data clean --------------------------------------------------------------
 
-i <- 6
+i <- 1
 
 auto_select_function <- function(i){
      set.seed(202208)
@@ -183,12 +183,6 @@ auto_select_function <- function(i){
           lower_95 = as.matrix(outcome$lower[,2]),
           upper_80 = as.matrix(outcome$upper[,1]),
           upper_95 = as.matrix(outcome$upper[,2])
-     )
-     
-     outcome_plot_1_2_link <- data.frame(
-          date = c(max(outcome_plot_1$date), min(outcome_plot_2$date)),
-          value = c(outcome_plot_1[nrow(outcome_plot_1), 'fit'],
-                    outcome_plot_2[1, 'mean'])
      )
      
      fit_goodness <- fit_goodness |> 
@@ -449,4 +443,5 @@ stopCluster(cl)
 
 datafile_outcome <- do.call('rbind', outcome)
 write.xlsx(datafile_outcome, './outcome/appendix/model/index/pre-epidemic.xlsx')
+
 
