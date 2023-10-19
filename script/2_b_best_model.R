@@ -63,7 +63,7 @@ DataSelect <- DataClean |>
   select(disease, Best) |>
   distinct()
 
-write.xlsx(DataClean, "./outcome/appendix/model/select/pre-epidemic.xlsx")
+write.xlsx(DataSelect, "./outcome/appendix/model/select/pre-epidemic.xlsx")
 
 # plot for each model -----------------------------------------------------
 
