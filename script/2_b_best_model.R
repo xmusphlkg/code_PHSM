@@ -78,38 +78,77 @@ DataClean$Method <- factor(DataClean$Method,
     "ARIMA", "SARIMA", "Hybrid*", "Bayesian Structural"
   )
 )
-fig <- ggplot(
-  data = DataClean,
-  mapping = aes(
-    y = Method,
-    x = Index,
-    fill = as.factor(Best)
-  )
-) +
-  geom_col() +
-  # reverse y axis
-  scale_y_discrete(limits = rev(levels(DataClean$Method))) +
-  scale_fill_manual(
-    values = c("#00A087B2", "#DC0000B2"),
-    labels = c("Alternative Models", "Best Model")
-  ) +
-  facet_wrap(. ~ disease) +
-  theme_bw() +
-  theme(
-    legend.position = c(0.9, 0.1),
-    axis.text = element_text(color = "black"),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank()
-  ) +
-  labs(
-    x = "Composite Normalized Index",
-    y = NULL,
-    fill = "Best Model"
-  )
 
-ggsave(
-  filename = paste0("./outcome/publish/fig2.pdf"),
-  fig,
-  width = 12, height = 8, family = "Times New Roman",
-  limitsize = FALSE, device = cairo_pdf
-)
+diseases <- c('HBV', 'HCV', 'Syphilis', 'AIDS', 'Gonorrhea',
+              'HAV', 'HFMD', 'HEV', 'Other infectious diarrhea', 'Typhoid fever and paratyphoid fever', 'Acute hemorrhagic conjunctivitis', 'Dysentery',
+              'Dengue fever', 'Brucellosis', 'Malaria', 'Japanese encephalitis', 'HFRS', 'Hydatidosis', 'Typhus',
+              'Rubella', 'Mumps', 'Pertussis', 'Tuberculosis', 'Scarlet fever')
+
+layout <- '
+ABCDE##
+FGHIJKL
+MNOPQRS
+TVWXYZZ
+'
+
+plot_function <- function(i, diseases) {
+     
+     Data <- DataClean |> 
+          filter(disease == diseases[i])
+     
+     fig <- ggplot(
+          data = Data,
+          mapping = aes(
+               y = Method,
+               x = Index,
+               fill = as.factor(Best)
+          )
+     ) +
+          geom_col() +
+          scale_y_discrete(limits = rev(levels(Data$Method))) +
+          scale_fill_manual(
+               values = c("#00A087B2", "#DC0000B2"),
+               labels = c("Alternative Models", "Best Model")
+          ) +
+          theme_bw() +
+          labs(
+               x = NULL,
+               y = NULL,
+               fill = NULL,
+               title = paste0(LETTERS[i], ': ', diseases[i])
+          )
+     if (i %in% c(1, 6, 13, 20)) {
+          fig <- fig +
+               theme(
+                    legend.position = c(0.9, 0.1),
+                    axis.text = element_text(color = "black"),
+                    panel.grid.major.x = element_blank(),
+                    panel.grid.minor.x = element_blank()
+               )
+     } else {
+          fig <- fig +
+               theme(
+                    legend.position = c(0.9, 0.1),
+                    axis.text = element_text(color = "black"),
+                    panel.grid.major.x = element_blank(),
+                    panel.grid.minor.x = element_blank(),
+                    axis.text.y = element_blank()
+               )
+     }
+     return(fig)
+}
+
+outcome <- lapply(1:24, plot_function, diseases = diseases)
+outcome[[25]] <- guide_area()
+
+plot <- do.call(wrap_plots, outcome) +
+     plot_layout(design = layout, guides = 'collect')&
+     theme(
+          title = element_text(size = 8)
+     )
+
+ggsave('./outcome/publish/fig2.pdf',
+       plot,
+       family = "Times New Roman",
+       limitsize = FALSE, device = cairo_pdf,
+       width = 14, height = 8)

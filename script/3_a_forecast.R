@@ -14,6 +14,7 @@ library(caret)
 library(bsts)
 library(patchwork)
 library(Cairo)
+library(ggh4x)
 library(ggpubr)
 library(paletteer) 
 
@@ -33,7 +34,7 @@ layout <- '
 ABCDE##
 FGHIJKL
 MNOPQRS
-TVWXY##
+TVWXYZZ
 '
 
 datafile_analysis <- read.xlsx('./data/Nation.xlsx', 
@@ -86,7 +87,7 @@ datafile_class <- data.frame(disease_list = disease_list,
 
 # data clean --------------------------------------------------------------
 
-i <- 20
+i <- 7
 
 auto_analysis_function <- function(i){
      set.seed(202305)
@@ -218,14 +219,14 @@ auto_analysis_function <- function(i){
           )
      }
      
-     max_value <- max(outcome_plot_2[,-1], max_case, na.rm = T)
-     min_value <- min(outcome_plot_2[,-1], na.rm = T)
+     max_value <- max(outcome_plot_2[,2], max_case, na.rm = T)
+     min_value <- min(outcome_plot_2[,2], na.rm = T)
      
      outcome_plot_2 <- outcome_plot_2 |> 
           mutate_at(vars(contains('er')), as.numeric)
-     outcome_data <- full_join(outcome_plot_2, outcome_plot_1)
-     diff_value_1 <- round(sum(outcome_data$mean, na.rm = T) - sum(outcome_data$value, na.rm = T))
-     diff_color_1 <- ifelse(diff_value_1 > 0, "#00A08750", "#DC000050")
+     outcome_data <- full_join(outcome_plot_2, outcome_plot_1) |> 
+          mutate(diff = mean - value,
+                 color = if_else(diff > 0, 'Decrease', 'Increase'))
      
      write.xlsx(outcome_data,
                 paste0('./outcome/appendix/data/PHSMs/', datafile_class$disease_name[i], '.xlsx'))
@@ -238,28 +239,43 @@ auto_analysis_function <- function(i){
                                   y = value,
                                   colour = 'Observed'), 
                     linewidth = 0.7, data = outcome_plot_3)+
+          annotate('text', 
+                   x = median(c(as.Date('2020/1/1'), as.Date('2018/1/1'))),
+                   y = Inf, 
+                   label = 'Pre-epidemic Periods', 
+                   vjust = 1)+
           geom_line(mapping = aes(x = date, 
                                   y = mean,
                                   colour = 'Forecasted'),
                     linewidth = 0.7, data = outcome_plot_2)+
-          geom_ribbon(mapping = aes(x = date, 
-                                    ymin = mean, 
-                                    ymax = value),
-                      data = outcome_data, 
-                      alpha = 0.3, 
-                      fill = diff_color_1, 
-                      show.legend = F)+
-          geom_vline(xintercept = as.Date('2019/11/15'), show.legend = F,
+          stat_difference(mapping = aes(x = date, 
+                                        ymin = mean, 
+                                        ymax = value),
+                          data = outcome_data, 
+                          alpha = 0.3,
+                          levels = c('Decreased', 'Increased'))+
+          geom_vline(xintercept = c(as.Date('2020/1/1'), max(outcome_plot_2$date)),
+                     show.legend = F,
                      linetype = 'longdash')+
-          coord_cartesian(ylim = c(0, NA))+
-          scale_x_date(expand = expansion(add = c(0, 31)),
+          geom_vline(xintercept = c(as.Date('2020/1/1'), max(outcome_plot_2$date)),
+                     show.legend = F,
+                     linetype = 'longdash')+
+          annotate('text', 
+                   x = median(c(as.Date('2020/1/1'), max(outcome_plot_2$date))),
+                   y = Inf, 
+                   label = 'PHSMs Periods', 
+                   vjust = 1)+
+          coord_cartesian(ylim = c(0, NA),
+                          xlim = c(as.Date('2018-01-01'), NA))+
+          scale_x_date(expand = expansion(add = c(0, 62)),
                        date_labels = '%Y',
-                       breaks = seq(min(outcome_plot_3$date), max(outcome_plot_2$date)+31, by="2 years"))+
+                       breaks = seq(min(outcome_plot_3$date), max(outcome_plot_2$date)+62, by="1 years"))+
           scale_y_continuous(expand = c(0, 0),
                              label = scientific_10,
                              breaks = pretty(c(min_value, max_value, 0)),
                              limits = range(pretty(c(min_value, max_value, 0))))+
           scale_color_manual(values = c(Forecasted = "#E64B35FF", Observed = '#00A087FF'))+
+          scale_fill_manual(values = c(Decreased = "#E64B3550", Increased = '#00A08750'))+
           theme_set()+
           theme(legend.position = 'bottom')+
           labs(x = NULL,
@@ -271,10 +287,6 @@ auto_analysis_function <- function(i){
 }
 
 # run model ---------------------------------------------------------------
-
-i <- 20
-# lapply(1:26, auto_select_function)
-auto_analysis_function(i)
 
 cl <- makeCluster(24)
 registerDoParallel(cl)
@@ -291,6 +303,7 @@ clusterEvalQ(cl, {
      library(caret)
      library(bsts)
      library(patchwork)
+     library(ggh4x)
      library(Cairo)
      library(ggpubr)
 })
@@ -300,14 +313,14 @@ clusterExport(cl, c('datafile_analysis', 'datafile_class',
                     'fill_color', 'func_rmse', 'theme_set', 'scientific_10'), 
               envir = environment())
 outcome <- parLapply(cl, 1:24, auto_analysis_function)
-
 stopCluster(cl)
+outcome[[25]] <- guide_area()
 
-plot <- do.call(wrap_plots, outcome)
+plot <- do.call(wrap_plots, outcome) +
+     plot_layout(design = layout, guides = 'collect')
 
-ggsave('./outcome/publish/fig3.pdf',
-       plot + plot_layout(design = layout, guides = 'collect')&
-            theme(legend.position = 'bottom'),
+ggsave('./outcome/publish/fig3.1.pdf',
+       plot,
        family = "Times New Roman",
        limitsize = FALSE, device = cairo_pdf,
        width = 25, height = 14)
