@@ -242,7 +242,7 @@ auto_analysis_function <- function(i){
           annotate('text', 
                    x = median(c(as.Date('2020/1/1'), as.Date('2018/1/1'))),
                    y = Inf, 
-                   label = 'Pre-epidemic Periods', 
+                   label = 'Pre-epidemic\nPeriods', 
                    vjust = 1)+
           geom_line(mapping = aes(x = date, 
                                   y = mean,
@@ -257,13 +257,10 @@ auto_analysis_function <- function(i){
           geom_vline(xintercept = c(as.Date('2020/1/1'), max(outcome_plot_2$date)),
                      show.legend = F,
                      linetype = 'longdash')+
-          geom_vline(xintercept = c(as.Date('2020/1/1'), max(outcome_plot_2$date)),
-                     show.legend = F,
-                     linetype = 'longdash')+
           annotate('text', 
                    x = median(c(as.Date('2020/1/1'), max(outcome_plot_2$date))),
                    y = Inf, 
-                   label = 'PHSMs Periods', 
+                   label = 'PHSMs\nPeriods', 
                    vjust = 1)+
           coord_cartesian(ylim = c(0, NA),
                           xlim = c(as.Date('2018-01-01'), NA))+
@@ -317,11 +314,19 @@ stopCluster(cl)
 outcome[[25]] <- guide_area()
 
 plot <- do.call(wrap_plots, outcome) +
-     plot_layout(design = layout, guides = 'collect')
+     plot_layout(design = layout, guides = 'collect') &
+     theme(panel.background = element_rect(fill='transparent'),
+           plot.background = element_rect(fill='transparent', color=NA))
 
-ggsave('./outcome/publish/fig3.1.pdf',
+ggsave('./outcome/publish/fig3.pdf',
        plot,
        family = "Times New Roman",
        limitsize = FALSE, device = cairo_pdf,
+       width = 25, height = 14)
+
+ggsave('./outcome/publish/fig3.png',
+       plot,
+       family = "Times New Roman",
+       limitsize = FALSE,
        width = 25, height = 14)
 

@@ -49,5 +49,4 @@ func_rmse <-
      }
 
 
-fill_color <- paletteer_d("ggsci::nrc_npg")
-fill_color <- fill_color[c(4, 1, 3, 5, 8:10)]
+fill_color <- paletteer_d("ggsci::default_jama")
