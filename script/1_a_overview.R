@@ -19,20 +19,6 @@ datafile_analysis <- read.xlsx('./data/Nation.xlsx', detectDates = T) |>
      filter(date >= as.Date('2008-1-1'))
 datafile_class <- read.xlsx("./data/disease_class.xlsx", detectDates = T)
 
-disease_list <- c('百日咳', '丙肝', '戊肝', '布病', '登革热', 
-                  '肺结核', '风疹', '急性出血性结膜炎', '甲肝', 
-                  '痢疾', '淋病', '流行性出血热', '艾滋病',
-                  '流行性腮腺炎', '梅毒', '疟疾', '其它感染性腹泻病',
-                  '伤寒+副伤寒', '乙肝', '手足口病', '猩红热',
-                  '乙型脑炎', '包虫病', '斑疹伤寒')
-disease_name <- c('Pertussis', 'HCV', 'HEV',
-                  'Brucellosis', 'Dengue fever', 'Tuberculosis',
-                  'Rubella', 'Acute hemorrhagic conjunctivitis', 'HAV',
-                  'Dysentery', 'Gonorrhea', 'HFRS',
-                  'AIDS', 'Mumps', 
-                  'Syphilis', 'Malaria', 'Other infectious diarrhea',
-                  'Typhoid fever and paratyphoid fever', 'HBV', 'HFMD',
-                  'Scarlet fever', 'Japanese encephalitis', 'Hydatidosis', 'Typhus')
 
 split_date_1 <- as.Date("2019/12/15")
 split_date_2 <- as.Date("2022/11/15")
@@ -41,11 +27,11 @@ split_date_3 <- as.Date("2023/3/15")
 # bubble plot -------------------------------------------------------------
 
 datafile_plot <- datafile_analysis |> 
-     filter(disease_1 %in% disease_list) |> 
+     filter(disease_1 %in% datafile_class$diseaselist) |> 
      select(date, disease_1, value) |> 
      mutate(disease = factor(disease_1,
-                             levels = disease_list,
-                             labels = disease_name),
+                             levels = datafile_class$diseaselist,
+                             labels = datafile_class$diseasename),
             phase = case_when(date < split_date_1 ~ 'Pre-epidemic Periods',
                               date > split_date_1 & date < split_date_2 ~ 'PHSMs Periods',
                               date > split_date_2 ~ 'Epidemic Periods',),
@@ -79,13 +65,14 @@ write.csv(rbind(datafile_bubble, datafile_legend),
 datafile_plot <- datafile_plot  |> 
      group_by(phase, date, class) |> 
      summarise(value = sum(value),
-               .groups = 'drop')
+               .groups = 'drop') |> 
+     mutate(class = factor(class,
+                           levels = unique(datafile_class$class)))
 
 fig2 <- ggplot(data = datafile_plot)+
      geom_col(mapping = aes(x = date,
                             y = value,
                             fill = class),
-              show.legend = F,
               position = 'fill')+
      scale_fill_manual(values = fill_color)+
      scale_y_continuous(expand = c(0, 0),
@@ -94,9 +81,11 @@ fig2 <- ggplot(data = datafile_plot)+
                   date_breaks = '1 years',
                   date_labels = '%Y')+
      theme_plot()+
+     theme(legend.position = 'bottom')+
      labs(x = 'Date',
           y = 'Percentage of diseases',
-          title = 'C')
+          title = 'C',
+          fill = NULL)
 
 fig1 <- ggplot(data = datafile_plot)+
      geom_rect(data = data.frame(start_date = split_date_2,
@@ -160,7 +149,7 @@ fig1 <- ggplot(data = datafile_plot)+
                   date_breaks = '1 years',
                   date_labels = '%Y')+
      theme_plot()+
-     theme(legend.position = 'bottom')+
+     theme(legend.position = 'none')+
      labs(x = NULL,
           y = "Monthly incidence",
           color = NULL,

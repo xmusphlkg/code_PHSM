@@ -8,6 +8,10 @@ library(ggsci)
 library(paletteer)
 library(patchwork)
 library(Cairo)
+library(lubridate)
+library(scales)
+library(factoextra)
+library(ggdendroplot)
 
 source('./script/theme_set.R')
 
@@ -19,31 +23,9 @@ DataAll <- list.files(path = "./outcome/appendix/data/PHSMs/",
      lapply(read.xlsx, detectDates = T) |> 
      bind_rows()
 
-disease_list <- c('百日咳', '丙肝', '戊肝', '布病', '登革热', 
-                  '肺结核', '风疹', '急性出血性结膜炎', '甲肝', 
-                  '痢疾', '淋病', '流行性出血热', '艾滋病',
-                  '流行性腮腺炎', '梅毒', '疟疾', '其它感染性腹泻病',
-                  '伤寒+副伤寒', '乙肝', '手足口病', '猩红热',
-                  '乙型脑炎', '包虫病', '斑疹伤寒')
-disease_name <- c('Pertussis', 'HCV', 'HEV',
-                  'Brucellosis', 'Dengue fever', 'Tuberculosis',
-                  'Rubella', 'Acute hemorrhagic conjunctivitis', 'HAV',
-                  'Dysentery', 'Gonorrhea', 'HFRS',
-                  'AIDS', 'Mumps',
-                  'Syphilis', 'Malaria', 'Other infectious diarrhea',
-                  'Typhoid fever and paratyphoid fever', 'HBV', 'HFMD',
-                  'Scarlet fever', 'Japanese encephalitis', 'Hydatidosis', 'Typhus')
-
-datafile_class <- read.xlsx('./data/disease_class.xlsx') |> 
-     left_join(data.frame(disease_list = disease_list,
-                          disease_name = disease_name),
-               by = c(diseasename = 'disease_name')) |> 
-     mutate(diseasename = factor(diseasename,
-                                  levels = c('HBV', 'HCV', 'Syphilis', 'AIDS', 'Gonorrhea',
-                                             'HAV', 'HFMD', 'HEV', 'Other infectious diarrhea', 'Typhoid fever and paratyphoid fever', 'Acute hemorrhagic conjunctivitis', 'Dysentery',
-                                             'Dengue fever', 'Brucellosis', 'Malaria', 'Japanese encephalitis', 'HFRS', 'Hydatidosis', 'Typhus',
-                                             'Rubella', 'Mumps', 'Pertussis', 'Tuberculosis', 'Scarlet fever'))) |> 
-     arrange(class, disease_name)
+datafile_class <- read.xlsx('./data/disease_class.xlsx')
+datafile_class$disease <- factor(datafile_class$disease, levels = datafile_class$disease)
+datafile_class$class <- factor(datafile_class$class, levels = unique(datafile_class$class))
 
 DataAll <- DataAll |> 
      left_join(datafile_class,
@@ -59,7 +41,8 @@ i <- 1
 plot_rr <- function(i) {
      Class <- unique(datafile_class$class)[i]
      Data <- DataAll |> 
-          filter(class == Class)
+          filter(class == Class) |> 
+          mutate(date = format(ymd(date), "%Y.%m"))
      fill_value <- fill_color[1:length(unique(Data$diseasename))]
      names(fill_value) <- unique(Data$diseasename)
      
@@ -69,44 +52,103 @@ plot_rr <- function(i) {
                      linetype = 'longdash')+
           geom_boxplot(mapping = aes(y = diseasename,
                                      x = RR,
-                                     fill = diseasename),
-                       show.legend = F)+
+                                     fill = class))+
           scale_y_discrete(limits = datafile_class$diseasename[datafile_class$class == Class])+
           scale_x_continuous(limits = c(0, 3), breaks = 0:3)+
-          scale_fill_manual(values = fill_value)+
+          scale_fill_manual(values = fill_value[i])+
           theme_bw()+
-          labs(x = "Relative Risk",
+          labs(x = NULL,
                y = NULL,
-               title = paste0(LETTERS[2*i-1], ': ', Class))
+               title = paste0(LETTERS[2*i-1]),
+               fill = NULL)
      fig2 <- ggplot(data = Data,
-                    mapping = aes(color = diseasename,
-                                  fill = diseasename,
+                    mapping = aes(fill = RR,
                                   x = date,
-                                  y = RR))+
-          geom_hline(yintercept = 1,
-                     show.legend = F,
-                     linetype = 'longdash')+
-          geom_point(show.legend = F)+
-          geom_smooth(show.legend = F)+
-          scale_x_date(expand = expansion(add = c(0, 62)),
-                       date_labels = '%Y',
-                       breaks = seq(as.Date('2020/1/1'), max(Data$date)+62, by="1 years"))+
-          scale_fill_manual(values = fill_value)+
-          scale_color_manual(values = fill_value)+
-          coord_cartesian(ylim = c(0, 3))+
+                                  y = diseasename))+
+          geom_tile()+
+          scale_fill_gradientn(colors = paletteer_d("awtools::a_palette"),
+                               limits = c(0, 3))+
+          scale_x_discrete(breaks = paste(c(2020, 2021, 2022, 2023), "01", sep = '.'),
+                           labels = 2020:2023,
+                           expand = expansion(add = c(0, 0)))+
+          scale_y_discrete(limits = datafile_class$diseasename[datafile_class$class == Class],
+                           expand = c(0, 0))+
           theme_bw()+
-          labs(x = "Date",
-               y = "Relative Risk",
-               title = paste0(LETTERS[2*i], ': ', Class))
+          theme(axis.text.y = element_blank(),
+                legend.position = 'bottom')+
+          guides(fill = guide_colourbar(barwidth = 20, barheight = 0.5, color = "black"))+
+          labs(x = NULL,
+               y = NULL,
+               title = paste0(LETTERS[2*i]))
      fig1 + fig2 + plot_layout(widths = c(1, 3))
 }
 
 outcome <- lapply(1:4, plot_rr)
 
-plot <- do.call(wrap_plots, c(outcome, ncol = 1, byrow = FALSE))
+plot <- do.call(wrap_plots, c(outcome, ncol = 1, byrow = FALSE)) +
+     plot_layout(guides = 'collect') &
+     theme(legend.position = 'bottom')
+
+# plot cluster ----------------------------------------------------------------
+
+# cluster for RR
+set.seed(20231021)
+
+DataMat <- DataAll |> 
+     select(value, date, diseasename) |> 
+     pivot_wider(names_from = date,
+                 values_from = value)
+diseasename <- DataMat$diseasename
+DataMat <- DataMat |> 
+     select(-diseasename) |> 
+     as.matrix()
+rownames(DataMat) <- diseasename
+# DataMat <- scale(DataMat)
+hcdata <- hkmeans(DataMat, 2)
+fig1 <- ggplot()+
+     geom_dendro(hcdata$hclust,
+                 dendrocut=max(hcdata[["hclust"]][["merge"]]),
+                 groupCols = c(fill_color[2:1], 'grey'))+
+     scale_y_continuous(trans = 'log10')+
+     coord_flip()+
+     theme_hm()+
+     theme(axis.text.x = element_blank(),
+           axis.text.y = element_text (colour = c(rep(fill_color[2], table(hcdata[["cluster"]])[1]),
+                                                  rep(fill_color[1], table(hcdata[["cluster"]])[2]))),
+           axis.ticks = element_blank(),
+           axis.title = element_blank())+
+     labs(title = 'I')
+
+# cluster for report case
+DataMat <- DataAll |> 
+     select(RR, date, diseasename) |> 
+     pivot_wider(names_from = date,
+                 values_from = RR)
+diseasename <- DataMat$diseasename
+DataMat <- DataMat |> 
+     select(-diseasename) |> 
+     as.matrix()
+rownames(DataMat) <- diseasename
+# DataMat <- scale(DataMat)
+
+hcdata <- hkmeans(DataMat, 2)
+fig2 <- ggplot()+
+     geom_dendro(hcdata$hclust,
+                 dendrocut=max(hcdata[["hclust"]][["merge"]]),
+                 groupCols = c(fill_color[3:4], 'grey'))+
+     scale_y_continuous(trans = 'log10')+
+     coord_flip()+
+     theme_hm()+
+     theme(axis.text.x = element_blank(),
+           axis.text.y = element_text (colour = c(rep(fill_color[4], table(hcdata[["cluster"]])[2]),
+                                                  rep(fill_color[3], table(hcdata[["cluster"]])[1]))),
+           axis.ticks = element_blank(),
+           axis.title = element_blank())+
+     labs(title = 'J')
+plot1 <- fig1 | fig2
 
 ggsave('./outcome/publish/fig4.pdf',
-       plot,
+       cowplot::plot_grid(plot, plot1, ncol = 1, rel_heights = c(2.5, 1)),
        family = "Times New Roman",
        limitsize = FALSE, device = cairo_pdf,
-       width = 14, height = 8)
+       width = 14, height = 16)

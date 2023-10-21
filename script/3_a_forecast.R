@@ -16,9 +16,6 @@ library(patchwork)
 library(Cairo)
 library(ggh4x)
 library(ggpubr)
-library(paletteer) 
-
-library(doParallel)
 
 Sys.setlocale(locale = 'en')
 set.seed(202208)
@@ -31,9 +28,9 @@ source('./script/theme_set.R')
 source('./script/ggplot.R')
 
 layout <- '
-ABCDE##
-FGHIJKL
-MNOPQRS
+ABCDEFG
+HIJKLMN
+OPQRSZZ
 TVWXYZZ
 '
 
@@ -56,43 +53,18 @@ split_date_1 <- as.Date("2022/11/15")
 train_length <- 12*12
 forcast_length <- 12+12+11
 
-disease_list <- c('百日咳', '丙肝', '戊肝', '布病', '登革热', 
-                  '肺结核', '风疹', '急性出血性结膜炎', '甲肝', 
-                  '痢疾', '淋病', '流行性出血热', '艾滋病',
-                  '流行性腮腺炎', '梅毒', '疟疾', '其它感染性腹泻病',
-                  '伤寒+副伤寒', '乙肝', '手足口病', '猩红热',
-                  '乙型脑炎', '包虫病', '斑疹伤寒')
-disease_name <- c('Pertussis', 'HCV', 'HEV',
-                  'Brucellosis', 'Dengue fever', 'Tuberculosis',
-                  'Rubella', 'Acute hemorrhagic conjunctivitis', 'HAV',
-                  'Dysentery', 'Gonorrhea', 'HFRS',
-                  'AIDS', 'Mumps',
-                  'Syphilis', 'Malaria', 'Other infectious diarrhea',
-                  'Typhoid fever and paratyphoid fever', 'HBV', 'HFMD',
-                  'Scarlet fever', 'Japanese encephalitis', 'Hydatidosis', 'Typhus')
-
 scientific_10 <- function(x) {
      ifelse(x == 0, 0, parse(text = gsub("[+]", "", gsub("e", "%*%10^", scales::scientific_format()(x)))))
 }
 
-datafile_class <- data.frame(disease_list = disease_list,
-                             disease_name = disease_name) |> 
-     right_join(datafile_class, by = c('disease_name' = 'disease')) |> 
-     mutate(disease_name = factor(disease_name,
-                                  levels = c('HBV', 'HCV', 'Syphilis', 'AIDS', 'Gonorrhea',
-                                             'HAV', 'HFMD', 'HEV', 'Other infectious diarrhea', 'Typhoid fever and paratyphoid fever', 'Acute hemorrhagic conjunctivitis', 'Dysentery',
-                                             'Dengue fever', 'Brucellosis', 'Malaria', 'Japanese encephalitis', 'HFRS', 'Hydatidosis', 'Typhus',
-                                             'Rubella', 'Mumps', 'Pertussis', 'Tuberculosis', 'Scarlet fever'))) |> 
-     arrange(class, disease_name)
+datafile_class$disease <- factor(datafile_class$disease, levels = datafile_class$disease)
 
 # data clean --------------------------------------------------------------
-
-i <- 7
 
 auto_analysis_function <- function(i){
      set.seed(202305)
      datafile_single <- datafile_analysis %>% 
-          filter(disease_1 == datafile_class$disease_list[i]) %>% 
+          filter(disease_1 == datafile_class$diseaselist[i]) %>% 
           select(date, disease_1, value) %>% 
           complete(
                date = seq.Date(
@@ -101,7 +73,7 @@ auto_analysis_function <- function(i){
                     by = 'month'
                ),
                fill = list(value = 0,
-                           disease_1 = datafile_class$disease_list[i])
+                           disease_1 = datafile_class$diseaselist[i])
           )
      
      ## simulate date before 2020
@@ -126,6 +98,7 @@ auto_analysis_function <- function(i){
      
      # Select Method ------------------------------------------------------------
      
+     print(datafile_class$disease[i])
      print(datafile_class$Method[i])
      if (datafile_class$Method[i] == 'SARIMA'){
           mod <- auto.arima(ts_train_1, seasonal = T)
@@ -229,7 +202,7 @@ auto_analysis_function <- function(i){
                  color = if_else(diff > 0, 'Decrease', 'Increase'))
      
      write.xlsx(outcome_data,
-                paste0('./outcome/appendix/data/PHSMs/', datafile_class$disease_name[i], '.xlsx'))
+                paste0('./outcome/appendix/data/PHSMs/', datafile_class$disease[i], '.xlsx'))
      
      outcome_plot_3 <- datafile_single |> 
           filter(date < split_date_1)
@@ -278,39 +251,14 @@ auto_analysis_function <- function(i){
           labs(x = NULL,
                y = ifelse(i %in% c(1, 6, 13, 20),'Cases', ''),
                color = '',
-               title = paste0(LETTERS[i], ': ', datafile_class$disease_name[i]))
+               title = paste0(LETTERS[i], ': ', datafile_class$disease[i]))
      
      return(fig1)
 }
 
 # run model ---------------------------------------------------------------
 
-cl <- makeCluster(24)
-registerDoParallel(cl)
-clusterEvalQ(cl, {
-     library(tidyverse)
-     library(openxlsx)
-     library(jsonlite)
-     library(stats)
-     library(tseries)
-     library(astsa)
-     library(forecast)
-     library(greyforecasting)
-     library(forecastHybrid)
-     library(caret)
-     library(bsts)
-     library(patchwork)
-     library(ggh4x)
-     library(Cairo)
-     library(ggpubr)
-})
-
-clusterExport(cl, c('datafile_analysis', 'datafile_class',
-                    'forcast_length', 'split_date', 'train_length', 'split_date_1',
-                    'fill_color', 'func_rmse', 'theme_set', 'scientific_10'), 
-              envir = environment())
-outcome <- parLapply(cl, 1:24, auto_analysis_function)
-stopCluster(cl)
+outcome <- lapply(1:24, auto_analysis_function)
 outcome[[25]] <- guide_area()
 
 plot <- do.call(wrap_plots, outcome) +
@@ -326,7 +274,6 @@ ggsave('./outcome/publish/fig3.pdf',
 
 ggsave('./outcome/publish/fig3.png',
        plot,
-       family = "Times New Roman",
        limitsize = FALSE,
        width = 25, height = 14)
 

@@ -13,20 +13,15 @@ library(tidyverse)
 library(openxlsx)
 library(ggsci)
 library(Cairo)
+library(patchwork)
 
 # data --------------------------------------------------------------------
 
 DataRaw <- read.xlsx("./outcome/appendix/model/index/pre-epidemic.xlsx")
 DataRaw$Index <- rep(c("RMSE", "R-squared", "MAE"), times = nrow(DataRaw) / 3)
-DataRaw$disease <- factor(
-  DataRaw$disease,
-  levels = c(
-    "HBV", "HCV", "Syphilis", "AIDS", "Gonorrhea",
-    "HAV", "HFMD", "HEV", "Other infectious diarrhea", "Typhoid fever and paratyphoid fever", "Acute hemorrhagic conjunctivitis", "Dysentery",
-    "Dengue fever", "Brucellosis", "Malaria", "Japanese encephalitis", "HFRS", "Hydatidosis", "Typhus",
-    "Rubella", "Mumps", "Pertussis", "Tuberculosis", "Scarlet fever"
-  )
-)
+datafile_class <- read.xlsx("./data/disease_class.xlsx")
+
+DataRaw$disease <- factor(DataRaw$disease, levels = datafile_class$diseasename)
 
 # best model --------------------------------------------------------------
 
@@ -79,15 +74,12 @@ DataClean$Method <- factor(DataClean$Method,
   )
 )
 
-diseases <- c('HBV', 'HCV', 'Syphilis', 'AIDS', 'Gonorrhea',
-              'HAV', 'HFMD', 'HEV', 'Other infectious diarrhea', 'Typhoid fever and paratyphoid fever', 'Acute hemorrhagic conjunctivitis', 'Dysentery',
-              'Dengue fever', 'Brucellosis', 'Malaria', 'Japanese encephalitis', 'HFRS', 'Hydatidosis', 'Typhus',
-              'Rubella', 'Mumps', 'Pertussis', 'Tuberculosis', 'Scarlet fever')
+diseases <- datafile_class$diseasename
 
 layout <- '
-ABCDE##
-FGHIJKL
-MNOPQRS
+ABCDEFG
+HIJKLMN
+OPQRSZZ
 TVWXYZZ
 '
 
@@ -107,7 +99,7 @@ plot_function <- function(i, diseases) {
           geom_col() +
           scale_y_discrete(limits = rev(levels(Data$Method))) +
           scale_fill_manual(
-               values = c("#00A087B2", "#DC0000B2"),
+               values = fill_color[6:7],
                labels = c("Alternative Models", "Best Model")
           ) +
           theme_bw() +
@@ -117,7 +109,7 @@ plot_function <- function(i, diseases) {
                fill = NULL,
                title = paste0(LETTERS[i], ': ', diseases[i])
           )
-     if (i %in% c(1, 6, 13, 20)) {
+     if (i %in% c(1, 8, 15, 20)) {
           fig <- fig +
                theme(
                     legend.position = c(0.9, 0.1),
