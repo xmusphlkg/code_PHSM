@@ -44,7 +44,9 @@ datafile_class <- read.xlsx('./data/disease_class.xlsx')
 datafile_class <- read.xlsx('./outcome/appendix/model/select/pre-epidemic.xlsx') |>
      left_join(datafile_class, by = c(disease = 'diseasename')) |> 
      rename(Method = 'Best') |> 
-     filter(!is.na(class))
+     filter(!is.na(class)) |> 
+     mutate(disease = factor(disease, levels = datafile_class$diseasename)) |> 
+     arrange(disease)
 datafile_class$id <- 1:nrow(datafile_class)
 
 split_date <- as.Date("2019/12/15")
@@ -56,8 +58,6 @@ forcast_length <- 12+12+11
 scientific_10 <- function(x) {
      ifelse(x == 0, 0, parse(text = gsub("[+]", "", gsub("e", "%*%10^", scales::scientific_format()(x)))))
 }
-
-datafile_class$disease <- factor(datafile_class$disease, levels = datafile_class$disease)
 
 # data clean --------------------------------------------------------------
 
