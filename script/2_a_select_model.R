@@ -32,8 +32,8 @@ datafile_analysis <- read.xlsx('./data/Nation.xlsx', detectDates = T) %>%
      filter(date >= as.Date('2008/1/1'))
 
 split_date <- as.Date("2019/12/1")
-train_length <- 12*9
-test_length <- 12*3
+train_length <- 12*10
+test_length <- 12*2
 forcast_length <- 12+12+12+3
 
 scientific_10 <- function(x) {

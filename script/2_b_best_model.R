@@ -15,6 +15,11 @@ library(ggsci)
 library(Cairo)
 library(patchwork)
 
+remove(list = ls())
+
+source('./script/theme_set.R')
+source('./script/ggplot.R')
+
 # data --------------------------------------------------------------------
 
 DataRaw <- read.xlsx("./outcome/appendix/model/index/pre-epidemic.xlsx")

@@ -21,6 +21,8 @@ library(factoextra)
 library(ggdendroplot)
 library(paletteer)
 
+remove(list = ls())
+
 source("./script/theme_set.R")
 
 # data --------------------------------------------------------------------

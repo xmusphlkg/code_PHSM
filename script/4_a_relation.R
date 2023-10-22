@@ -13,6 +13,8 @@ library(scales)
 library(factoextra)
 library(ggdendroplot)
 
+remove(list = ls())
+
 source('./script/theme_set.R')
 
 # data --------------------------------------------------------------------
