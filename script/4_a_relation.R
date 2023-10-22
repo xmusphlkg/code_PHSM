@@ -24,12 +24,12 @@ DataAll <- list.files(path = "./outcome/appendix/data/PHSMs/",
      bind_rows()
 
 datafile_class <- read.xlsx('./data/disease_class.xlsx')
-datafile_class$disease <- factor(datafile_class$disease, levels = datafile_class$disease)
+datafile_class$diseasename <- factor(datafile_class$diseasename, levels = datafile_class$diseasename)
 datafile_class$class <- factor(datafile_class$class, levels = unique(datafile_class$class))
 
 DataAll <- DataAll |> 
      left_join(datafile_class,
-               by = c('disease_1' = 'disease_list')) |> 
+               by = c('disease_1' = 'diseaselist')) |> 
      mutate(
           RR = value/mean
      )

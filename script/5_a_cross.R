@@ -19,6 +19,7 @@ library(lubridate)
 library(scales)
 library(factoextra)
 library(ggdendroplot)
+library(paletteer)
 
 source("./script/theme_set.R")
 
@@ -32,50 +33,19 @@ DataAll <- list.files(
   lapply(read.xlsx, detectDates = T) |>
   bind_rows()
 
-disease_list <- c(
-  "百日咳", "丙肝", "戊肝", "布病", "登革热",
-  "肺结核", "风疹", "急性出血性结膜炎", "甲肝",
-  "痢疾", "淋病", "流行性出血热", "艾滋病",
-  "流行性腮腺炎", "梅毒", "疟疾", "其它感染性腹泻病",
-  "伤寒+副伤寒", "乙肝", "手足口病", "猩红热",
-  "乙型脑炎", "包虫病", "斑疹伤寒"
-)
-disease_name <- c(
-  "Pertussis", "HCV", "HEV",
-  "Brucellosis", "Dengue fever", "Tuberculosis",
-  "Rubella", "Acute hemorrhagic conjunctivitis", "HAV",
-  "Dysentery", "Gonorrhea", "HFRS",
-  "AIDS", "Mumps",
-  "Syphilis", "Malaria", "Other infectious diarrhea",
-  "Typhoid fever and paratyphoid fever", "HBV", "HFMD",
-  "Scarlet fever", "Japanese encephalitis", "Hydatidosis", "Typhus"
-)
-
-datafile_class <- read.xlsx("./data/disease_class.xlsx") |>
-  left_join(
-    data.frame(
-      disease_list = disease_list,
-      disease_name = disease_name
-    ),
-    by = c(diseasename = "disease_name")
-  )
+datafile_class <- read.xlsx('./data/disease_class.xlsx')
+datafile_class$diseasename <- factor(datafile_class$diseasename, levels = datafile_class$diseasename)
+datafile_class$class <- factor(datafile_class$class, levels = unique(datafile_class$class))
 
 DataAll <- DataAll |>
   left_join(datafile_class,
-    by = c("disease_1" = "disease_list")
+    by = c("disease_1" = "diseaselist")
   ) |>
   mutate(
     RR = value / mean
   )
 
 # cross-correlation analysis ------------------------------------------------------
-
-perform_cross_correlation <- function(data) {
-     ccf_result <- ccf(data$RR, data$diff)
-     max_correlation <- max(ccf_result$acf)
-     lag_time <- ccf_result$lag[which.max(ccf_result$acf)]
-     return(data.frame(max_correlation = max_correlation, lag_time = lag_time))
-}
 
 DataSI <- read.csv('./data/owid-covid-data.csv') |> 
      filter(iso_code == "CHN")
@@ -93,16 +63,112 @@ DataSIm <- DataSI |>
 DataAll <- DataAll |> 
      left_join(DataSIm, by = 'date')
 
-cross_correlation_results <- DataAll |> 
-     group_by(diseasename) %>%
-     summarize(correlation_results = list(perform_cross_correlation(.)))
+data <- DataAll |> filter(diseasename == "HFMD")
 
+perform_cross_correlation <- function(diseasename) {
+     data <- DataAll[DataAll$diseasename == diseasename,]
+     ccf_result <- ccf(data$index, data$diff, lag.max = 6, plot = F)
+     lag_time <- ccf_result$lag[7:13]
+     lag_cor <- ccf_result$acf[7:13]
+     return(data.frame(diseasename = diseasename, correlation = lag_cor, lag_time = lag_time))
+}
 
+cross_correlation_results <- lapply(datafile_class$diseasename,
+                                    perform_cross_correlation)
+cross_correlation_results <- do.call('rbind', cross_correlation_results)
 
-ggsave("./outcome/appendix/figure/PHSMs_cluster",
+diseases <- datafile_class$diseasename
+
+layout <- '
+ABCDEFG
+HIJKLMN
+OPQRSZZ
+TVWXYZZ
+'
+
+DataRelation <- data.frame(
+     level = c("No Association", "Weak", "Moderate", "Strong"),
+     pl = c(0, 0.2, 0.4, 0.6),
+     ph = c(0.2, 0.4, 0.6, 1)
+)
+DataRelation$level <- factor(DataRelation$level,
+                             levels = DataRelation$level)
+
+plot_function <- function(i, diseases) {
+     
+     Data <- cross_correlation_results |> 
+          filter(diseasename == diseases[i])
+     
+     fig <- ggplot(data = Data) +
+          geom_rect(data = DataRelation,
+                    mapping = aes(xmin = -Inf,
+                                  xmax = Inf,
+                                  ymin = pl,
+                                  ymax =ph,
+                                  fill = level),
+                    alpha = 0.7)+
+          geom_rect(data = DataRelation,
+                    mapping = aes(xmin = -Inf,
+                                  xmax = Inf,
+                                  ymin = -pl,
+                                  ymax = -ph,
+                                  fill = level),
+                    alpha = 0.7)+
+          geom_hline(yintercept = 0,
+                     show.legend = F,
+                     linetype = 'longdash')+
+          geom_point(mapping = aes(x = lag_time,
+                                   y = correlation)) +
+          geom_line(mapping = aes(x = lag_time,
+                                  y = correlation))+
+          coord_cartesian(ylim = c(-0.4, 0.8))+
+          scale_fill_manual(values = c("#E0F7FAFF", "#80DEEAFF", "#00BCD4FF", "#006064FF"))+
+          scale_y_continuous(breaks = seq(-0.4, 0.8, 0.2))+
+          theme_bw() +
+          labs(
+               x = NULL,
+               y = ifelse(i %in% c(1, 8, 15, 20), "ACF", ""),
+               title = paste0(LETTERS[i], ': ', diseases[i]),
+               fill = "Correlation"
+          )
+     if (i %in% c(1, 8, 15, 20)) {
+          fig <- fig +
+               theme(
+                    legend.position = c(0.9, 0.1),
+                    axis.text = element_text(color = "black"),
+                    panel.grid.major.x = element_blank(),
+                    panel.grid.minor.x = element_blank(),
+                    panel.grid.major.y = element_blank(),
+                    panel.grid.minor.y = element_blank()
+               )
+     } else {
+          fig <- fig +
+               theme(
+                    legend.position = c(0.9, 0.1),
+                    axis.text = element_text(color = "black"),
+                    panel.grid.major.x = element_blank(),
+                    panel.grid.minor.x = element_blank(),
+                    axis.text.y = element_blank(),
+                    axis.title.y = element_blank(),
+                    panel.grid.major.y = element_blank(),
+                    panel.grid.minor.y = element_blank()
+               )
+     }
+     return(fig)
+}
+
+outcome <- lapply(1:24, plot_function, diseases = diseases)
+outcome[[25]] <- guide_area()
+
+plot <- do.call(wrap_plots, outcome) +
+     plot_layout(design = layout, guides = 'collect')&
+     theme(
+          title = element_text(size = 8)
+     )
+
+ggsave("./outcome/publish/fig5.pdf",
        plot,
        family = "Times New Roman",
        limitsize = FALSE, device = cairo_pdf,
-       width = 14, height = 8
-)
+       width = 14, height = 8)
 
