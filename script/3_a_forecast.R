@@ -17,6 +17,7 @@ library(Cairo)
 library(ggh4x)
 library(ggpubr)
 library(paletteer)
+library(doParallel)
 
 Sys.setlocale(locale = 'en')
 set.seed(202208)
@@ -60,6 +61,12 @@ scientific_10 <- function(x) {
      ifelse(x == 0, 0, parse(text = gsub("[+]", "", gsub("e", "%*%10^", scales::scientific_format()(x)))))
 }
 
+
+# change best model -------------------------------------------------------
+
+datafile_class$Method[datafile_class$disease == "Acute hemorrhagic conjunctivitis"] <- "ETS"
+datafile_class$Method[datafile_class$disease == "Malaria"] <- "ETS"
+
 # data clean --------------------------------------------------------------
 
 auto_analysis_function <- function(i){
@@ -95,7 +102,7 @@ auto_analysis_function <- function(i){
      outcome_plot_1 <- datafile_single |> 
           filter(date > split_date & date < split_date_1) |> 
           as.data.frame()
-     max_case <- max(ts_obse_1)
+     max_case <- max(tail(ts_obse_1, 59))
      
      # Select Method ------------------------------------------------------------
      
@@ -259,7 +266,35 @@ auto_analysis_function <- function(i){
 
 # run model ---------------------------------------------------------------
 
-outcome <- lapply(1:24, auto_analysis_function)
+
+cl <- makeCluster(24)
+registerDoParallel(cl)
+clusterEvalQ(cl, {
+     library(tidyverse)
+     library(openxlsx)
+     library(jsonlite)
+     library(stats)
+     library(tseries)
+     library(astsa)
+     library(forecast)
+     library(greyforecasting)
+     library(forecastHybrid)
+     library(caret)
+     library(bsts)
+     library(patchwork)
+     library(Cairo)
+     library(ggh4x)
+     library(ggpubr)
+     library(paletteer)
+     
+     Sys.setlocale(locale = 'en')
+     set.seed(202208)
+})
+
+clusterExport(cl, ls()[ls() != "cl"], 
+              envir = environment())
+outcome <- parLapply(cl, 1:24, auto_analysis_function)
+stopCluster(cl)
 outcome[[25]] <- guide_area()
 
 plot <- do.call(wrap_plots, outcome) +

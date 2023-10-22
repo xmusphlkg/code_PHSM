@@ -32,28 +32,18 @@ datafile_analysis <- read.xlsx('./data/Nation.xlsx', detectDates = T) %>%
      filter(date >= as.Date('2008/1/1'))
 
 split_date <- as.Date("2019/12/1")
-train_length <- 12*10
-test_length <- 12*2
+train_length <- 12*9
+test_length <- 12*3
 forcast_length <- 12+12+12+3
 
 scientific_10 <- function(x) {
      ifelse(x == 0, 0, parse(text = gsub("[+]", "", gsub("e", "%*%10^", scales::scientific_format()(x)))))
 }
 
-disease_list <- c('百日咳', '丙肝', '戊肝', '布病', '登革热', 
-                  '肺结核', '风疹', '急性出血性结膜炎', '甲肝', 
-                  '痢疾', '淋病', '流行性出血热', '艾滋病',
-                  '流行性腮腺炎', '梅毒', '疟疾', '其它感染性腹泻病',
-                  '伤寒+副伤寒', '乙肝', '手足口病', '猩红热',
-                  '乙型脑炎', '包虫病', '斑疹伤寒')
-disease_name <- c('Pertussis', 'HCV', 'HEV',
-                  'Brucellosis', 'Dengue fever', 'Tuberculosis',
-                  'Rubella', 'Acute hemorrhagic conjunctivitis', 'HAV',
-                  'Dysentery', 'Gonorrhea', 'HFRS',
-                  'AIDS', 'Mumps', 
-                  'Syphilis', 'Malaria', 'Other infectious diarrhea',
-                  'Typhoid fever and paratyphoid fever', 'HBV', 'HFMD',
-                  'Scarlet fever', 'Japanese encephalitis', 'Hydatidosis', 'Typhus')
+datafile_class <- read.xlsx("./data/disease_class.xlsx")
+
+disease_list <- datafile_class$diseaselist
+disease_name <- datafile_class$diseasename
 
 # data clean --------------------------------------------------------------
 

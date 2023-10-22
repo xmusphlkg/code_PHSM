@@ -50,7 +50,7 @@ datafile_class <- read.xlsx('./outcome/appendix/model/select/pre-epidemic.xlsx')
      arrange(disease)
 datafile_class$id <- 1:nrow(datafile_class)
 
-split_date <- as.Date("2019/12/15")
+split_date <- as.Date("2019/6/15")
 split_date_1 <- as.Date("2022/11/15")
 split_date_2 <- as.Date("2023/3/1")
 
@@ -60,6 +60,11 @@ forcast_length <- 12+12+12+3
 scientific_10 <- function(x) {
      ifelse(x == 0, 0, parse(text = gsub("[+]", "", gsub("e", "%*%10^", scales::scientific_format()(x)))))
 }
+
+# change best model -------------------------------------------------------
+
+datafile_class$Method[datafile_class$disease == "Acute hemorrhagic conjunctivitis"] <- "ETS"
+datafile_class$Method[datafile_class$disease == "Malaria"] <- "ETS"
 
 # data clean --------------------------------------------------------------
 i <- 1
@@ -94,7 +99,7 @@ auto_analysis_function <- function(i){
      
      ## plot data before April 2019
      outcome_plot_1 <- datafile_single |> 
-          filter(date > split_date & date < split_date_2) |> 
+          filter(date > split_date & date <= split_date_2) |> 
           as.data.frame()
      max_case <- max(outcome_plot_1$value)
      
@@ -207,7 +212,7 @@ auto_analysis_function <- function(i){
                 paste0('./outcome/appendix/data/Epidemic/', datafile_class$disease[i], '.xlsx'))
      
      outcome_plot_3 <- datafile_single |> 
-          filter(date < split_date_2)
+          filter(date <= split_date_2)
      
      fig1 <- ggplot()+
           geom_line(mapping = aes(x = date,
@@ -215,7 +220,7 @@ auto_analysis_function <- function(i){
                                   colour = 'Observed'), 
                     linewidth = 0.7, data = outcome_plot_3)+
           annotate('text', 
-                   x = median(c(split_date+365*2, split_date_1)),
+                   x = median(c(as.Date('2022/6/1'), split_date_1)),
                    y = Inf, 
                    label = 'PHSMs\nPeriods', 
                    vjust = 1)+
@@ -238,9 +243,10 @@ auto_analysis_function <- function(i){
                    label = 'Epidemic\nPeriods', 
                    vjust = 1)+
           coord_cartesian(ylim = c(0, NA),
-                          xlim = c(as.Date('2022/1/1'), NA))+
+                          xlim = c(as.Date('2022/6/1'), NA))+
           scale_x_date(date_labels = '%b\n%Y',
-                       breaks = seq(split_date, split_date_2, by="3 months"))+
+                       breaks = seq(as.Date('2022/6/1'), split_date_2, by="2 months"),
+                       expand = expansion(add = c(0, 31)))+
           scale_y_continuous(expand = expansion(add = c(0, 31)),
                              label = scientific_10,
                              breaks = pretty(c(min_value, max_value, 0)),
@@ -259,7 +265,33 @@ auto_analysis_function <- function(i){
 
 # run model ---------------------------------------------------------------
 
-outcome <- lapply(1:24, auto_analysis_function)
+cl <- makeCluster(24)
+registerDoParallel(cl)
+clusterEvalQ(cl, {
+     library(tidyverse)
+     library(openxlsx)
+     library(jsonlite)
+     library(stats)
+     library(tseries)
+     library(astsa)
+     library(forecast)
+     library(greyforecasting)
+     library(forecastHybrid)
+     library(caret)
+     library(bsts)
+     library(patchwork)
+     library(Cairo)
+     library(ggh4x)
+     library(ggpubr)
+     library(paletteer)
+     
+     Sys.setlocale(locale = 'en')
+     set.seed(202208)
+})
+
+clusterExport(cl, ls()[ls() != "cl"], 
+              envir = environment())
+outcome <- parLapply(cl, 1:24, auto_analysis_function)
 outcome[[25]] <- guide_area()
 
 plot <- do.call(wrap_plots, outcome) +

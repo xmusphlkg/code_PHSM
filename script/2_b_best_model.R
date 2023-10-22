@@ -99,7 +99,7 @@ plot_function <- function(i, diseases) {
           geom_col() +
           scale_y_discrete(limits = rev(levels(Data$Method))) +
           scale_fill_manual(
-               values = fill_color[6:7],
+               values = fill_color[5:4],
                labels = c("Alternative Models", "Best Model")
           ) +
           theme_bw() +
@@ -143,4 +143,9 @@ ggsave('./outcome/publish/fig2.pdf',
        plot,
        family = "Times New Roman",
        limitsize = FALSE, device = cairo_pdf,
+       width = 14, height = 8)
+
+ggsave('./outcome/publish/fig2.png',
+       plot,
+       limitsize = FALSE,
        width = 14, height = 8)
