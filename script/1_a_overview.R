@@ -43,7 +43,6 @@ datafile_plot <- datafile_analysis |>
                                       "Intestinal infectious diseases",
                                       "Respiratory infectious disease",
                                       "Natural focal disease")))
-
 datafile_bubble <- datafile_plot |> 
      group_by(disease, class, level) |> 
      summarise(value = sum(value),
@@ -56,10 +55,51 @@ datafile_legend <- data.frame(
 )
 
 write.csv(rbind(datafile_bubble, datafile_legend),
-          './outcome/publish/fig1.csv',
+          './outcome/appendix/data/fig1_1.csv',
           quote = F,
           row.names = F)
 
+# summary of NID ----------------------------------------------------------
+
+## disease list
+unique(datafile_plot$disease)
+
+## total
+sum(datafile_plot$value)
+
+## each group
+datafile_plot |> 
+     group_by(class, disease) |> 
+     summarise(count = sum(value),
+               .groups = 'drop') |> 
+     mutate(percent = round(count/sum(count), 4)) |> 
+     arrange(desc(count))
+
+datafile_plot |> 
+     group_by(class) |> 
+     summarise(count = sum(value),
+               .groups = 'drop') |> 
+     mutate(percent = round(count/sum(count), 4)) |> 
+     arrange(desc(count))
+
+## natural focal disease in 2014.9-10
+datafile_plot |> 
+     filter(class == "Natural focal disease" &
+                 date %in% as.Date(c('2014-08-01', '2014-09-01', "2014-10-01", "2014-11-01"))) |> 
+     ggplot()+
+     geom_line(mapping = aes(x = date,
+                             y = value,
+                             color = disease))
+datafile_plot |> 
+     filter(disease == "Dengue fever" &
+                 date <= as.Date('2014-12-01') &
+                 date >= as.Date('2013-01-01')) |> 
+     ggplot()+
+     geom_line(mapping = aes(x = date,
+                             y = value,
+                             color = disease))
+19178/1480 - 1
+23525/1665 - 1
 # lineplot ----------------------------------------------------------------
 
 datafile_plot <- datafile_plot  |> 
@@ -158,12 +198,12 @@ fig1
 
 fig1 + fig2 + plot_layout(ncol = 1)
 
-ggsave(filename = './outcome/publish/fig1.pdf',
+ggsave(filename = './outcome/publish/fig1_2.pdf',
        width = 14,
        height = 8,
        device = cairo_pdf,
        family = "Times New Roman")
 
-ggsave(filename = './outcome/publish/fig1.png',
+ggsave(filename = './outcome/publish/fig1_2.png',
        width = 14,
        height = 8)
