@@ -10,6 +10,7 @@ library(astsa)
 library(forecast)
 library(greyforecasting)
 library(forecastHybrid)
+library(prophet)
 library(caret)
 library(bsts)
 library(patchwork)
@@ -60,12 +61,6 @@ forcast_length <- 12+12+11
 scientific_10 <- function(x) {
      ifelse(x == 0, 0, parse(text = gsub("[+]", "", gsub("e", "%*%10^", scales::scientific_format()(x)))))
 }
-
-
-# change best model -------------------------------------------------------
-
-datafile_class$Method[datafile_class$disease == "Acute hemorrhagic conjunctivitis"] <- "ETS"
-datafile_class$Method[datafile_class$disease == "Malaria"] <- "ETS"
 
 # data clean --------------------------------------------------------------
 
@@ -122,18 +117,21 @@ auto_analysis_function <- function(i){
           )
      }
      
-     if (datafile_class$Method[i] == 'ARIMA'){
-          mod <- auto.arima(ts_train_1, seasonal = F)
-          outcome <- forecast(mod, h = forcast_length)
+     if (datafile_class$Method[i] == 'Prophet'){
+          mod <- prophet(data.frame(ds = zoo::as.Date(time(ts_train_1)), y = as.numeric(ts_train_1)),
+                         interval.width = 0.95)
+          future <- make_future_dataframe(mod, periods = forcast_length, freq = "month")
+          outcome <- predict(mod, future)
           
           outcome_plot_2 <- data.frame(
-               date = zoo::as.Date(time(outcome$mean)),
-               mean = as.matrix(outcome$mean),
-               lower_80 = as.matrix(outcome$lower[,1]),
-               lower_95 = as.matrix(outcome$lower[,2]),
-               upper_80 = as.matrix(outcome$upper[,1]),
-               upper_95 = as.matrix(outcome$upper[,2])
-          )
+               date = as.Date(outcome$ds),
+               mean = as.numeric(outcome$yhat),
+               lower_80 = as.numeric(outcome$yhat_lower),
+               lower_95 = as.numeric(outcome$yhat_lower),
+               upper_80 = as.numeric(outcome$yhat_upper),
+               upper_95 = as.numeric(outcome$yhat_upper)
+          ) |> 
+               tail(forcast_length)
      }
      
      if (datafile_class$Method[i] == 'ETS'){
@@ -279,6 +277,7 @@ clusterEvalQ(cl, {
      library(forecast)
      library(greyforecasting)
      library(forecastHybrid)
+     library(prophet)
      library(caret)
      library(bsts)
      library(patchwork)
