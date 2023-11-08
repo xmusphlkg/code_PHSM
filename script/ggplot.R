@@ -14,8 +14,8 @@ plot_outcome <- function(outcome_plot_1,
                     outcome_plot_2[1, 'mean'])
      )
      
-     max_value <- max(c(max(outcome_plot_1[,-1], na.rm = T), max(outcome_plot_2[,-1], na.rm = T)), max_case)
-     min_value <- min(c(min(outcome_plot_1[,-1], na.rm = T), min(outcome_plot_2[,-1], na.rm = T)))
+     max_value <- max(c(max(outcome_plot_1[,-1], na.rm = T), max(outcome_plot_2[,'mean'], na.rm = T)), max_case)
+     min_value <- min(c(min(outcome_plot_1[,-1], na.rm = T), min(outcome_plot_2[,'mean'], na.rm = T)))
      
      fig1 <- ggplot()+
           geom_line(mapping = aes(x = date, y = value, colour = 'Observed'), 
