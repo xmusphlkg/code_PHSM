@@ -41,14 +41,13 @@ plot_outcome <- function(outcome_plot_1,
           geom_hline(yintercept = 0, show.legend = F)+
           annotate('text', x = median(outcome_plot_1$date), y = Inf, label = 'Train Database', vjust = 1)+
           annotate('text', x = median(outcome_plot_2$date), y = Inf, label = 'Test Database', vjust = 1)+
-          coord_cartesian(ylim = c(0, NA))+
+          coord_cartesian(ylim = c(0, range(pretty(c(min_value, max_value, 0)))[2]))+
           scale_x_date(expand = expansion(add = c(0, 31)),
                        date_labels = '%Y',
                        breaks = seq(min(outcome_plot_1$date), max(outcome_plot_2$date)+31, by="2 years"))+
           scale_y_continuous(expand = c(0, 0),
                              label = scientific_10,
-                             breaks = pretty(c(min_value, max_value, 0)),
-                             limits = range(pretty(c(min_value, max_value, 0))))+
+                             breaks = pretty(c(min_value, max_value, 0)))+
           scale_color_manual(
                values = c(Fitted = "#00A087B2",
                           Forecasted = "#DC0000B2",

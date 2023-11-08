@@ -81,7 +81,7 @@ plot <- do.call(wrap_plots, c(outcome, ncol = 2, byrow = T)) +
 
 # plot cluster ----------------------------------------------------------------
 
-# cluster for RR
+# cluster for incidence
 set.seed(20231021)
 
 DataMat <- DataAll |> 
@@ -97,9 +97,8 @@ DataMat <- scale(DataMat)
 hcdata <- hkmeans(DataMat, 2)
 fig1 <- fviz_dend(hcdata,
           cex = 0.6,
-          palette = "jama", 
+          k_colors = fill_color[3:2],
           rect = TRUE,
-          rect_border = "jama",
           rect_fill = TRUE,
           main = 'E')+
      # scale_y_continuous(trans = 'log10')+
@@ -122,9 +121,8 @@ DataMat <- scale(DataMat)
 hcdata <- hkmeans(DataMat, 2)
 fig2 <- fviz_dend(hcdata,
                   cex = 0.6,
-                  palette = "jama", 
+                  k_colors = fill_color[5:4],
                   rect = TRUE,
-                  rect_border = "jama",
                   rect_fill = TRUE,
                   main = 'F')+
      # scale_y_continuous(trans = 'log10')+
