@@ -233,11 +233,11 @@ fig4 <- fviz_dend(hcdata,
            axis.title = element_blank())
 
 plot1 <- fig1 + fig2 + fig3 + fig4 +
-     plot_layout(ncol = 2, byrow = F)
+     plot_layout(ncol = 2, byrow = T)
 
 
 ggsave('./outcome/publish/fig5.pdf',
-       cowplot::plot_grid(plot, plot1, ncol = 1, rel_heights = c(2.2, 3)),
+       cowplot::plot_grid(plot, plot1, ncol = 1, rel_heights = c(2.2, 2)),
        family = "Times New Roman",
        limitsize = FALSE, device = cairo_pdf,
-       width = 14, height = 18)
+       width = 14, height = 14)

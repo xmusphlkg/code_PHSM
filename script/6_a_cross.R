@@ -32,7 +32,7 @@ select_disease <- c('HFMD', 'Dengue fever', 'Japanese encephalitis',
 # data --------------------------------------------------------------------
 
 DataAll <- list.files(
-  path = "./outcome/appendix/data/PHSMs/",
+  path = "./outcome/appendix/data/forecast/",
   pattern = "*.xlsx",
   full.names = TRUE
 ) |>
@@ -50,7 +50,7 @@ DataAll <- DataAll |>
   mutate(
     RR = value / mean
   ) |> 
-     filter(diseasename %in% select_disease)
+     filter(diseasename %in% select_disease & date < as.Date('2022/11/1'))
 
 # cross-correlation analysis ------------------------------------------------------
 
@@ -143,7 +143,6 @@ plot_function <- function(i, diseases = select_disease) {
      if (i %in% c(1, 5)) {
           fig <- fig +
                theme(
-                    legend.position = c(0.9, 0.1),
                     axis.text = element_text(color = "black"),
                     panel.grid.major.x = element_blank(),
                     panel.grid.minor.x = element_blank(),
@@ -153,7 +152,6 @@ plot_function <- function(i, diseases = select_disease) {
      } else {
           fig <- fig +
                theme(
-                    legend.position = c(0.9, 0.1),
                     axis.text = element_text(color = "black"),
                     panel.grid.major.x = element_blank(),
                     panel.grid.minor.x = element_blank(),
@@ -171,12 +169,13 @@ outcome <- lapply(1:8, plot_function, diseases = select_disease)
 plot <- do.call(wrap_plots, outcome) +
      plot_layout(design = layout, guides = 'collect')&
      theme(
-          title = element_text(size = 8)
+          title = element_text(size = 8),
+          legend.position = 'bottom'
      )
 
-ggsave("./outcome/publish/fig5.pdf",
+ggsave("./outcome/publish/fig6.pdf",
        plot,
        family = "Times New Roman",
        limitsize = FALSE, device = cairo_pdf,
-       width = 8, height = 4)
+       width = 8, height = 5)
 
