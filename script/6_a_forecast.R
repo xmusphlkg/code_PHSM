@@ -231,8 +231,8 @@ auto_analysis_function <- function(i){
                                   colour = 'Forecasted'),
                     linewidth = 0.7, data = outcome_plot_2)+
           stat_difference(mapping = aes(x = date, 
-                                        ymin = mean, 
-                                        ymax = value),
+                                        ymin = value, 
+                                        ymax = mean),
                           data = outcome_data, 
                           alpha = 0.3,
                           levels = c('Decreased', 'Increased'))+
