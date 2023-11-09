@@ -19,10 +19,11 @@ datafile_analysis <- read.xlsx('./data/Nation.xlsx', detectDates = T) |>
      filter(date >= as.Date('2008-1-1'))
 datafile_class <- read.xlsx("./data/disease_class.xlsx", detectDates = T)
 
-
-split_date_1 <- as.Date("2019/12/15")
-split_date_2 <- as.Date("2022/11/15")
-split_date_3 <- as.Date("2023/3/15")
+# left border
+split_date_0 <- as.Date("2020/1/1")
+split_date_1 <- as.Date("2020/4/1")
+split_date_2 <- as.Date("2022/11/1")
+split_date_3 <- as.Date("2023/4/1")
 
 # bubble plot -------------------------------------------------------------
 
@@ -100,6 +101,17 @@ datafile_plot |>
                              color = disease))
 19178/1480 - 1
 23525/1665 - 1
+
+
+# background rect ---------------------------------------------------------
+
+datafile_rect <- data.frame(
+     start = c(as.Date('2008/1/1'), split_date_0, split_date_1, split_date_2),
+     end = c(split_date_0, split_date_1, split_date_2, split_date_3),
+     label = c('Pre-epidemic Period', 'PHSMs Period I', 'PHSMs Period II', 'Epidemic Period')
+) |> 
+     mutate(m = as.Date((as.numeric(start)+as.numeric(end))/2, origin = "1970-01-01"))
+
 # lineplot ----------------------------------------------------------------
 
 datafile_plot <- datafile_plot  |> 
@@ -128,58 +140,26 @@ fig2 <- ggplot(data = datafile_plot)+
           fill = NULL)
 
 fig1 <- ggplot(data = datafile_plot)+
-     geom_rect(data = data.frame(start_date = split_date_2,
-                                 end_date = split_date_3), 
-               aes(xmin = start_date, 
-                   xmax = end_date), 
+     geom_rect(data = datafile_rect, 
+               aes(xmin = start, 
+                   xmax = end,
+                   fill = label), 
                ymin = -Inf, 
                ymax = Inf, 
-               fill = "#E9E29CFF",
                alpha = 0.2,
                show.legend = F)+
-     annotate('text',
-              x = median(c(split_date_2, split_date_3)),
-              y = 9e5,
-              label = "Epidemic\nPeriods",
-              family = "Times New Roman",
-              vjust = 1,
-              hjust = 0.5)+
-     geom_rect(data = data.frame(start_date = c(split_date_1),
-                                 end_date = c(split_date_2)), 
-               aes(xmin = start_date, 
-                   xmax = end_date), 
-               ymin = -Inf, 
-               ymax = Inf, 
-               fill = "#EEB479FF",
-               alpha = 0.2,
+     geom_text(data = datafile_rect, 
+               aes(x = m, 
+                   y = 1e6,
+                   label = label),
+               vjust = 1,
+               hjust = 0.5,
                show.legend = F)+
-     annotate('text',
-              x = median(c(split_date_1, split_date_2)),
-              y = 9e5,
-              label = "PHSMs Periods",
-              family = "Times New Roman",
-              vjust = 1,
-              hjust = 0.5)+
-     geom_rect(data = data.frame(start_date = c(min(datafile_plot$date)),
-                                 end_date = c(split_date_1)), 
-               aes(xmin = start_date, 
-                   xmax = end_date), 
-               ymin = -Inf, 
-               ymax = Inf, 
-               fill = "#91D1C2FF",
-               alpha = 0.2,
-               show.legend = F)+
-     annotate('text',
-              x = median(c(split_date_1, min(datafile_plot$date))),
-              y = 9e5,
-              label = "Pre-epidemic Periods",
-              family = "Times New Roman",
-              vjust = 1,
-              hjust = 0.5)+
      geom_line(mapping = aes(x = date,
                              y = value,
                              color = class))+
      scale_color_manual(values = fill_color)+
+     scale_fill_manual(values = c("#05215D50", "#E6383350", "#5E954650", "#3381A850"))+
      scale_y_continuous(expand = c(0, 0),
                         trans = 'log10',
                         label = scientific_10,

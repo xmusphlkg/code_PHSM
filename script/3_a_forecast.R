@@ -55,20 +55,35 @@ datafile_class$id <- 1:nrow(datafile_class)
 ## adjust best model
 datafile_class$Method[datafile_class$disease == 'AHC'] <- "Hybrid"
 
-split_date <- as.Date("2019/12/15")
-split_date_1 <- as.Date("2022/11/15")
-
-train_length <- 12*12
-forcast_length <- 12+12+11
-
 scientific_10 <- function(x) {
      ifelse(x == 0, 0, parse(text = gsub("[+]", "", gsub("e", "%*%10^", scales::scientific_format()(x)))))
 }
 
 # data clean --------------------------------------------------------------
 
+i <- 1
+
 auto_analysis_function <- function(i){
      set.seed(202305)
+     
+     ## set split date
+     split_date <- as.Date("2019/1/1")
+     split_date_0 <- as.Date("2020/1/1")
+     split_date_1 <- as.Date("2020/4/1")
+     split_date_2 <- as.Date("2022/11/1")
+     split_date_3 <- as.Date("2023/4/1")
+     
+     datafile_rect <- data.frame(
+          start = c(split_date, split_date_0, split_date_1, split_date_2),
+          end = c(split_date_0, split_date_1, split_date_2, split_date_3),
+          label = c('Pre-epidemic Period', 'PHSMs Period I', 'PHSMs Period II', 'Epidemic Period')
+     ) |> 
+          mutate(m = as.Date((as.numeric(start)+as.numeric(end))/2, origin = "1970-01-01"))
+     
+     ## prepare data
+     train_length <- 12*12
+     forcast_length <- 12+12+12+3
+     
      datafile_single <- datafile_analysis %>% 
           filter(disease_1 == datafile_class$diseaselist[i]) %>% 
           select(date, disease_1, value) %>% 
@@ -86,7 +101,7 @@ auto_analysis_function <- function(i){
      df_simu <- datafile_single  %>% 
           arrange(date) %>% 
           unique() %>% 
-          filter(date <= split_date_1)%>% 
+          filter(date < split_date_0)%>% 
           select(value)
      
      ts_obse_1 <- df_simu %>% 
@@ -96,9 +111,8 @@ auto_analysis_function <- function(i){
      
      ts_train_1 <- head(ts_obse_1, train_length)
      
-     ## plot data before April 2019
      outcome_plot_1 <- datafile_single |> 
-          filter(date > split_date & date < split_date_1) |> 
+          filter(date >= split_date_0) |> 
           as.data.frame()
      max_case <- max(tail(ts_obse_1, 59))
      
@@ -211,50 +225,57 @@ auto_analysis_function <- function(i){
                  color = if_else(diff > 0, 'Decrease', 'Increase'))
      
      write.xlsx(outcome_data,
-                paste0('./outcome/appendix/data/PHSMs/', datafile_class$disease[i], '.xlsx'))
+                paste0('./outcome/appendix/data/', datafile_class$disease[i], '.xlsx'))
      
      outcome_plot_3 <- datafile_single |> 
-          filter(date < split_date_1)
+          filter(date >= split_date)
+     plot_breaks <- pretty(c(min_value, max_value, 0))
      
      fig1 <- ggplot()+
+          geom_vline(xintercept = datafile_rect$end,
+                     show.legend = F,
+                     linetype = 'longdash')+
+          geom_hline(yintercept = 0,
+                     show.legend = F)+
+          geom_rect(data = datafile_rect, 
+                    aes(xmin = start, 
+                        xmax = end,
+                        fill = label), 
+                    ymax = 0, 
+                    ymin = -max(plot_breaks)/10, 
+                    alpha = 0.2,
+                    show.legend = F)+
           geom_line(mapping = aes(x = date,
                                   y = value,
                                   colour = 'Observed'), 
                     linewidth = 0.7, data = outcome_plot_3)+
-          annotate('text', 
-                   x = median(c(as.Date('2020/1/1'), as.Date('2018/1/1'))),
-                   y = Inf, 
-                   label = 'Pre-epidemic\nPeriods', 
-                   vjust = 1)+
           geom_line(mapping = aes(x = date, 
                                   y = mean,
                                   colour = 'Forecasted'),
                     linewidth = 0.7, data = outcome_plot_2)+
           stat_difference(mapping = aes(x = date, 
-                                        ymin = value, 
-                                        ymax = mean),
+                                        ymin = mean, 
+                                        ymax = value),
                           data = outcome_data, 
                           alpha = 0.3,
                           levels = c('Decreased', 'Increased'))+
-          geom_vline(xintercept = c(as.Date('2020/1/1'), max(outcome_plot_2$date)),
-                     show.legend = F,
-                     linetype = 'longdash')+
-          annotate('text', 
-                   x = median(c(as.Date('2020/1/1'), max(outcome_plot_2$date))),
-                   y = Inf, 
-                   label = 'PHSMs\nPeriods', 
-                   vjust = 1)+
-          coord_cartesian(ylim = c(0, NA),
-                          xlim = c(as.Date('2018-01-01'), NA))+
-          scale_x_date(expand = expansion(add = c(0, 62)),
+          coord_cartesian(ylim = c(-max(plot_breaks)/10, NA),
+                          xlim = c(split_date, NA))+
+          scale_x_date(expand = expansion(add = c(0, 0)),
                        date_labels = '%Y',
-                       breaks = seq(min(outcome_plot_3$date), max(outcome_plot_2$date)+62, by="1 years"))+
+                       breaks = seq(min(outcome_plot_3$date), max(outcome_plot_2$date), by="1 years"))+
           scale_y_continuous(expand = c(0, 0),
                              label = scientific_10,
-                             breaks = pretty(c(min_value, max_value, 0)),
-                             limits = range(pretty(c(min_value, max_value, 0))))+
-          scale_color_manual(values = c(Forecasted = "#E64B35FF", Observed = '#00A087FF'))+
-          scale_fill_manual(values = c(Decreased = "#E64B3550", Increased = '#00A08750'))+
+                             breaks = plot_breaks,
+                             limits = range(plot_breaks))+
+          scale_color_manual(values = c(Forecasted = "#E64B35FF",
+                                        Observed = '#00A087FF'))+
+          scale_fill_manual(values = c(Decreased = "#E64B3550",
+                                       Increased = '#00A08750',
+                                       'Pre-epidemic Period' = "#3381A850",
+                                       'PHSMs Period I' = "#E6383350",
+                                       'PHSMs Period II' = "#5E954650",
+                                       'Epidemic Period' = "#05215D50"))+
           theme_set()+
           theme(legend.position = 'bottom')+
           labs(x = NULL,

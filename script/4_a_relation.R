@@ -36,6 +36,23 @@ DataAll <- DataAll |>
           RR = value/mean
      )
 
+# summary -----------------------------------------------------------------
+
+DataAll |> 
+     group_by(diseasename) |> 
+     summarise(diff = round(sum(diff), 4),
+               percnet = round(sum(diff)/sum(mean), 4)) |> 
+     print(n = 24)
+
+DataAll |> 
+     group_by(diseasename) |> 
+     summarise(q2 = quantile(RR, 0.5),
+               q1 = quantile(RR, 0.25),
+               q3 = quantile(RR, 0.75),
+               s = wilcox.test(RR, mu = 1)$statistic,
+               P = round(wilcox.test(RR, mu = 1)$p.value, 4)) |> 
+     print(n = 24)
+
 # plot --------------------------------------------------------------------
 
 i <- 1
@@ -107,19 +124,7 @@ DataMat <- DataMat |>
 rownames(DataMat) <- diseasename
 DataMat <- scale(DataMat)
 hcdata <- hkmeans(DataMat, 2)
-# fig1 <- ggplot()+
-#      geom_dendro(hcdata$hclust,
-#                  dendrocut=max(hcdata[["hclust"]][["merge"]]),
-#                  groupCols = c(fill_color[2:1], 'grey'))+
-#      scale_y_continuous(trans = 'log10')+
-#      coord_flip()+
-#      theme_hm()+
-#      theme(axis.text.x = element_blank(),
-#            axis.text.y = element_text (colour = c(rep(fill_color[2], table(hcdata[["cluster"]])[1]),
-#                                                   rep(fill_color[1], table(hcdata[["cluster"]])[2]))),
-#            axis.ticks = element_blank(),
-#            axis.title = element_blank())+
-#      labs(title = 'I')
+
 fig1 <- fviz_dend(hcdata,
                   cex = 0.6,
                   k_colors = fill_color[3:2], 
@@ -144,19 +149,7 @@ DataMat <- DataMat |>
 rownames(DataMat) <- diseasename
 DataMat <- scale(DataMat)
 hcdata <- hkmeans(DataMat, 2)
-# fig2 <- ggplot()+
-#      geom_dendro(hcdata$hclust,
-#                  dendrocut=max(hcdata[["hclust"]][["merge"]]),
-#                  groupCols = c(fill_color[3:4], 'grey'))+
-#      scale_y_continuous(trans = 'log10')+
-#      coord_flip()+
-#      theme_hm()+
-#      theme(axis.text.x = element_blank(),
-#            axis.text.y = element_text (colour = c(rep(fill_color[4], table(hcdata[["cluster"]])[2]),
-#                                                   rep(fill_color[3], table(hcdata[["cluster"]])[1]))),
-#            axis.ticks = element_blank(),
-#            axis.title = element_blank())+
-#      labs(title = 'J')
+
 fig2 <- fviz_dend(hcdata,
                   cex = 0.6,
                   k_colors = fill_color[5:4], 

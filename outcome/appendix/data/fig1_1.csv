@@ -1,6 +1,6 @@
 disease,class,level,value
+AHC,Intestinal infectious diseases,C,744081
 AIDS,Blood borne and sexually transmitted diseases,B,678436
-Acute hemorrhagic conjunctivitis,Intestinal infectious diseases,C,744081
 Brucellosis,Natural focal disease,B,715059
 Dengue fever,Natural focal disease,B,93628
 Dysentery,Intestinal infectious diseases,C,2322475
@@ -21,7 +21,7 @@ Rubella,Respiratory infectious disease,C,426848
 Scarlet fever,Respiratory infectious disease,B,703823
 Syphilis,Blood borne and sexually transmitted diseases,B,6705309
 Tuberculosis,Respiratory infectious disease,B,14236427
-Typhoid fever and paratyphoid fever,Intestinal infectious diseases,B,174784
+Typhoid and paratyphoid fever,Intestinal infectious diseases,B,174784
 Typhus,Natural focal disease,C,25278
 A,legend,A,20000
 B,legend,A,2e+05
