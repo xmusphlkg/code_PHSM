@@ -14,6 +14,7 @@ library(openxlsx)
 library(ggsci)
 library(Cairo)
 library(patchwork)
+library(paletteer)
 
 remove(list = ls())
 
@@ -58,12 +59,18 @@ DataClean <- DataClean |>
   ) |>
   ungroup()
 
-## save to select
+## save select
 DataSelect <- DataClean |>
   select(disease, Best) |>
   distinct()
 
 write.xlsx(DataSelect, "./outcome/appendix/model/select/pre-epidemic.xlsx")
+
+## save normalized composite index
+DataTable <- DataClean |> 
+     mutate(across(where(is.numeric), ~round(., 2)))
+write.xlsx(DataTable, 
+           "./outcome/appendix/data/Table S1.xlsx")
 
 # plot for each model -----------------------------------------------------
 
@@ -98,6 +105,10 @@ plot_function <- function(i, diseases) {
           )
      ) +
           geom_col() +
+          geom_text(mapping = aes(
+               label = sprintf("%.2f", Index),
+               hjust = Index >= 0
+          ))+
           scale_y_discrete(limits = rev(levels(Data$Method))) +
           scale_fill_manual(
                values = fill_color[5:4],

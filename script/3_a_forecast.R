@@ -52,6 +52,9 @@ datafile_class <- read.xlsx('./outcome/appendix/model/select/pre-epidemic.xlsx')
      arrange(disease)
 datafile_class$id <- 1:nrow(datafile_class)
 
+## adjust best model
+datafile_class$Method[datafile_class$disease == 'AHC'] <- "Hybrid"
+
 split_date <- as.Date("2019/12/15")
 split_date_1 <- as.Date("2022/11/15")
 
