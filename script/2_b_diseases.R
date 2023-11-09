@@ -194,7 +194,7 @@ fig <- wrap_plots(plotlist = plot_list, ncol = 1) +
      theme(legend.position = 'bottom')
 
 ggsave(
-     filename = "./outcome/publish/fig1p.pdf",
+     filename = "./outcome/publish/fig2.pdf",
      plot = fig,
      width = 14,
      height = 20,

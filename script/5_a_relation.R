@@ -19,7 +19,13 @@ source('./script/theme_set.R')
 
 # data --------------------------------------------------------------------
 
-DataAll <- list.files(path = "./outcome/appendix/data/PHSMs/",     
+# left border
+split_date_0 <- as.Date("2020/1/1")
+split_date_1 <- as.Date("2020/4/1")
+split_date_2 <- as.Date("2022/11/1")
+split_date_3 <- as.Date("2023/4/1")
+
+DataAll <- list.files(path = "./outcome/appendix/data/forecast/",     
                       pattern = "*.xlsx", 
                       full.names = TRUE)|>
      lapply(read.xlsx, detectDates = T) |> 
@@ -33,25 +39,31 @@ DataAll <- DataAll |>
      left_join(datafile_class,
                by = c('disease_1' = 'diseaselist')) |> 
      mutate(
-          RR = value/mean
+          RR = value/mean,
+          Periods = case_when(
+               date < split_date_1 ~ "PHSMs Period I",
+               date >= split_date_1 & date < split_date_2 ~ "PHSMs Period II",
+               date >= split_date_2 ~ "Epidemic Period",
+               .default = "other"
+          )
      )
 
 # summary -----------------------------------------------------------------
 
 DataAll |> 
-     group_by(diseasename) |> 
+     group_by(diseasename, Periods) |> 
      summarise(diff = round(sum(diff), 4),
                percnet = round(sum(diff)/sum(mean), 4)) |> 
-     print(n = 24)
+     print(n = 24*3)
 
 DataAll |> 
-     group_by(diseasename) |> 
+     group_by(diseasename, Periods) |> 
      summarise(q2 = quantile(RR, 0.5),
                q1 = quantile(RR, 0.25),
                q3 = quantile(RR, 0.75),
                s = wilcox.test(RR, mu = 1)$statistic,
                P = round(wilcox.test(RR, mu = 1)$p.value, 4)) |> 
-     print(n = 24)
+     print(n = 24*3)
 
 # plot --------------------------------------------------------------------
 
@@ -85,6 +97,7 @@ plot_rr <- function(i) {
                                   x = date,
                                   y = diseasename))+
           geom_tile()+
+          geom_vline(xintercept = c(3.5, 34.5))+
           scale_fill_gradientn(colors = paletteer_d("awtools::a_palette"),
                                limits = c(0, 3))+
           scale_x_discrete(breaks = paste(c(2020, 2021, 2022, 2023), "01", sep = '.'),
@@ -110,61 +123,121 @@ plot <- do.call(wrap_plots, c(outcome, ncol = 1, byrow = FALSE)) +
 
 # plot cluster ----------------------------------------------------------------
 
-# cluster for incidence
 set.seed(20231021)
 
-DataMat <- DataAll |> 
-     select(value, date, diseasename) |> 
+# cluster for incidence
+datafile_analysis <- read.xlsx("./data/Nation.xlsx", detectDates = T) |>
+     filter(date >= as.Date("2008-1-1") & date < split_date_0)
+datafile_class <- read.xlsx("./data/disease_class.xlsx", detectDates = T)
+
+DataMatInci <- datafile_analysis |>
+     filter(disease_1 %in% datafile_class$diseaselist) |>
+     select(date, disease_1, value) |> 
+     complete(date = seq.Date(min(datafile_analysis$date), max(datafile_analysis$date), by = "month"),
+              disease_1 = unique(datafile_class$diseaselist),
+              fill = list(value = 0)) |> 
+     mutate(year = year(date)) |>
+     mutate(
+          disease = factor(disease_1,
+                           levels = datafile_class$diseaselist,
+                           labels = datafile_class$diseasename
+          ),
+          phase = case_when(
+               date < split_date_1 ~ "Pre-epidemic Periods",
+               date > split_date_1 & date < split_date_2 ~ "PHSMs Periods",
+               date > split_date_2 ~ "Epidemic Periods",
+          ),
+          phase = factor(phase,
+                         levels = c("Pre-epidemic Periods", "PHSMs Periods", "Epidemic Periods")
+          )
+     ) |>
+     left_join(datafile_class, by = c("disease" = "diseasename")) |>
+     mutate(class = factor(class,
+                           levels = c(
+                                "Blood borne and sexually transmitted diseases",
+                                "Intestinal infectious diseases",
+                                "Respiratory infectious disease",
+                                "Natural focal disease"
+                           )
+     )) |> 
+     select(value, date, disease) |> 
      pivot_wider(names_from = date,
                  values_from = value)
-diseasename <- DataMat$diseasename
-DataMat <- DataMat |> 
+
+diseasename <- DataMatInci$disease
+DataMatInci <- DataMatInci |> 
+     select(-disease) |> 
+     as.matrix()
+rownames(DataMatInci) <- diseasename
+DataMatInci <- scale(DataMatInci)
+# cluster for report case
+DataMatRR <- DataAll |> 
+     select(RR, date, diseasename) |> 
+     pivot_wider(names_from = date,
+                 values_from = RR)
+diseasename <- DataMatRR$diseasename
+DataMatRR <- DataMatRR |> 
      select(-diseasename) |> 
      as.matrix()
-rownames(DataMat) <- diseasename
-DataMat <- scale(DataMat)
-hcdata <- hkmeans(DataMat, 2)
+rownames(DataMatRR) <- diseasename
+DataMatRR <- scale(DataMatRR)
 
+## PHSMs period I
+hcdata <- hkmeans(DataMatInci, 2)
 fig1 <- fviz_dend(hcdata,
                   cex = 0.6,
                   k_colors = fill_color[3:2], 
                   rect = TRUE,
                   rect_fill = TRUE,
                   main = 'I')+
-     # scale_y_continuous(trans = 'log10')+
      theme(axis.text.x = element_blank(),
            axis.text.y = element_blank(),
            axis.ticks = element_blank(),
            axis.title = element_blank())
-
-# cluster for report case
-DataMat <- DataAll |> 
-     select(RR, date, diseasename) |> 
-     pivot_wider(names_from = date,
-                 values_from = RR)
-diseasename <- DataMat$diseasename
-DataMat <- DataMat |> 
-     select(-diseasename) |> 
-     as.matrix()
-rownames(DataMat) <- diseasename
-DataMat <- scale(DataMat)
-hcdata <- hkmeans(DataMat, 2)
-
+hcdata <- hkmeans(DataMatRR[,1:3], 2)
 fig2 <- fviz_dend(hcdata,
                   cex = 0.6,
                   k_colors = fill_color[5:4], 
                   rect = TRUE,
                   rect_fill = TRUE,
                   main = 'J')+
-     # scale_y_continuous(trans = 'log10')+
      theme(axis.text.x = element_blank(),
            axis.text.y = element_blank(),
            axis.ticks = element_blank(),
            axis.title = element_blank())
-plot1 <- fig1 | fig2
 
-ggsave('./outcome/publish/fig4.pdf',
-       cowplot::plot_grid(plot, plot1, ncol = 1, rel_heights = c(2.2, 1)),
+## PHSMs period II
+hcdata <- hkmeans(DataMatRR[,4:34], 2)
+fig3 <- fviz_dend(hcdata,
+                  cex = 0.6,
+                  k_colors = fill_color[5:4], 
+                  rect = TRUE,
+                  rect_fill = TRUE,
+                  main = 'K')+
+     theme(axis.text.x = element_blank(),
+           axis.text.y = element_blank(),
+           axis.ticks = element_blank(),
+           axis.title = element_blank())
+
+## Epidemic period
+hcdata <- hkmeans(DataMatRR[,35:39], 2)
+fig4 <- fviz_dend(hcdata,
+                  cex = 0.6,
+                  k_colors = fill_color[4:5], 
+                  rect = TRUE,
+                  rect_fill = TRUE,
+                  main = 'L')+
+     theme(axis.text.x = element_blank(),
+           axis.text.y = element_blank(),
+           axis.ticks = element_blank(),
+           axis.title = element_blank())
+
+plot1 <- fig1 + fig2 + fig3 + fig4 +
+     plot_layout(ncol = 2, byrow = F)
+
+
+ggsave('./outcome/publish/fig5.pdf',
+       cowplot::plot_grid(plot, plot1, ncol = 1, rel_heights = c(2.2, 3)),
        family = "Times New Roman",
        limitsize = FALSE, device = cairo_pdf,
-       width = 14, height = 16)
+       width = 14, height = 18)
