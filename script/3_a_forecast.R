@@ -61,7 +61,7 @@ scientific_10 <- function(x) {
 
 # data clean --------------------------------------------------------------
 
-i <- 1
+i <- 9
 
 auto_analysis_function <- function(i){
      set.seed(202305)
@@ -101,7 +101,7 @@ auto_analysis_function <- function(i){
      df_simu <- datafile_single  %>% 
           arrange(date) %>% 
           unique() %>% 
-          filter(date < split_date_0)%>% 
+          filter(date < split_date_3)%>% 
           select(value)
      
      ts_obse_1 <- df_simu %>% 
@@ -114,7 +114,7 @@ auto_analysis_function <- function(i){
      outcome_plot_1 <- datafile_single |> 
           filter(date >= split_date_0) |> 
           as.data.frame()
-     max_case <- max(tail(ts_obse_1, 59))
+     max_case <- max(tail(ts_obse_1, forcast_length+12))
      
      # Select Method ------------------------------------------------------------
      
@@ -225,7 +225,7 @@ auto_analysis_function <- function(i){
                  color = if_else(diff > 0, 'Decrease', 'Increase'))
      
      write.xlsx(outcome_data,
-                paste0('./outcome/appendix/data/', datafile_class$disease[i], '.xlsx'))
+                paste0('./outcome/appendix/data/forecast/', datafile_class$disease[i], '.xlsx'))
      
      outcome_plot_3 <- datafile_single |> 
           filter(date >= split_date)
