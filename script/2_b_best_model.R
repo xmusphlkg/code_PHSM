@@ -23,7 +23,7 @@ source('./script/ggplot.R')
 
 # data --------------------------------------------------------------------
 
-DataRaw <- read.xlsx("./outcome/appendix/model/index/pre-epidemic.xlsx")
+DataRaw <- read.xlsx("./outcome/appendix/model/pre-epidemic.xlsx")
 DataRaw$Index <- rep(c("RMSE", "R-squared", "MAE"), times = nrow(DataRaw) / 3)
 datafile_class <- read.xlsx("./data/disease_class.xlsx")
 
@@ -64,7 +64,7 @@ DataSelect <- DataClean |>
   select(disease, Best) |>
   distinct()
 
-write.xlsx(DataSelect, "./outcome/appendix/model/select/pre-epidemic.xlsx")
+write.xlsx(DataSelect, "./outcome/appendix/model/select.xlsx")
 
 ## save normalized composite index
 DataTable <- DataClean |> 

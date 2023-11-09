@@ -43,7 +43,7 @@ datafile_analysis <- read.xlsx('./data/Nation.xlsx',
 
 datafile_class <- read.xlsx('./data/disease_class.xlsx')
 
-datafile_class <- read.xlsx('./outcome/appendix/model/select/pre-epidemic.xlsx') |>
+datafile_class <- read.xlsx('./outcome/appendix/model/select.xlsx') |>
      left_join(datafile_class, by = c(disease = 'diseasename')) |> 
      rename(Method = 'Best') |> 
      filter(!is.na(class)) |> 
