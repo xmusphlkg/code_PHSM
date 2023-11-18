@@ -237,14 +237,14 @@ auto_analysis_function <- function(i){
                      linetype = 'longdash')+
           geom_hline(yintercept = 0,
                      show.legend = F)+
-          geom_rect(data = datafile_rect, 
-                    aes(xmin = start, 
-                        xmax = end,
-                        fill = label), 
-                    ymax = 0, 
-                    ymin = -max(plot_breaks)/10, 
-                    alpha = 0.2,
-                    show.legend = F)+
+          # geom_rect(data = datafile_rect, 
+          #           aes(xmin = start, 
+          #               xmax = end,
+          #               fill = label), 
+          #           ymax = 0, 
+          #           ymin = -max(plot_breaks)/10, 
+          #           alpha = 0.2,
+          #           show.legend = F)+
           geom_line(mapping = aes(x = date,
                                   y = value,
                                   colour = 'Observed'), 
@@ -259,7 +259,16 @@ auto_analysis_function <- function(i){
                           data = outcome_data, 
                           alpha = 0.3,
                           levels = c('Decreased', 'Increased'))+
-          coord_cartesian(ylim = c(-max(plot_breaks)/10, NA),
+          # coord_cartesian(ylim = c(-max(plot_breaks)/10, NA),
+          #                 xlim = c(split_date, NA))+
+          # scale_x_date(expand = expansion(add = c(0, 0)),
+          #              date_labels = '%Y',
+          #              breaks = seq(min(outcome_plot_3$date), max(outcome_plot_2$date), by="1 years"))+
+          # scale_y_continuous(expand = c(0, 0),
+          #                    label = scientific_10,
+          #                    breaks = plot_breaks,
+          #                    limits = range(plot_breaks))+
+          coord_cartesian(ylim = c(0, NA),
                           xlim = c(split_date, NA))+
           scale_x_date(expand = expansion(add = c(0, 0)),
                        date_labels = '%Y',
@@ -278,8 +287,8 @@ auto_analysis_function <- function(i){
                                        'Epidemic Period' = "#05215D50"))+
           theme_set()+
           theme(legend.position = 'bottom')+
-          labs(x = NULL,
-               y = ifelse(i %in% c(1, 6, 13, 20),'Cases', ''),
+          labs(x = 'Date',
+               y = ifelse(i %in% c(1, 8, 15, 20), 'Monthly Incidence', ''),
                color = '',
                title = paste0(LETTERS[i], ': ', datafile_class$disease[i]))
      

@@ -42,8 +42,8 @@ datafile_plot <- datafile_analysis |>
      mutate(class = factor(class,
                            levels = c("Blood borne and sexually transmitted diseases",
                                       "Intestinal infectious diseases",
-                                      "Respiratory infectious disease",
-                                      "Natural focal disease")))
+                                      "Respiratory infectious diseases",
+                                      "Natural focal diseases")))
 datafile_bubble <- datafile_plot |> 
      group_by(disease, class, level) |> 
      summarise(value = sum(value),

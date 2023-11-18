@@ -72,8 +72,8 @@ datafile_plot <- datafile_analysis |>
                            levels = c(
                                 "Blood borne and sexually transmitted diseases",
                                 "Intestinal infectious diseases",
-                                "Respiratory infectious disease",
-                                "Natural focal disease"
+                                "Respiratory infectious diseases",
+                                "Natural focal diseases"
                            )
      ))
 
@@ -179,7 +179,7 @@ plot_single <- function(i) {
           ) +
           guides(fill = guide_colourbar(barwidth = 20, barheight = 0.5, color = "black")) +
           labs(
-               x = NULL,
+               x = 'Date',
                y = NULL,
                fill = "Monthly Incidence (Normalize)"
           )

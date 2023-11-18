@@ -136,7 +136,7 @@ plot_function <- function(i, diseases = select_disease) {
           theme_bw() +
           labs(
                x = ifelse(i %in% 5:8, 'Lag Time (Month)', ""),
-               y = ifelse(i %in% c(1, 5), "ACF", ""),
+               y = ifelse(i %in% c(1, 5), "Correlation Coefficient", ""),
                title = paste0(LETTERS[i], ': ', diseases[i]),
                fill = "Correlation"
           )

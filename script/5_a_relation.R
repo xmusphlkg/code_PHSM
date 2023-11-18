@@ -50,20 +50,26 @@ DataAll <- DataAll |>
 
 # summary -----------------------------------------------------------------
 
-DataAll |> 
-     group_by(diseasename, Periods) |> 
-     summarise(diff = round(sum(diff), 4),
-               percnet = round(sum(diff)/sum(mean), 4)) |> 
-     print(n = 24*3)
+Data <- DataAll |> 
+     group_by(diseasename, class, Periods) |> 
+     summarise(diff = round(sum(diff), 2),
+               percnet = round(sum(diff)/sum(mean), 4),
+               .groups = 'drop') |> 
+     arrange(Periods)
 
-DataAll |> 
-     group_by(diseasename, Periods) |> 
+write.xlsx(Data,
+           './outcome/appendix/data/Table S3.xlsx')
+
+Data <- DataAll |> 
+     group_by(class, diseasename, Periods) |> 
      summarise(q2 = quantile(RR, 0.5),
                q1 = quantile(RR, 0.25),
                q3 = quantile(RR, 0.75),
                s = wilcox.test(RR, mu = 1)$statistic,
-               P = round(wilcox.test(RR, mu = 1)$p.value, 4)) |> 
-     print(n = 24*3)
+               P = round(wilcox.test(RR, mu = 1)$p.value, 4),
+               .groups = 'drop')
+write.xlsx(Data,
+           './outcome/appendix/data/Table S4.xlsx')
 
 # plot --------------------------------------------------------------------
 
@@ -156,8 +162,8 @@ DataMatInci <- datafile_analysis |>
                            levels = c(
                                 "Blood borne and sexually transmitted diseases",
                                 "Intestinal infectious diseases",
-                                "Respiratory infectious disease",
-                                "Natural focal disease"
+                                "Respiratory infectious diseases",
+                                "Natural focal diseases"
                            )
      )) |> 
      select(value, date, disease) |> 
