@@ -229,28 +229,17 @@ ui <- dashboardPage(
             width = 12,
             solidHeader = TRUE,
             status = "info",
-            "This is a Shiny app for disease data dashboard."
+            "This application is developed for the manuscript:",
+            tags$br(),
+            tags$b("Temporal trends and shifts of 24 notifiable infectious diseases in China before and during the COVID-19 epidemic."),
           ),
           ## Add github readme.md file
           box(
-            title = "About me",
+            title = "About this project",
             width = 12,
             solidHeader = TRUE,
             status = "info",
             includeMarkdown("README.md")
-          ),
-          ## Add cite information
-          box(
-            title = "Cite",
-            width = 12,
-            solidHeader = TRUE,
-            status = "info",
-            tags$b("Please cite this app as:"),
-            tags$br(),
-            tags$div(
-              class = "quote",
-              "Kangguo Li. (2020, November 20). xmusphlkg/code_PHSM: code_PHSM (Version v1.0.0). Zenodo. http://doi.org/10.5281/zenodo.4278951"
-            )
           )
         )
       )
