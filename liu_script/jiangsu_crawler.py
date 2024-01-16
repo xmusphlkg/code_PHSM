@@ -61,6 +61,7 @@ for i in range(1, 7):
 df = pd.DataFrame(data, columns=['中文解释', '链接'])
 df = df[df['中文解释'].str.contains('月全省')]
 df['年份'],df['月份'] = zip(*df['中文解释'].apply(lambda x: get_year_month(x)))
+df.to_csv('./data/province/jiangsu/jiangsu_url.csv', index=False, encoding='gbk')
 
 ##爬取各个链接内的文档
 df['链接']=df['链接'].str.extract(r'url=(.*?)(?:&q=|$)')
