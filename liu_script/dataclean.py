@@ -93,10 +93,13 @@ def process_files_combined(directory):
                             df.iloc[i, 2] = float(df.iloc[i, 2])
                         except:
                             pass
-                        if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1], (int, float)) and isinstance(
-                                df.iloc[i][2], (int, float)):
-                            data_list.append(
-                                [remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
+                        try:
+                            if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1], (int, float)) and isinstance(
+                                    df.iloc[i][2], (int, float)):
+                                data_list.append(
+                                    [remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
+                        except:
+                            pass
 
     result_df = pd.DataFrame(data_list, columns=['疾病病种', '发病数', '死亡数', 'date'])
     return result_df
