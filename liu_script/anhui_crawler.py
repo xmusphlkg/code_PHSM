@@ -7,7 +7,7 @@ from urllib.parse import quote
 import re
 from urllib.parse import unquote
 from html import unescape
-from liu_script.dataclean import remove_space,process_files_combined,update_url_column
+from liu_script.dataclean import remove_space, process_files_combined, update_url_column, get_year_month
 
 data = []
 for i in range(1, 7):

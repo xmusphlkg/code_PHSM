@@ -1,13 +1,11 @@
 import os
 from html import unescape
 from urllib.parse import unquote
-
 import xlrd
 import pandas as pd
 from bs4 import BeautifulSoup
 from docx import Document
 import requests
-
 
 def remove_chinese(title):
     title_type = title.split('.')[-1]
@@ -36,7 +34,8 @@ def process_files_combined(directory):
 
         if file_size > 100:
             file_type = filetype(file)
-
+            if file_type == 'doc':
+                pass
             if file_type == 'docx':
                 text_content, table_content = read_docx(file_path)
                 df = pd.DataFrame(table_content)
