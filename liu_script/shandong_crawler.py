@@ -13,7 +13,7 @@ for i in range(1, 7):
     if i==1:
         url = "http://wsjkw.shandong.gov.cn/zwgk/zdmsgysy/fdcrb/index.html"
     else:
-        url=f"http://wsjkw.shandong.gov.cn/zwgk/zdmsgysy/fdcrb/index_{i}.html"
+        url=f"http://wsjkw.shandong.gov.cn/zwgk/zdmsgysy/fdcrb/index_{i-1}.html"
     headers = {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
         "Accept-Encoding": "gzip, deflate",
