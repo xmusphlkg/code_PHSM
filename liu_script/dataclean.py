@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from docx import Document
 import requests
 
+
 def remove_chinese(title):
     title_type = title.split('.')[-1]
     title = ''.join([x for x in title if x.isdigit() or x == '-'])
@@ -75,9 +76,9 @@ def process_files_combined(directory):
                         data_list.append(
                             [remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
             elif file_type == 'csv':
-                df = pd.read_csv(file_path,encoding='gbk')
+                df = pd.read_csv(file_path, encoding='gbk')
                 for i in range(len(df)):
-                    if str(df.iloc[0,0])=='0':
+                    if str(df.iloc[0, 0]) == '0':
                         try:
                             df.iloc[i, 2] = float(df.iloc[i, 2])
                             df.iloc[i, 3] = float(df.iloc[i, 3])
@@ -94,12 +95,26 @@ def process_files_combined(directory):
                         except:
                             pass
                         try:
-                            if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1], (int, float)) and isinstance(
+                            if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1],
+                                                                             (int, float)) and isinstance(
                                     df.iloc[i][2], (int, float)):
                                 data_list.append(
                                     [remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
                         except:
                             pass
+            elif file_type == 'xlsx':
+                sheet = pd.read_excel(file_path)
+                df = sheet
+
+                for i in range(len(df)):
+                    try:
+                        df.iloc[i][1], df.iloc[i][2] = float(df.iloc[i][1]), float(df.iloc[i][2])
+                    except:
+                        pass
+                    if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1], (int, float)) and isinstance(
+                            df.iloc[i][2], (int, float)):
+                        data_list.append(
+                            [remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
 
     result_df = pd.DataFrame(data_list, columns=['疾病病种', '发病数', '死亡数', 'date'])
     return result_df
@@ -117,10 +132,12 @@ def read_docx(file_path):
             table_content.append(row_content)
     return text_content, table_content
 
+
 def get_year_month(title):
     year = title.split('布')[1].split('年')[0]
     month = title.split('年')[1].split('月')[0]
     return year, month
+
 
 def download_and_parse_data(df_row, headers):
     url = df_row['链接']
@@ -161,7 +178,6 @@ def download_and_parse_data(df_row, headers):
         print(f'{df_row["年份"]}-{df_row["月份"]}不存在传染病信息')
 
 
-
 def scrape_and_save_table(soup, df, i):
     table = soup.find('tbody')
     rows = table.find_all('tr')
@@ -177,6 +193,7 @@ def scrape_and_save_table(soup, df, i):
 
     file_path = f'./data/province/anhui/{df["年份"].iloc[i]}-{df["月份"].iloc[i]}.csv'
     table_df.to_csv(file_path, encoding='gbk')
+
 
 # 使用方式：
 # scrape_and_save_table(soup, df, i)
@@ -199,5 +216,3 @@ def update_url_column(df_csv_path, url_csv_path):
                 df['url'].iloc[j] = url
     df.drop('date_1', axis=1, inplace=True)
     df.to_csv(df_csv_path, encoding='gbk', index=False)
-
-
