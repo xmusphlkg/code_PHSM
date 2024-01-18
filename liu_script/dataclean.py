@@ -1,6 +1,7 @@
 import os
 from html import unescape
 from urllib.parse import unquote
+import numpy as np
 import xlrd
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -26,6 +27,7 @@ def remove_space(title):
 
 def process_files_combined(directory):
     data_list = []
+    datatype_list = (np.floating,np.integer,int, float)
 
     files = os.listdir(directory)
 
@@ -45,8 +47,8 @@ def process_files_combined(directory):
                         df.iloc[i][1], df.iloc[i][2] = float(df.iloc[i][1]), float(df.iloc[i][2])
                     except:
                         pass
-                    if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1], (int, float)) and isinstance(
-                            df.iloc[i][2], (int, float)):
+                    if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1], datatype_list) and isinstance(
+                            df.iloc[i][2], datatype_list):
                         data_list.append(
                             [remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
             elif file_type == 'xls':
@@ -71,8 +73,8 @@ def process_files_combined(directory):
                         df.iloc[i][1], df.iloc[i][2] = float(df.iloc[i][1]), float(df.iloc[i][2])
                     except:
                         pass
-                    if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1], (int, float)) and isinstance(
-                            df.iloc[i][2], (int, float)):
+                    if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1], datatype_list) and isinstance(
+                            df.iloc[i][2], datatype_list):
                         data_list.append(
                             [remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
             elif file_type == 'csv':
@@ -84,8 +86,8 @@ def process_files_combined(directory):
                             df.iloc[i, 3] = float(df.iloc[i, 3])
                         except:
                             pass
-                        if isinstance(df.iloc[i][1], str) and isinstance(df.iloc[i][2], (int, float)) and isinstance(
-                                df.iloc[i][3], (int, float)):
+                        if isinstance(df.iloc[i][1], str) and isinstance(df.iloc[i][2], datatype_list) and isinstance(
+                                df.iloc[i][3], datatype_list):
                             data_list.append(
                                 [remove_space(df.iloc[i][1]), df.iloc[i][2], df.iloc[i][3], file.split('.')[0]])
                     else:
@@ -95,9 +97,8 @@ def process_files_combined(directory):
                         except:
                             pass
                         try:
-                            if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1],
-                                                                             (int, float)) and isinstance(
-                                    df.iloc[i][2], (int, float)):
+                            if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i,1],datatype_list) and isinstance(
+                                    df.iloc[i][2], datatype_list):
                                 data_list.append(
                                     [remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
                         except:
@@ -111,8 +112,8 @@ def process_files_combined(directory):
                         df.iloc[i][1], df.iloc[i][2] = float(df.iloc[i][1]), float(df.iloc[i][2])
                     except:
                         pass
-                    if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1], (int, float)) and isinstance(
-                            df.iloc[i][2], (int, float)):
+                    if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1], datatype_list) and isinstance(
+                            df.iloc[i][2], datatype_list):
                         data_list.append(
                             [remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
 
