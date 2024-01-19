@@ -36,7 +36,7 @@ for i in range(1, 6):
         chinese_text = link.text.strip()
         if '传染病' in chinese_text:
             url_link = link.get('href')
-            data.append([chinese_text, url_link,origin_url+url[1:]])
+            data.append([chinese_text, origin_url+url_link[1:],url])
 def get_year_month(title):
     year = title.split('年')[0]
     month = title.split('年')[1].split('月')[0]

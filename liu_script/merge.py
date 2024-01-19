@@ -7,7 +7,7 @@ from openpyxl import load_workbook
 provinces=os.listdir('./data/province')
 data_center=pd.read_csv('./data/latest_data_center.csv')
 book = load_workbook('./data/nation_and_provinces.xlsx')
-
+#同步报告数据
 for province in provinces:
     sheet_name = province
     if sheet_name in book.sheetnames:
@@ -27,19 +27,18 @@ for province in provinces:
             df_list.to_excel(writer, sheet_name=sheet_name, index=False)
     except:
         pass
-
+book.save('./data/nation_and_provinces.xlsx')
 #sheet首字母变大写
 def capitalize_sheet_names(file_path):
     workbook = load_workbook(file_path)
     for sheet_name in workbook.sheetnames:
-        sheet = workbook[sheet_name]
         first_letter = sheet_name[0].upper()
         new_sheet_name = first_letter + sheet_name[1:]
-        workbook[sheet_name].title = new_sheet_name
+        workbook[sheet_name].title = re.sub('[^\u4e00-\u9fa5a-zA-Z]', '',new_sheet_name)
     workbook.save(file_path)
 
 file_path = './data/nation_and_provinces.xlsx'
 capitalize_sheet_names(file_path)
 
-
-
+#同步数据中心数据
+for i in range(len(data_center)):

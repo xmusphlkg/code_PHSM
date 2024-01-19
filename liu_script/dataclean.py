@@ -204,7 +204,10 @@ def scrape_and_save_table(soup, df, i):
 # scrape_and_save_table(soup, df, i)
 
 def update_url_column(df_csv_path, url_csv_path):
-    url_df = pd.read_csv(url_csv_path, encoding='gbk')
+    try:
+        url_df = pd.read_csv(url_csv_path, encoding='gbk')
+    except:
+        url_df = pd.read_csv(url_csv_path)
     df = pd.read_csv(df_csv_path, encoding='gbk')
     try:
         df['date_1'] = pd.to_datetime(df['date'],format='%b-%y')
@@ -215,9 +218,18 @@ def update_url_column(df_csv_path, url_csv_path):
     df['url'] = None
 
     for i in range(len(url_df)):
-        url = unquote(url_df.loc[i, '链接'])
-        url_year = int(url_df['年份'].iloc[i])
-        url_month = int(url_df['月份'].iloc[i])
+        try:
+            url = unquote(url_df.loc[i, '链接'])
+        except:
+            url = unquote(url_df.loc[i, 'url'])
+        try:
+            url_year = int(url_df['年份'].iloc[i])
+        except:
+            url_year = int(url_df['年'].iloc[i])
+        try:
+            url_month = int(url_df['月份'].iloc[i])
+        except:
+            url_month = int(url_df['月'].iloc[i])
 
         for j in range(len(df)):
             if str(df['year'].iloc[j]) == str(url_year) and str(df['month'].iloc[j]) == str(url_month):
