@@ -5,6 +5,7 @@ import numpy as np
 from openpyxl import load_workbook
 from tqdm import tqdm
 import time
+from liu_script.dataclean import find_missing_elements
 
 provinces=os.listdir('./data/province')
 data_center=pd.read_csv('./data/latest_data_center.csv')
@@ -42,21 +43,37 @@ def capitalize_sheet_names(file_path):
 file_path = './data/nation_and_provinces.xlsx'
 capitalize_sheet_names(file_path)
 
-#diseaseName2Code
-df_mapping =pd.read_csv('./liu_script/diseaseName2Code.csv',encoding='gbk')
-df_mapping.to_csv('./data/nation_and_provinces.xlsx',encoding='gbk',index=False)
-with pd.ExcelFile('./data/nation_and_provinces.xlsx') as writer:
-    for sheet_name in writer.sheet_names:
-        df_sheet = pd.read_excel(writer, sheet_name)
+#查找不包含的名词
+no_str_list=[]
+for sheet_name in book.sheetnames:
+    df_sheet = pd.read_excel(file_path, sheet_name)
+    for i in tqdm(range(len(df_sheet)), desc="Processing", unit="iteration"):
         if 'disease_cn' in df_sheet.columns:
-            for index, row in df_sheet.iterrows():
-                disease_cn_value = row['disease_cn']
-                matching_row = df_mapping[df_mapping['Name'] == disease_cn_value]
-                if not matching_row.empty:
-                    code_value = matching_row.iloc[0]['Code']
-                    df_sheet.at[index, 'disease_en'] = code_value
-            with pd.ExcelWriter('./data/nation_and_provinces.xlsx', engine='openpyxl', mode='a') as writer:
-                df_sheet.to_excel(writer, sheet_name, index=False)
+            disease_cn_value = df_sheet['disease_cn'][i]
+            if disease_cn_value not in data_center['DiseasesCN'].values:
+                no_str_list.append(disease_cn_value)
+no_str_list=list(set(no_str_list))
+no_str_list=pd.DataFrame(no_str_list,columns=['disease_cn'])
+diseaseName2Code=pd.read_csv('./liu_script/diseaseName2Code.csv',encoding='gbk')
+no_str_list=find_missing_elements(no_str_list,'disease_cn',diseaseName2Code,'Name')
+no_str_list=pd.DataFrame(no_str_list,columns=['disease_cn'])
+no_str_list.to_csv('./liu_script/diseaseName2diseaseNameCN.csv',encoding='gbk',index=False)
+
+# #diseaseName2Code
+# df_mapping =pd.read_csv('./liu_script/diseaseName2Code.csv',encoding='gbk')
+# df_mapping.to_csv('./liu_script/diseaseName2Code.csv',encoding='gbk',index=False)
+# with pd.ExcelFile('./data/nation_and_provinces.xlsx') as writer:
+#     for sheet_name in writer.sheet_names:
+#         df_sheet = pd.read_excel(writer, sheet_name)
+#         if 'disease_cn' in df_sheet.columns:
+#             for index, row in df_sheet.iterrows():
+#                 disease_cn_value = row['disease_cn']
+#                 matching_row = df_mapping[df_mapping['Name'] == disease_cn_value]
+#                 if not matching_row.empty:
+#                     code_value = matching_row.iloc[0]['Code']
+#                     df_sheet.at[index, 'disease_en'] = code_value
+#             with pd.ExcelWriter('./data/nation_and_provinces.xlsx', engine='openpyxl', mode='a') as writer:
+#                 df_sheet.to_excel(writer, sheet_name, index=False)
 
 
 #同步数据中心数据

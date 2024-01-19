@@ -248,3 +248,7 @@ def motify_date(df,df_csv_path):
     df["年"]=df["date"].str.split("-",expand=True)[0]
     df["月"]=df["date"].str.split("-",expand=True)[1]
     df.to_csv(df_csv_path, encoding='gbk', index=False)
+
+def find_missing_elements(df_1,i, df_2,m):
+    str_list = df_1[~df_1[i].isin(df_2[m])][i].tolist()
+    return str_list
