@@ -2,6 +2,9 @@ import os
 import pandas as pd
 import xlrd
 
+from liu_script.dataclean import update_url_column, motify_date
+
+name='zhejiang'
 
 def remove_chinese(title):
     title_type=title.split('.')[-1]
@@ -50,6 +53,9 @@ for file in files:
         pass
 df = pd.DataFrame(dict, columns=['疾病病种', '发病数', '死亡数', 'date'])
 df.to_csv('./data/province/zhejiang/zhejiang_1.csv', index=False, encoding='gbk')
+file=pd.read_csv('./data/province/zhejiang/zhejiang.csv',encoding='gbk')
+df.to_csv('./data/province/zhejiang/zhejiang.csv',encoding='gbk')
+update_url_column(f'./data/province/{name}/{name}.csv',f'./data/province/{name}/{name}_url.csv')
 
 # file=pd.read_csv('./data/province/zhejiang/zhejiang.csv')
 # file.to_csv('./data/province/zhejiang/zhejiang.csv', index=False, encoding='gbk')

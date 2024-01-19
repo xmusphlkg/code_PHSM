@@ -206,18 +206,30 @@ def scrape_and_save_table(soup, df, i):
 def update_url_column(df_csv_path, url_csv_path):
     url_df = pd.read_csv(url_csv_path)
     df = pd.read_csv(df_csv_path, encoding='gbk')
-    df['date_1'] = pd.to_datetime(df['date'])
+    df['date_1'] = pd.to_datetime(df['date'],format='%b-%y')
     df['year'] = df['date_1'].dt.year.astype(str)
     df['month'] = df['date_1'].dt.month.astype(str)
     df['url'] = None
 
     for i in range(len(url_df)):
-        url = unquote(url_df.loc[i, '链接'])
-        url_year = int(url_df['年份'].iloc[i])
-        url_month = int(url_df['月份'].iloc[i])
+        url = unquote(url_df.loc[i, 'url'])
+        url_year = int(url_df['年'].iloc[i])
+        url_month = int(url_df['月'].iloc[i])
 
         for j in range(len(df)):
             if str(df['year'].iloc[j]) == str(url_year) and str(df['month'].iloc[j]) == str(url_month):
                 df['url'].iloc[j] = url
     df.drop('date_1', axis=1, inplace=True)
+    df.to_csv(df_csv_path, encoding='gbk', index=False)
+
+def motify_date(df,df_csv_path):
+    df_1=df
+    df_1['date'] = pd.to_datetime(df['date'], format='%b-%y', errors='coerce').dt.strftime('20%y-%m')
+    df_1=df_1.dropna(axis=0)
+    df_2=df
+    df_2['date'] = pd.to_datetime(df['date'], format='%y-%b', errors='coerce').dt.strftime('20%y-%m')
+    df_2=df_2.dropna(axis=0)
+    df=pd.concat([df_1,df_2])
+    df["年"]=df["date"].str.split("-",expand=True)[0]
+    df["月"]=df["date"].str.split("-",expand=True)[1]
     df.to_csv(df_csv_path, encoding='gbk', index=False)
