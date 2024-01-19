@@ -26,96 +26,100 @@ def remove_space(title):
 
 
 def process_files_combined(directory):
-    data_list = []
-    datatype_list = (np.floating,np.integer,int, float)
+    try:
+        data_list = []
+        datatype_list = (np.floating,np.integer,int, float)
 
-    files = os.listdir(directory)
+        files = os.listdir(directory)
 
-    for file in files:
-        file_path = os.path.join(directory, file)
-        file_size = os.path.getsize(file_path)
+        for file in files:
+            file_path = os.path.join(directory, file)
+            file_size = os.path.getsize(file_path)
+            print(file)
 
-        if file_size > 100:
-            file_type = filetype(file)
-            if file_type == 'doc':
-                pass
-            if file_type == 'docx':
-                text_content, table_content = read_docx(file_path)
-                df = pd.DataFrame(table_content)
-                for i in range(len(df)):
-                    try:
-                        df.iloc[i][1], df.iloc[i][2] = float(df.iloc[i][1]), float(df.iloc[i][2])
-                    except:
-                        pass
-                    if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1], datatype_list) and isinstance(
-                            df.iloc[i][2], datatype_list):
-                        data_list.append(
-                            [remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
-            elif file_type == 'xls':
-                sheet = xlrd.open_workbook(file_path).sheet_by_index(0)
-                num_rows = sheet.nrows
-                num_cols = sheet.ncols
-                data = []
-
-                for row_index in range(num_rows):
-                    row_data = []
-
-                    for col_index in range(num_cols):
-                        cell_value = sheet.cell_value(row_index, col_index)
-                        row_data.append(cell_value)
-
-                    data.append(row_data)
-
-                df = pd.DataFrame(data)
-
-                for i in range(len(df)):
-                    try:
-                        df.iloc[i][1], df.iloc[i][2] = float(df.iloc[i][1]), float(df.iloc[i][2])
-                    except:
-                        pass
-                    if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1], datatype_list) and isinstance(
-                            df.iloc[i][2], datatype_list):
-                        data_list.append(
-                            [remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
-            elif file_type == 'csv':
-                df = pd.read_csv(file_path, encoding='gbk')
-                for i in range(len(df)):
-                    if str(df.iloc[0, 0]) == '0':
+            if file_size > 100:
+                file_type = filetype(file)
+                if file_type == 'doc':
+                    pass
+                if file_type == 'docx':
+                    text_content, table_content = read_docx(file_path)
+                    df = pd.DataFrame(table_content)
+                    for i in range(len(df)):
                         try:
-                            df.iloc[i, 2] = float(df.iloc[i, 2])
-                            df.iloc[i, 3] = float(df.iloc[i, 3])
+                            df.iloc[i][1], df.iloc[i][2] = float(df.iloc[i][1]), float(df.iloc[i][2])
                         except:
                             pass
-                        if isinstance(df.iloc[i][1], str) and isinstance(df.iloc[i][2], datatype_list) and isinstance(
-                                df.iloc[i][3], datatype_list):
+                        if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1], datatype_list) and isinstance(
+                                df.iloc[i][2], datatype_list):
                             data_list.append(
-                                [remove_space(df.iloc[i][1]), df.iloc[i][2], df.iloc[i][3], file.split('.')[0]])
-                    else:
-                        try:
-                            df.iloc[i, 1] = float(df.iloc[i, 1])
-                            df.iloc[i, 2] = float(df.iloc[i, 2])
-                        except:
-                            pass
-                        try:
-                            if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i,1],datatype_list) and isinstance(
-                                    df.iloc[i][2], datatype_list):
-                                data_list.append(
-                                    [remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
-                        except:
-                            pass
-            elif file_type == 'xlsx':
-                sheet = pd.read_excel(file_path)
-                df = sheet
+                                [remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
+                elif file_type == 'xls':
+                    sheet = xlrd.open_workbook(file_path).sheet_by_index(0)
+                    num_rows = sheet.nrows
+                    num_cols = sheet.ncols
+                    data = []
 
-                for i in range(len(df)):
-                    try:
-                        df.iloc[i][1], df.iloc[i][2] = float(df.iloc[i][1]), float(df.iloc[i][2])
-                    except:
-                        pass
-                    if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1], datatype_list) and isinstance(
-                            df.iloc[i][2], datatype_list):
-                        data_list.append(
-                            [remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
+                    for row_index in range(num_rows):
+                        row_data = []
+
+                        for col_index in range(num_cols):
+                            cell_value = sheet.cell_value(row_index, col_index)
+                            row_data.append(cell_value)
+
+                        data.append(row_data)
+
+                    df = pd.DataFrame(data)
+
+                    for i in range(len(df)):
+                        try:
+                            df.iloc[i][1], df.iloc[i][2] = float(df.iloc[i][1]), float(df.iloc[i][2])
+                        except:
+                            pass
+                        if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1], datatype_list) and isinstance(
+                                df.iloc[i][2], datatype_list):
+                            data_list.append(
+                                [remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
+                elif file_type == 'csv':
+                    df = pd.read_csv(file_path, encoding='gbk')
+                    for i in range(len(df)):
+                        if str(df.iloc[0, 0]) == '0':
+                            try:
+                                df.iloc[i, 2] = float(df.iloc[i, 2])
+                                df.iloc[i, 3] = float(df.iloc[i, 3])
+                            except:
+                                pass
+                            if isinstance(df.iloc[i][1], str) and isinstance(df.iloc[i][2], datatype_list) and isinstance(
+                                    df.iloc[i][3], datatype_list):
+                                data_list.append(
+                                    [remove_space(df.iloc[i][1]), df.iloc[i][2], df.iloc[i][3], file.split('.')[0]])
+                        else:
+                            try:
+                                df.iloc[i, 1] = float(df.iloc[i, 1])
+                                df.iloc[i, 2] = float(df.iloc[i, 2])
+                            except:
+                                pass
+                            try:
+                                if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i,1],datatype_list) and isinstance(
+                                        df.iloc[i][2], datatype_list):
+                                    data_list.append(
+                                        [remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
+                            except:
+                                pass
+                elif file_type == 'xlsx':
+                    sheet = pd.read_excel(file_path)
+                    df = sheet
+
+                    for i in range(len(df)):
+                        try:
+                            df.iloc[i][1], df.iloc[i][2] = float(df.iloc[i][1]), float(df.iloc[i][2])
+                        except:
+                            pass
+                        if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1], datatype_list) and isinstance(
+                                df.iloc[i][2], datatype_list):
+                            data_list.append(
+                                [remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
+    except:
+        pass
 
     result_df = pd.DataFrame(data_list, columns=['疾病病种', '发病数', '死亡数', 'date'])
     return result_df
@@ -200,7 +204,7 @@ def scrape_and_save_table(soup, df, i):
 # scrape_and_save_table(soup, df, i)
 
 def update_url_column(df_csv_path, url_csv_path):
-    url_df = pd.read_csv(url_csv_path, encoding='gbk')
+    url_df = pd.read_csv(url_csv_path)
     df = pd.read_csv(df_csv_path, encoding='gbk')
     df['date_1'] = pd.to_datetime(df['date'])
     df['year'] = df['date_1'].dt.year.astype(str)
@@ -209,8 +213,8 @@ def update_url_column(df_csv_path, url_csv_path):
 
     for i in range(len(url_df)):
         url = unquote(url_df.loc[i, '链接'])
-        url_year = url_df['年份'].iloc[i]
-        url_month = url_df['月份'].iloc[i]
+        url_year = int(url_df['年份'].iloc[i])
+        url_month = int(url_df['月份'].iloc[i])
 
         for j in range(len(df)):
             if str(df['year'].iloc[j]) == str(url_year) and str(df['month'].iloc[j]) == str(url_month):
