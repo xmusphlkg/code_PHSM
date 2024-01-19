@@ -43,7 +43,8 @@ file_path = './data/nation_and_provinces.xlsx'
 capitalize_sheet_names(file_path)
 
 #diseaseName2Code
-df_mapping =pd.read_csv('./liu_script/diseaseName2Code.csv')
+df_mapping =pd.read_csv('./liu_script/diseaseName2Code.csv',encoding='gbk')
+df_mapping.to_csv('./data/nation_and_provinces.xlsx',encoding='gbk',index=False)
 with pd.ExcelFile('./data/nation_and_provinces.xlsx') as writer:
     for sheet_name in writer.sheet_names:
         df_sheet = pd.read_excel(writer, sheet_name)
@@ -54,8 +55,6 @@ with pd.ExcelFile('./data/nation_and_provinces.xlsx') as writer:
                 if not matching_row.empty:
                     code_value = matching_row.iloc[0]['Code']
                     df_sheet.at[index, 'disease_en'] = code_value
-
-            # 将更新后的数据写回原来的sheet
             with pd.ExcelWriter('./data/nation_and_provinces.xlsx', engine='openpyxl', mode='a') as writer:
                 df_sheet.to_excel(writer, sheet_name, index=False)
 
