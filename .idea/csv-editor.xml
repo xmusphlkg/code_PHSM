@@ -31,6 +31,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\outcome\appendix\data\fig1_1.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
       </map>
     </option>
   </component>
