@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from liu_script.dataclean import update_url_column, read_docx
 from liu_script.zhejiang_dataclean import remove_space, filetype
 
+origin_url = 'https://wsjkw.sh.gov.cn/'
 data = []
 name='shanghai'
 for i in range(1, 10):
@@ -42,7 +43,7 @@ for i in range(1, 10):
         chinese_text = link.text.strip()
         if '传染病' in chinese_text:
             url_link = link.get('href')
-            data.append([chinese_text, url_link,url])
+            data.append([chinese_text, str(origin_url) + url_link[1:],url])
 def get_year_month(title):
     year = title.split('年')[0]
     month = title.split('年')[1].split('月')[0]
@@ -51,6 +52,10 @@ df = pd.DataFrame(data, columns=['中文解释', '链接','Referer'])
 df = df[df['中文解释'].str.contains('月')]
 df['年份'],df['月份'] = zip(*df['中文解释'].apply(lambda x: get_year_month(x)))
 df['年份'] = df['年份'].str.replace(r'\D', '', regex=True)
+df.replace('\xa0', '', regex=True, inplace=True)
+df.replace('\u3000', '', regex=True, inplace=True)
+df.replace('\u2002', '', regex=True, inplace=True)
+df.replace(' ', '', regex=True, inplace=True)
 df.to_csv(f'./data/province/{name}/{name}_url.csv', index=False, encoding='gbk')
 
 for i in range(len(df)):
@@ -90,7 +95,7 @@ for i in range(len(df)):
                     pass
                 if 'docx' in str(link):
                     sign=1
-                    url_link = unescape(str(origin_url) + link[1:])
+                    url_link = unescape(link)
                     response = requests.get(url_link, headers=headers)
                     if response.status_code == 200:
                         with open(f'./data/province/{name}/{df["年份"].iloc[i]}-{df["月份"].iloc[i]}.docx', 'wb') as f:

@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 from liu_script.dataclean import process_files_combined, update_url_column
 data = []
+origin_url='https://wsjkw.cq.gov.cn/zwgk_242/wsjklymsxx/ylws_266434/jbfk_266438/yqxx'
 for i in range(1, 6):
     if i==1:
         url = "https://wsjkw.cq.gov.cn/zwgk_242/wsjklymsxx/ylws_266434/jbfk_266438/yqxx/index.html"
@@ -35,7 +36,7 @@ for i in range(1, 6):
         chinese_text = link.text.strip()
         if '传染病' in chinese_text:
             url_link = link.get('href')
-            data.append([chinese_text, url_link,url])
+            data.append([chinese_text, url_link,origin_url+url[1:]])
 def get_year_month(title):
     year = title.split('年')[0]
     month = title.split('年')[1].split('月')[0]
@@ -69,7 +70,7 @@ for i in range(len(df)):
             "sec-ch-ua-platform": '"Windows"'
         }
         sign=0
-        response=requests.get(origin_url+url[1:], headers=headers)
+        response=requests.get(url, headers=headers)
         soup=BeautifulSoup(response.content,'html.parser',from_encoding='gbk')
         links_with_blank_target = soup.find({'ul'})
         try:
