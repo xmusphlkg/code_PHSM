@@ -88,8 +88,9 @@ for i in tqdm(range(len(data_center)), desc="Processing", unit="iteration"):
     try:
         existing_df = pd.read_excel(file_path, sheet_name=sheet_name)
         combined_df = pd.concat([existing_df, df_list], axis=1)
-        combined_df.to_excel('a.xlsx', sheet_name=sheet_name, index=False)
+        combined_df.to_excel(file_path, sheet_name=sheet_name, index=False)
     except:
-        df_list.to_excel(file_path, sheet_name=sheet_name, index=False)
-
+        with pd.ExcelWriter('./data/nation_and_provinces.xlsx', engine='openpyxl') as writer:
+            writer.book = book
+            df_list.to_excel(writer, sheet_name=sheet_name, index=False)
 book.save('./data/nation_and_provinces.xlsx')
