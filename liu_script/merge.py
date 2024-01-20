@@ -82,12 +82,13 @@ no_str_list.to_csv('./liu_script/diseaseName2diseaseNameCN.csv', encoding='gbk',
 
 # 同步数据中心数据
 file_path = './data/nation_and_provinces.xlsx'
+origin_file_path = './data/origin_nation_and_provinces.xlsx'
 data_center['Province'].replace('Total', 'Nation', inplace=True)
 data_center.sort_values(by=['Province'], inplace=True)
 data_center.reset_index(drop=True, inplace=True)
 data_list = []
 with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
-    book=writer.book
+    writer.book = book
     for i in tqdm(range(len(data_center)), desc="Processing", unit="iteration"):
         sheet_name = data_center['Province'][i]
         if i == len(data_center) - 1:
@@ -99,7 +100,7 @@ with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
                                    columns=["date", "value", "disease_cn", "disease_en", "source", "url", "year",
                                             "month"])
             try:
-                existing_df = pd.read_excel('origin_nation_and_provinces.xlsx', sheet_name=sheet_name)
+                existing_df = pd.read_excel(origin_file_path, sheet_name=sheet_name)
                 combined_df = pd.concat([existing_df, df_list], axis=0)
                 combined_df.to_excel(writer, sheet_name=sheet_name, index=False)
             except:
@@ -114,7 +115,7 @@ with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
                                    columns=["date", "value", "disease_cn", "disease_en", "source", "url", "year",
                                             "month"])
             try:
-                existing_df = pd.read_excel(writer, sheet_name=sheet_name)
+                existing_df = pd.read_excel(origin_file_path, sheet_name=sheet_name)
                 combined_df = pd.concat([existing_df, df_list], axis=0)
                 combined_df.to_excel(writer, sheet_name=sheet_name, index=False)
             except:
