@@ -121,7 +121,14 @@ with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
             df_sheet.to_excel(writer, sheet_name=sheet_name, index=False)
         except:
             pass
-
+#构建中文-英文字典
+dict={}
+for i in tqdm(range(len(data_center)), desc="Processing", unit="iteration"):
+    dict.update({str(data_center['DiseasesCN'][i]):str(data_center['Diseases'][i])})
+diseaseName2Code=pd.read_csv('./liu_script/diseaseName2Code.csv',encoding='gbk')
+for i in tqdm(range(len(diseaseName2Code)), desc="Processing", unit="iteration"):
+    dict.update({str(diseaseName2Code['Name'][i]):str(diseaseName2Code['Code'][i])})
+dict_df=pd.DataFrame(dict,index=range(len(dict)))
 
 # #diseaseName2Code
 # df_mapping =pd.read_csv('./liu_script/diseaseName2Code.csv',encoding='gbk')
