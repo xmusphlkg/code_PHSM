@@ -77,20 +77,20 @@ no_str_list.to_csv('./liu_script/diseaseName2diseaseNameCN.csv',encoding='gbk',i
 
 
 #同步数据中心数据
-for i in tqdm(range(len(data_center)), desc="Processing", unit="iteration"):
-    data_list=[]
-    data_list.append([data_center['Date'][i],data_center['Cases'][i],data_center['DiseasesCN'][i],
-                      data_center['Diseases'][i],'DataCenter',data_center['URL'][i],
-                      str(data_center['YearMonthDay'][i]).split('/')[0],str(data_center['YearMonthDay'][i]).split('/')[1]])
-    df_list = pd.DataFrame(data_list,
-                           columns=["date", "value", "disease_cn", "disease_en", "source", "url", "year", "month"])
-    sheet_name=data_center['Province'][i]
-    try:
-        existing_df = pd.read_excel(file_path, sheet_name=sheet_name)
-        combined_df = pd.concat([existing_df, df_list], axis=1)
-        combined_df.to_excel(file_path, sheet_name=sheet_name, index=False)
-    except:
-        with pd.ExcelWriter('./data/nation_and_provinces.xlsx', engine='openpyxl') as writer:
-            writer.book = book
-            df_list.to_excel(writer, sheet_name=sheet_name, index=False)
-book.save('./data/nation_and_provinces.xlsx')
+with pd.ExcelWriter('./data/nation_and_provinces.xlsx', engine='openpyxl') as writer:
+    writer.book = book
+    for i in tqdm(range(len(data_center)), desc="Processing", unit="iteration"):
+        data_list=[]
+        data_list.append([data_center['Date'][i],data_center['Cases'][i],data_center['DiseasesCN'][i],
+                          data_center['Diseases'][i],'DataCenter',data_center['URL'][i],
+                          str(data_center['YearMonthDay'][i]).split('/')[0],str(data_center['YearMonthDay'][i]).split('/')[1]])
+        df_list = pd.DataFrame(data_list,
+                               columns=["date", "value", "disease_cn", "disease_en", "source", "url", "year", "month"])
+        sheet_name=data_center['Province'][i]
+        try:
+            existing_df = pd.read_excel(writer, sheet_name=sheet_name)
+            combined_df = pd.concat([existing_df, df_list], axis=1)
+            combined_df.to_excel(writer, sheet_name=sheet_name, index=False)
+        except:
+                df_list.to_excel(writer, sheet_name=sheet_name, index=False)
+    book.save('./data/nation_and_provinces.xlsx')
