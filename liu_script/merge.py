@@ -5,6 +5,7 @@ import numpy as np
 from openpyxl import load_workbook
 from tqdm import tqdm
 import time
+import shutil
 from liu_script.dataclean import find_missing_elements
 
 provinces = os.listdir('./data/province')
@@ -109,6 +110,7 @@ with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
                               data_center['Diseases'][i], 'DataCenter', data_center['URL'][i],
                               str(data_center['YearMonthDay'][i]).split('/')[0],
                               str(data_center['YearMonthDay'][i]).split('/')[1]])
+shutil.copyfile('./data/nation_and_provinces.xlsx', './data/nation_and_provinces_1.xlsx')
 
 #将xlsx按照时间顺序排序
 with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
@@ -128,21 +130,52 @@ for i in tqdm(range(len(data_center)), desc="Processing", unit="iteration"):
 diseaseName2Code=pd.read_csv('./liu_script/diseaseName2Code.csv',encoding='gbk')
 for i in tqdm(range(len(diseaseName2Code)), desc="Processing", unit="iteration"):
     dict.update({str(diseaseName2Code['Name'][i]):str(diseaseName2Code['Code'][i])})
-dict_df=pd.DataFrame(dict,index=range(len(dict)))
+dict_df=pd.DataFrame(dict,index=range(1)).transpose()
+dict_df.to_csv('./liu_script/dict.csv',encoding='gbk',index=True)
 
-# #diseaseName2Code
-# df_mapping =pd.read_csv('./liu_script/diseaseName2Code.csv',encoding='gbk')
-# df_mapping.to_csv('./liu_script/diseaseName2Code.csv',encoding='gbk',index=False)
-# with pd.ExcelFile('./data/nation_and_provinces.xlsx') as writer:
-#     for sheet_name in writer.sheet_names:
-#         df_sheet = pd.read_excel(writer, sheet_name)
-#         if 'disease_cn' in df_sheet.columns:
-#             for index, row in df_sheet.iterrows():
-#                 disease_cn_value = row['disease_cn']
-#                 matching_row = df_mapping[df_mapping['Name'] == disease_cn_value]
-#                 if not matching_row.empty:
-#                     code_value = matching_row.iloc[0]['Code']
-#                     df_sheet.at[index, 'disease_en'] = code_value
-#             with pd.ExcelWriter('./data/nation_and_provinces.xlsx', engine='openpyxl', mode='a') as writer:
-#                 df_sheet.to_excel(writer, sheet_name, index=False)
+#构建中文-中文字典与中文-英文字典
+dict_cn_df =pd.read_csv('./liu_script/diseaseName2diseaseNameCN.csv',encoding='gbk')
+dict_df=pd.read_csv('./liu_script/dict.csv',encoding='gbk')
+dict={}
+dict_cn={}
+for i in range(len(dict_cn_df)):
+    dict_cn.update({dict_cn_df['disease_cn'][i]:dict_cn_df['Name'][i]})
+for i in range(len(dict_df)):
+    dict.update({dict_df['Unnamed: 0'][i]:dict_df['0'][i]})
 
+#字典匹配
+with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
+    writer.book = book
+    for sheet_name in writer.book.sheetnames[4:]:
+        df_sheet = pd.read_excel("./data/nation_and_provinces_1.xlsx", sheet_name)
+        for i in tqdm(range(len(df_sheet)), desc="Processing", unit="iteration"):
+            disease_cn_value = df_sheet['disease_cn'][i]
+            if disease_cn_value in dict_cn:
+                disease_cn_value_update = dict_cn[disease_cn_value]
+                df_sheet['disease_cn'][i] = disease_cn_value_update
+        df_sheet.to_excel(writer, sheet_name, index=False)
+shutil.copyfile('./data/nation_and_provinces.xlsx', './data/nation_and_provinces_1.xlsx')
+
+with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
+    writer.book = book
+    for sheet_name in writer.book.sheetnames[4:]:
+        df_sheet = pd.read_excel("./data/nation_and_provinces_1.xlsx", sheet_name)
+        for i in tqdm(range(len(df_sheet)), desc="Processing", unit="iteration"):
+            disease_cn_value = df_sheet['disease_cn'][i]
+            if disease_cn_value in dict:
+                disease_en_value = dict[disease_cn_value]
+                df_sheet['disease_en'][i] = disease_en_value
+        df_sheet.to_excel(writer, sheet_name, index=False)
+shutil.copyfile('./data/nation_and_provinces.xlsx', './data/nation_and_provinces_1.xlsx')
+
+#去除空白值
+with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
+    writer.book = book
+    for sheet_name in writer.book.sheetnames[4:]:
+        try:
+            df_sheet = pd.read_excel("./data/nation_and_provinces_1.xlsx", sheet_name)
+            df_sheet.dropna(inplace=True)
+            df_sheet.to_excel(writer, sheet_name, index=False)
+        except:
+            pass
+shutil.copyfile('./data/nation_and_provinces.xlsx', './data/nation_and_provinces_1.xlsx')
