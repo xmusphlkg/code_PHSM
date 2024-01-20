@@ -123,17 +123,19 @@ with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
             df_sheet.to_excel(writer, sheet_name=sheet_name, index=False)
         except:
             pass
-#构建中文-英文字典
-dict={}
-for i in tqdm(range(len(data_center)), desc="Processing", unit="iteration"):
-    dict.update({str(data_center['DiseasesCN'][i]):str(data_center['Diseases'][i])})
-diseaseName2Code=pd.read_csv('./liu_script/diseaseName2Code.csv',encoding='gbk')
-for i in tqdm(range(len(diseaseName2Code)), desc="Processing", unit="iteration"):
-    dict.update({str(diseaseName2Code['Name'][i]):str(diseaseName2Code['Code'][i])})
-dict_df=pd.DataFrame(dict,index=range(1)).transpose()
-dict_df.to_csv('./liu_script/dict.csv',encoding='gbk',index=True)
+# #构建中文-英文字典
+# dict={}
+# for i in tqdm(range(len(data_center)), desc="Processing", unit="iteration"):
+#     dict.update({str(data_center['DiseasesCN'][i]):str(data_center['Diseases'][i])})
+# diseaseName2Code=pd.read_csv('./liu_script/diseaseName2Code.csv',encoding='gbk')
+# for i in tqdm(range(len(diseaseName2Code)), desc="Processing", unit="iteration"):
+#     dict.update({str(diseaseName2Code['Name'][i]):str(diseaseName2Code['Code'][i])})
+# dict_df=pd.DataFrame(dict,index=range(1)).transpose()
+# dict_df.to_csv('./liu_script/dict.csv',encoding='gbk',index=True)
 
 #构建中文-中文字典与中文-英文字典
+file_path = './data/nation_and_provinces.xlsx'
+shutil.copyfile('./data/nation_and_provinces.xlsx', './data/nation_and_provinces_1.xlsx')
 dict_cn_df =pd.read_csv('./liu_script/diseaseName2diseaseNameCN.csv',encoding='gbk')
 dict_df=pd.read_csv('./liu_script/dict.csv',encoding='gbk')
 dict={}
@@ -174,7 +176,9 @@ with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
     for sheet_name in writer.book.sheetnames[4:]:
         try:
             df_sheet = pd.read_excel("./data/nation_and_provinces_1.xlsx", sheet_name)
+            df_sheet.replace('', np.nan, inplace=True)
             df_sheet.dropna(inplace=True)
+            df_sheet.reset_index(drop=True, inplace=True)
             df_sheet.to_excel(writer, sheet_name, index=False)
         except:
             pass
