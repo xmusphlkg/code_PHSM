@@ -171,15 +171,3 @@ with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
 shutil.copyfile('./data/nation_and_provinces.xlsx', './data/nation_and_provinces_1.xlsx')
 
 #去除空白值
-with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
-    writer.book = book
-    for sheet_name in writer.book.sheetnames[4:]:
-        try:
-            df_sheet = pd.read_excel("./data/nation_and_provinces_1.xlsx", sheet_name)
-            df_sheet.replace('', np.nan, inplace=True)
-            df_sheet.dropna(inplace=True)
-            df_sheet.reset_index(drop=True, inplace=True)
-            df_sheet.to_excel(writer, sheet_name, index=False)
-        except:
-            pass
-shutil.copyfile('./data/nation_and_provinces.xlsx', './data/nation_and_provinces_1.xlsx')
