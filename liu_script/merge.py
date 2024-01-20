@@ -63,23 +63,6 @@ no_str_list = find_missing_elements(no_str_list, 'disease_cn', diseaseName2Code,
 no_str_list = pd.DataFrame(no_str_list, columns=['disease_cn'])
 no_str_list.to_csv('./liu_script/diseaseName2diseaseNameCN.csv', encoding='gbk', index=False)
 
-# #diseaseName2Code
-# df_mapping =pd.read_csv('./liu_script/diseaseName2Code.csv',encoding='gbk')
-# df_mapping.to_csv('./liu_script/diseaseName2Code.csv',encoding='gbk',index=False)
-# with pd.ExcelFile('./data/nation_and_provinces.xlsx') as writer:
-#     for sheet_name in writer.sheet_names:
-#         df_sheet = pd.read_excel(writer, sheet_name)
-#         if 'disease_cn' in df_sheet.columns:
-#             for index, row in df_sheet.iterrows():
-#                 disease_cn_value = row['disease_cn']
-#                 matching_row = df_mapping[df_mapping['Name'] == disease_cn_value]
-#                 if not matching_row.empty:
-#                     code_value = matching_row.iloc[0]['Code']
-#                     df_sheet.at[index, 'disease_en'] = code_value
-#             with pd.ExcelWriter('./data/nation_and_provinces.xlsx', engine='openpyxl', mode='a') as writer:
-#                 df_sheet.to_excel(writer, sheet_name, index=False)
-
-
 # 同步数据中心数据
 file_path = './data/nation_and_provinces.xlsx'
 origin_file_path = './data/origin_nation_and_provinces.xlsx'
@@ -126,3 +109,33 @@ with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
                               data_center['Diseases'][i], 'DataCenter', data_center['URL'][i],
                               str(data_center['YearMonthDay'][i]).split('/')[0],
                               str(data_center['YearMonthDay'][i]).split('/')[1]])
+
+#将xlsx按照时间顺序排序
+with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
+    writer.book = book
+    for sheet_name in writer.book.sheetnames:
+        try:
+            df_sheet = pd.read_excel("./data/nation_and_provinces_1.xlsx", sheet_name)
+            df_sheet.sort_values(by=['date'], inplace=True)
+            df_sheet.reset_index(drop=True, inplace=True)
+            df_sheet.to_excel(writer, sheet_name=sheet_name, index=False)
+        except:
+            pass
+
+
+# #diseaseName2Code
+# df_mapping =pd.read_csv('./liu_script/diseaseName2Code.csv',encoding='gbk')
+# df_mapping.to_csv('./liu_script/diseaseName2Code.csv',encoding='gbk',index=False)
+# with pd.ExcelFile('./data/nation_and_provinces.xlsx') as writer:
+#     for sheet_name in writer.sheet_names:
+#         df_sheet = pd.read_excel(writer, sheet_name)
+#         if 'disease_cn' in df_sheet.columns:
+#             for index, row in df_sheet.iterrows():
+#                 disease_cn_value = row['disease_cn']
+#                 matching_row = df_mapping[df_mapping['Name'] == disease_cn_value]
+#                 if not matching_row.empty:
+#                     code_value = matching_row.iloc[0]['Code']
+#                     df_sheet.at[index, 'disease_en'] = code_value
+#             with pd.ExcelWriter('./data/nation_and_provinces.xlsx', engine='openpyxl', mode='a') as writer:
+#                 df_sheet.to_excel(writer, sheet_name, index=False)
+
