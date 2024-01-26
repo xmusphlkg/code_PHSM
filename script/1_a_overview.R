@@ -15,9 +15,8 @@ scientific_10 <- function(x) {
      parse(text = gsub("[+]", "", gsub("1e", "10^", scales::scientific_format()(x))))
 }
 
-datafile_analysis <- read.xlsx('./data/Nation.xlsx', detectDates = T) |> 
-     filter(date >= as.Date('2008-1-1'))
-datafile_class <- read.xlsx("./data/disease_class.xlsx", detectDates = T)
+datafile_analysis <- read.xlsx('./data/nation_and_provinces.xlsx', detectDates = T, sheet = 'Nation')
+datafile_class <- read.xlsx('./data/nation_and_provinces.xlsx', sheet = 'Class')
 
 # left border
 split_date_0 <- as.Date("2020/1/1")
@@ -28,22 +27,23 @@ split_date_3 <- as.Date("2023/4/1")
 # bubble plot -------------------------------------------------------------
 
 datafile_plot <- datafile_analysis |> 
-     filter(disease_1 %in% datafile_class$diseaselist) |> 
-     select(date, disease_1, value) |> 
-     mutate(disease = factor(disease_1,
-                             levels = datafile_class$diseaselist,
+     filter(disease_en %in% datafile_class$diseasename) |> 
+     select(date, disease_en, value) |> 
+     mutate(disease = factor(disease_en,
+                             levels = datafile_class$diseasename,
                              labels = datafile_class$diseasename),
             phase = case_when(date < split_date_1 ~ 'Pre-epidemic Periods',
-                              date > split_date_1 & date < split_date_2 ~ 'PHSMs Periods',
-                              date > split_date_2 ~ 'Epidemic Periods',),
+                              date >= split_date_1 & date < split_date_2 ~ 'PHSMs Periods',
+                              date >= split_date_2 ~ 'Epidemic Periods',),
             phase = factor(phase,
-                           levels = c('Pre-epidemic Periods', 'PHSMs Periods', 'Epidemic Periods'))) |> 
+                           levels = c('Pre-epidemic Periods', 'PHSMs Periods', 'Epidemic Periods')),
+            value = as.integer(value)) |> 
      left_join(datafile_class, by = c('disease' = 'diseasename')) |> 
      mutate(class = factor(class,
                            levels = c("Blood borne and sexually transmitted diseases",
                                       "Intestinal infectious diseases",
                                       "Respiratory infectious diseases",
-                                      "Natural focal diseases")))
+                                      "Zoonotic infectious diseases")))
 datafile_bubble <- datafile_plot |> 
      group_by(disease, class, level) |> 
      summarise(value = sum(value),
@@ -52,13 +52,10 @@ datafile_legend <- data.frame(
      disease = LETTERS[1:4],
      class = 'legend',
      level = 'A',
-     value = c(2e4, 2e5, 2e6, 2.6e7)
+     value = c(2e4, 2e5, 2e6, 2.8e7)
 )
 
-write.csv(rbind(datafile_bubble, datafile_legend),
-          './outcome/appendix/data/fig1_1.csv',
-          quote = F,
-          row.names = F)
+data_fig_A <- rbind(datafile_bubble, datafile_legend)
 
 # summary of NID ----------------------------------------------------------
 
@@ -85,7 +82,7 @@ datafile_plot |>
 
 ## natural focal disease in 2014.9-10
 datafile_plot |> 
-     filter(class == "Natural focal disease" &
+     filter(class == "Zoonotic infectious diseases" &
                  date %in% as.Date(c('2014-08-01', '2014-09-01', "2014-10-01", "2014-11-01"))) |> 
      ggplot()+
      geom_line(mapping = aes(x = date,
@@ -106,9 +103,9 @@ datafile_plot |>
 # background rect ---------------------------------------------------------
 
 datafile_rect <- data.frame(
-     start = c(as.Date('2008/1/1'), split_date_0, split_date_1, split_date_2),
-     end = c(split_date_0, split_date_1, split_date_2, split_date_3),
-     label = c('Pre-epidemic Period', 'PHSMs Period I', 'PHSMs Period II', 'Epidemic Period')
+     start = c(min(datafile_plot$date), split_date_0, split_date_1, split_date_2, split_date_3),
+     end = c(split_date_0, split_date_1, split_date_2, split_date_3, max(datafile_plot$date)),
+     label = c('Pre-epidemic Period', 'PHSMs Period I', 'PHSMs Period II', 'Epidemic Period', 'Post-epidemic Period')
 ) |> 
      mutate(m = as.Date((as.numeric(start)+as.numeric(end))/2, origin = "1970-01-01"))
 
@@ -119,7 +116,9 @@ datafile_plot <- datafile_plot  |>
      summarise(value = sum(value),
                .groups = 'drop') |> 
      mutate(class = factor(class,
-                           levels = unique(datafile_class$class)))
+                           levels = unique(datafile_class$class))) |> 
+     group_by(date) |> 
+     mutate(percent = value/sum(value))
 
 fig2 <- ggplot(data = datafile_plot)+
      geom_col(mapping = aes(x = date,
@@ -159,7 +158,7 @@ fig1 <- ggplot(data = datafile_plot)+
                              y = value,
                              color = class))+
      scale_color_manual(values = fill_color)+
-     scale_fill_manual(values = c("#05215D50", "#E6383350", "#5E954650", "#3381A850"))+
+     scale_fill_manual(values = c("#EDD74650", "#DD412450", "#ED8B0050", "#0F85A050", "#00496F50"))+
      scale_y_continuous(expand = c(0, 0),
                         trans = 'log10',
                         label = scientific_10,
@@ -184,6 +183,12 @@ ggsave(filename = './outcome/publish/fig1_2.pdf',
        device = cairo_pdf,
        family = "Times New Roman")
 
-ggsave(filename = './outcome/publish/fig1_2.png',
-       width = 14,
-       height = 8)
+# figure data
+data_fig <- list(
+     'panel A' = data_fig_A,
+     'panel B' = datafile_plot[,1:3],
+     'panel C' = datafile_plot[,c(1:2, 4)]
+)
+write.xlsx(data_fig,
+           file = './outcome/appendix/data/Fig.1 data.xlsx')
+
