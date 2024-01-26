@@ -73,8 +73,11 @@ df.to_csv(f'./data/province/{name}/{name}_url.csv', index=False, encoding='gbk')
 # and sends a GET request to that URL with specific headers. It then uses BeautifulSoup to parse the
 # HTML content of the response.
 df=pd.read_csv(f'./data/province/{name}/{name}_url.csv', encoding='gbk')
+#Loop through the dataframe
 for i in range(len(df)):
+        #Get the link from the dataframe
         url = df.iloc[i]['链接']
+        #Set the headers for the request
         headers = {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
             'Accept-Encoding': 'gzip, deflate, br',
@@ -94,91 +97,141 @@ for i in range(len(df)):
             'sec-ch-ua-platform': '"Windows"'
         }
 
+        #Set the sign to 0
         sign=0
+        #Make the request
         response=requests.get(url, headers=headers)
+        #Parse the response
         soup=BeautifulSoup(response.content,'html.parser',from_encoding='gbk')
+        #Find all the links with blank targets
         links_with_blank_target = soup.find_all('a')
         try:
+            #Loop through the links
             for url in links_with_blank_target:
 
+                #Try to get the link from the 'a' tag
                 try:
                     link=url.find('a')['href']
                 except:
                     pass
 
+                #Try to get the link from the 'href' attribute
                 try:
                     link=url.get('href')
                 except:
                     pass
+                #Check if the link contains 'gov'
                 if 'gov' in str(link):
+                    #Unescape the link
                     url_link = unescape(link)
                 else:
+                    #Unescape the link and add the origin url
                     url_link = unescape(str(origin_url) + link[1:])
 
+                #Check if the link contains 'docx'
                 if 'docx' in str(link):
+                    #Set the sign to 1
                     sign=1
+                    #Make the request
                     response = requests.get(url_link, headers=headers)
+                    #Check if the request was successful
                     if response.status_code == 200:
+                        #Write the response content to a docx file
                         with open(f'./data/province/{name}/{df["年份"].iloc[i]}-{df["月份"].iloc[i]}.docx', 'wb') as f:
                             f.write(response.content)
                     else:
+                        #Print a message if the request was unsuccessful
                         print(f'{df["年份"].iloc[i]}-{df["月份"].iloc[i]}存在，下载失败，但是200',{df.iloc[i]['链接']})
+                #Check if the link contains 'doc' and not 'docx'
                 if 'doc' in str(link) and 'docx' not in str(link) :
+                    #Set the sign to 1
                     sign=1
+                    #Make the request
                     response = requests.get(url_link, headers=headers)
+                    #Check if the request was successful
                     if response.status_code == 200:
+                        #Write the response content to a doc file
                         with open(f'./data/province/{name}/{df["年份"].iloc[i]}-{df["月份"].iloc[i]}.doc', 'wb') as f:
                             f.write(response.content)
                     else:
+                        #Print a message if the request was unsuccessful
                         print(f'{df["年份"].iloc[i]}-{df["月份"].iloc[i]}存在，下载失败，但是200',{df.iloc[i]['链接']})
+                #Check if the link contains 'xls' and not 'xlsx'
                 if 'xls' in str(link) and 'xlsx' not in str(link) :
+                    #Set the sign to 1
                     sign=1
+                    #Make the request
                     response = requests.get(url_link, headers=headers)
+                    #Check if the request was successful
                     if response.status_code == 200:
+                        #Write the response content to a xls file
                         with open(f'./data/province/{name}/{df["年份"].iloc[i]}-{df["月份"].iloc[i]}.xls', 'wb') as f:
                             f.write(response.content)
                     else:
+                        #Print a message if the request was unsuccessful
                         print(f'{df["年份"].iloc[i]}-{df["月份"].iloc[i]}存在，下载失败，但是200',{df.iloc[i]['链接']})
+                #Check if the link contains 'xlsx'
                 if 'xlsx' in str(link) :
+                    #Set the sign to 1
                     sign=1
+                    #Make the request
                     response = requests.get(url_link, headers=headers)
+                    #Check if the request was successful
                     if response.status_code == 200:
+                        #Write the response content to a xlsx file
                         with open(f'./data/province/{name}/{df["年份"].iloc[i]}-{df["月份"].iloc[i]}.xlsx', 'wb') as f:
                             f.write(response.content)
                     else:
+                        #Print a message if the request was unsuccessful
                         print(f'{df["年份"].iloc[i]}-{df["月份"].iloc[i]}存在，下载失败，但是200',{df.iloc[i]['链接']})
         except:
             pass
+        #Try to get the table data from the response
         try:
             table = soup.find('tbody')
             rows = table.find_all('tr')
             table_data = []
+            #Loop through the rows
             for row in rows:
+                #Find all the cells in the row
                 cells = row.find_all(['td'])
+                #Get the data from the cells
                 row_data = [cell.text.strip() for cell in cells]
+                #Append the data to the table_data list
                 table_data.append(row_data)
+            #Create a dataframe from the table_data
             table_df = pd.DataFrame(table_data)
+            #Replace certain characters with empty strings
             table_df.replace('\xa0', '', regex=True, inplace=True)
             table_df.replace('\u3000', '', regex=True, inplace=True)
             table_df.replace('\u2002', '', regex=True, inplace=True)
             table_df.replace(' ', '', regex=True, inplace=True)
+            #Write the dataframe to a csv file
             table_df.to_csv(f'./data/province/{name}/{df["年份"].iloc[i]}-{df["月份"].iloc[i]}.csv',encoding='gbk',index=False)
+            #Set the sign to 1
             sign = 1
         except:
             pass
+        #Check if the sign is 0
         if sign==0:
+            #Print a message if the data is not found
             print(f'{df["年份"].iloc[i]}-{df["月份"].iloc[i]}不存在传染病信息',{df.iloc[i]['链接']})
 
 
 # The code snippet you provided is performing the following tasks:
 files = os.listdir(f'./data/province/{name}/')
+#Create a dataframe from the files in the specified directory
 a=process_files_combined(f'./data/province/{name}/')
+#Replace certain characters with empty strings
 a.replace('\xa0', '', regex=True, inplace=True)
 a.replace('\u3000', '', regex=True, inplace=True)
 a.replace('\u2002', '', regex=True, inplace=True)
 a.replace(' ', '', regex=True, inplace=True)
+#Drop any rows with missing values
 a=a.dropna()
+#Save the dataframe as a csv file
 a.to_csv(f'./data/province/{name}/{name}.csv',index=False,encoding='gbk')
+#Update the url column with the new csv file
 update_url_column(f'./data/province/{name}/{name}.csv',f'./data/province/{name}/{name}_url.csv')
 
 
