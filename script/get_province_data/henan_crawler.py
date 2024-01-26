@@ -3,7 +3,10 @@ from html import unescape
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-from liu_script.dataclean import process_files_combined, update_url_column
+from dataclean import process_files_combined, update_url_column
+
+# The code is scraping data from a website to collect information about infectious diseases in Henan
+# province, China.
 data = []
 for i in range(1, 12):
     if i==1:
@@ -40,10 +43,23 @@ for i in range(1, 12):
         if '传染病' in chinese_text:
             url_link = link.get('href')
             data.append([chinese_text, url_link])
+
 def get_year_month(title):
+    """
+    The function `get_year_month` takes a title as input and returns the year and month extracted from
+    the title.
+    
+    :param title: The title parameter is a string that represents a title containing the year and month
+    information
+    :return: The function `get_year_month` returns a tuple containing the year and month extracted from
+    the `title` string.
+    """
     year = title.split('年')[0]
     month = title.split('年')[1].split('月')[0]
     return year, month
+
+# The code block you provided is creating a pandas DataFrame called `df` from the `data` list. The
+# DataFrame has two columns named '中文解释' (Chinese explanation) and '链接' (link).
 df = pd.DataFrame(data, columns=['中文解释', '链接'])
 df = df[df['中文解释'].str.contains('月')]
 df['年份'],df['月份'] = zip(*df['中文解释'].apply(lambda x: get_year_month(x)))
@@ -51,6 +67,8 @@ df['年份'] = df['年份'].str.replace(r'\D', '', regex=True)
 df.to_csv('./data/province/henan/henan_url.csv', index=False, encoding='gbk')
 
 
+# The code block you provided is iterating over each row in the DataFrame `df` and performing the
+# following tasks:
 for i in range(len(df)):
         url = df.iloc[i]['链接']
         origin_url=url.split('/t')[0]
@@ -116,6 +134,7 @@ for i in range(len(df)):
         if sign==0:
             print(f'{df["年份"].iloc[i]}-{df["月份"].iloc[i]}不存在传染病信息')
 
+# The code block you provided is performing the following tasks:
 files = os.listdir('./data/province/henan/')
 a=process_files_combined('./data/province/henan/')
 a.to_csv('./data/province/henan/henan.csv',index=False,encoding='gbk')

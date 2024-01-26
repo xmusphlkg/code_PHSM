@@ -3,7 +3,9 @@ from html import unescape
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-from liu_script.dataclean import process_files_combined, update_url_column
+from dataclean import process_files_combined, update_url_column
+
+# The code is crawling data from the website of Chongqing Province Health Commission. It sends a GET
 data = []
 origin_url='https://wsjkw.cq.gov.cn/zwgk_242/wsjklymsxx/ylws_266434/jbfk_266438/yqxx'
 for i in range(1, 6):
@@ -37,7 +39,16 @@ for i in range(1, 6):
         if '传染病' in chinese_text:
             url_link = link.get('href')
             data.append([chinese_text, origin_url+url_link[1:],url])
+
 def get_year_month(title):
+    """
+    The function `get_year_month` extracts the year and month from a given title, and the code snippet
+    processes a DataFrame to extract the year and month from the '中文解释' column and save the result to a
+    CSV file.
+    
+    :param title: The `title` parameter is a string that represents the title of a data entry
+    :return: The function `get_year_month` returns the year and month extracted from the given title.
+    """
     year = title.split('年')[0]
     month = title.split('年')[1].split('月')[0]
     return year, month
@@ -47,6 +58,8 @@ df['年份'],df['月份'] = zip(*df['中文解释'].apply(lambda x: get_year_mon
 df['年份'] = df['年份'].str.replace(r'\D', '', regex=True)
 df.to_csv('./data/province/chongqing/chongqing_url.csv', index=False, encoding='gbk')
 
+# The code block you provided is iterating over each row in the DataFrame `df` and performing the
+# following tasks:
 for i in range(len(df)):
         url = df.iloc[i]['链接']
         origin_url='https://wsjkw.cq.gov.cn/zwgk_242/wsjklymsxx/ylws_266434/jbfk_266438/yqxx'
@@ -116,6 +129,7 @@ for i in range(len(df)):
         if sign==0:
             print(f'{df["年份"].iloc[i]}-{df["月份"].iloc[i]}不存在传染病信息')
 
+# The code block you provided is performing the following tasks:
 files = os.listdir('./data/province/chongqing/')
 a=process_files_combined('./data/province/chongqing/')
 a.to_csv('./data/province/chongqing/chongqing.csv',index=False,encoding='gbk')

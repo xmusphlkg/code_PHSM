@@ -1,3 +1,9 @@
+"""
+This script is used to crawl data from the website of Anhui Province Health Commission.
+It retrieves information about infectious diseases in Anhui Province, including the Chinese explanation, URL, year, and month.
+The script saves the data in CSV format and downloads any associated DOCX files.
+"""
+
 import os
 import requests
 import json
@@ -7,8 +13,14 @@ from urllib.parse import quote
 import re
 from urllib.parse import unquote
 from html import unescape
-from liu_script.dataclean import remove_space, process_files_combined, update_url_column, get_year_month
+from dataclean import remove_space, process_files_combined, update_url_column, get_year_month
+# The code is crawling data from the website of Anhui Province Health Commission. It sends a POST
+# request to a specific URL with headers and parameters to retrieve information about infectious
+# diseases in Anhui Province. It then uses BeautifulSoup to parse the response and extract the Chinese
+# explanation and URL for each disease. The extracted data is stored in a list called `data`. The code
+# loops through multiple pages of the website by changing the `pageIndex` parameter in the request.
 
+# The code is crawling data from the website of Anhui Province Health Commission. It sends a POST
 data = []
 for i in range(1, 7):
     url = "https://wjw.ah.gov.cn/site/label/8888"
@@ -61,7 +73,8 @@ for i in range(1, 7):
         url_link =link.get('href')
         data.append([chinese_text, url_link])
 
-
+# The code loops through multiple pages of the website by changing the `pageIndex` parameter in the request.
+# The extracted data is stored in a list called `data`. The code saves the data in CSV format.
 df = pd.DataFrame(data, columns=['中文解释', '链接'])
 df = df[df['中文解释'].str.contains('月全省')]
 df['年份'],df['月份'] = zip(*df['中文解释'].apply(lambda x: get_year_month(x)))
@@ -86,12 +99,15 @@ headers = {
     "sec-ch-ua-platform": '"Windows"'
 }
 url_origin='https://wjw.ah.gov.cn/'
+
+
+# The code block you provided is responsible for downloading DOCX files and extracting data from HTML
+# tables for each URL in the `df['链接']` column.
 for i in range(len(df)):
     url=df['链接'].iloc[i]
     sign=0
     response=requests.get(url, headers=headers)
     soup=BeautifulSoup(response.content,'html.parser',from_encoding='gbk')
-    #docx文件
     links_with_blank_target=soup.find_all('a',{'target':'_blank'})
     for url in links_with_blank_target:
         link=url.get('href')
@@ -126,6 +142,10 @@ for i in range(len(df)):
 # 2019-3不存在传染病信息
 # 2018-10不存在传染病信息
 
+# The code `a=process_files_combined('./data/province/anhui/')` is calling a function named
+# `process_files_combined` and passing the directory path `./data/province/anhui/` as an argument.
+# This function processes the CSV and DOCX files in the specified directory and combines the data into
+# a single DataFrame. The resulting DataFrame is assigned to the variable `a`.
 a=process_files_combined('./data/province/anhui/')
 a.to_csv('./data/province/anhui/anhui.csv',index=False,encoding='gbk')
 update_url_column('./data/province/anhui/anhui.csv','./data/province/anhui/anhui_url.csv')

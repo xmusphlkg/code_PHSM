@@ -4,9 +4,14 @@ import pandas as pd
 import requests
 import xlrd
 from bs4 import BeautifulSoup
-from liu_script.dataclean import update_url_column, read_docx
-from liu_script.zhejiang_dataclean import remove_space, filetype
+from dataclean import update_url_column, read_docx, remove_space, filetype
 
+# The above code is scraping data from a website related to the pandept of epidemiology and public health in Shanghai.
+# The website is called "上海市卫生健康委员会" (Shanghai Municipal Health Commission), and it is responsible for
+# monitoring and controlling the epidemic situation in Shanghai. It
+# retrieves information from multiple pages and extracts links that contain the text "传染病" (which
+# means "infectious disease" in Chinese). The extracted data includes the Chinese text, the complete
+# URL of the link, and the original URL of the website.
 origin_url = 'https://wsjkw.sh.gov.cn/'
 data = []
 name='shanghai'
@@ -44,10 +49,24 @@ for i in range(1, 10):
         if '传染病' in chinese_text:
             url_link = link.get('href')
             data.append([chinese_text, str(origin_url) + url_link[1:],url])
+
 def get_year_month(title):
+    """
+    The function `get_year_month` extracts the year and month from a given title, and the code snippet
+    processes a DataFrame to extract the year and month from the '中文解释' column and save the result to a
+    CSV file.
+    
+    :param title: The `title` parameter is a string that represents the title of a data entry
+    :return: The code is returning a DataFrame object that has been modified and saved as a CSV file.
+    """
     year = title.split('年')[0]
     month = title.split('年')[1].split('月')[0]
     return year, month
+
+# The above code is performing several operations on a pandas DataFrame named 'df'.
+# The DataFrame contains two columns named '中文解释' and '链接', which correspond to the Chinese explanation and the URL respectively.
+# The code is adding two new columns '年份' and '月份' to the DataFrame, which correspond to the year and month respectively.
+# The code is saving the modified DataFrame to a CSV file.
 df = pd.DataFrame(data, columns=['中文解释', '链接','Referer'])
 df = df[df['中文解释'].str.contains('月')]
 df['年份'],df['月份'] = zip(*df['中文解释'].apply(lambda x: get_year_month(x)))
@@ -58,6 +77,10 @@ df.replace('\u2002', '', regex=True, inplace=True)
 df.replace(' ', '', regex=True, inplace=True)
 df.to_csv(f'./data/province/{name}/{name}_url.csv', index=False, encoding='gbk')
 
+
+# The above code is a Python script that iterates over a DataFrame called `df`. For each row in the
+# DataFrame, it extracts a URL from the '链接' column and sends a GET request to that URL with specific
+# headers. It then uses BeautifulSoup to parse the HTML content of the response.
 for i in range(len(df)):
         url = df.iloc[i]['链接']
         origin_url='https://wsjkw.sh.gov.cn/'
@@ -152,6 +175,14 @@ for i in range(len(df)):
             print(f'{df["年份"].iloc[i]}-{df["月份"].iloc[i]}不存在传染病信息')
 
 def process_files_combined(directory):
+    """
+    The function `process_files_combined` processes files in a given directory, extracting data from
+    various file types (doc, docx, xls, xlsx, csv) and returning a DataFrame with the extracted data.
+    
+    :param directory: The `directory` parameter is a string that represents the path to the directory
+    where the files are located
+    :return: a pandas DataFrame object named `result_df`.
+    """
     data_list = []
 
     files = os.listdir(directory)
@@ -240,6 +271,22 @@ def process_files_combined(directory):
 
     result_df = pd.DataFrame(data_list, columns=['疾病病种', '发病数',  'date'])
     return result_df
+
+def update_url_column(file_path,url_file_path):
+    """
+    The function `update_url_column` updates the '链接' column of a CSV file with the URLs of the
+    corresponding data entries.
+    
+    :param file_path: The `file_path` parameter is a string that represents the path to the CSV file
+    :param url_file_path: The `url_file_path` parameter is a string that represents the path to the CSV
+    file that contains the URLs
+    :return: None
+    """
+    df = pd.read_csv(file_path,encoding='gbk')
+    url_df = pd.read_csv(url_file_path,encoding='gbk')
+    df['链接'] = url_df['链接']
+    df.to_csv(file_path, index=False,encoding='gbk')
+
 files = os.listdir(f'./data/province/{name}/')
 a=process_files_combined(f'./data/province/{name}/')
 a.replace('\xa0', '', regex=True, inplace=True)

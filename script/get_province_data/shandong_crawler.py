@@ -5,8 +5,9 @@ import requests
 from bs4 import BeautifulSoup
 from doc2docx import convert
 import time
-from liu_script.dataclean import process_files_combined, update_url_column
+from dataclean import process_files_combined, update_url_column
 
+# The code is scraping data from a website and storing it in a list called `data`.
 data = []
 origin_url = "http://wsjkw.shandong.gov.cn/zwgk/zdmsgysy/fdcrb"
 for i in range(1, 7):
@@ -34,16 +35,29 @@ for i in range(1, 7):
         chinese_text = link.text.strip()
         url_link = link.find('a')['href']
         data.append([chinese_text, origin_url+url_link[1:]])
+
 def get_year_month(title):
+    """
+    The above Python code defines a function called `get_year_month` that takes a `title` as input and
+    extracts the year and month from it, and then uses this function to process a DataFrame called `df`
+    and add two new columns '年份' and '月份' to it, and finally saves the modified DataFrame to a CSV file.
+    
+    :param title: The `title` parameter is a string that represents the title of a data entry in the
+    `df` DataFrame
+    :return: The code is returning the year and month extracted from the '中文解释' column of the DataFrame.
+    """
     year = title.split('省')[1].split('年')[0]
     month = title.split('年')[1].split('月')[0]
     return year, month
-
+# The code is creating a DataFrame called `df` using the `data` list as input. The DataFrame has two
+# columns named '中文解释' and '链接', which correspond to the Chinese explanation and the URL respectively.
 df = pd.DataFrame(data, columns=['中文解释', '链接'])
 df.replace('.\xa0','', inplace=True, regex=True)
 df['年份'],df['月份'] = zip(*df['中文解释'].apply(lambda x: get_year_month(x)))
 df.to_csv('./data/province/shandong/shandong_url.csv', index=False, encoding='gbk')
 
+# The code block you provided is iterating over each row in the DataFrame `df` and performing the
+# following actions:
 for i in range(len(df)):
     url = df.iloc[i]['链接']
     origin_url=url.split('/t')[0]
@@ -129,8 +143,9 @@ for i in range(len(df)):
 # 2014-7不存在传染病信息
 # 2014-6不存在传染病信息
 
-files = os.listdir('./data/province/shandong/')
 
+
+files = os.listdir('./data/province/shandong/')
 for file in files:
     if str(file)+"x" in files:
         os.remove(f'./data/province/shandong/{file}')
@@ -141,6 +156,9 @@ for file in files:
         pass
 
 
+# The code `a=process_files_combined('./data/province/shandong/')` is calling a function called
+# `process_files_combined` and passing the directory path `./data/province/shandong/` as an argument.
+# This function is processing the files in the specified directory and returning a DataFrame.
 a=process_files_combined('./data/province/shandong/')
 a.to_csv('./data/province/shandong/shandong.csv',index=False,encoding='gbk')
 update_url_column('./data/province/shandong/shandong.csv','./data/province/shandong/shandong_url.csv')

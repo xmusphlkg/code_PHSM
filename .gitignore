@@ -62,3 +62,6 @@ rsconnect/
 .idea/
 
 #
+data/nation_and_provinces_1.xlsx
+.git/
+.idea/

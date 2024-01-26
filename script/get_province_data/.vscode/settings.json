@@ -1,0 +1,8 @@
+{
+    "docwriter.progress.trackFunctions": true,
+    "docwriter.progress.trackMethods": true,
+    "docwriter.progress.trackClasses": true,
+    "docwriter.progress.trackTypes": true,
+    "docwriter.language": "English",
+    "docwriter.hotkey.windows": "Alt + ."
+}

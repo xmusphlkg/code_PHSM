@@ -4,7 +4,10 @@ import pandas as pd
 import requests
 import xlrd
 from bs4 import BeautifulSoup
-from liu_script.dataclean import update_url_column, read_docx, remove_space, filetype, process_files_combined
+from dataclean import update_url_column, read_docx, remove_space, filetype, process_files_combined
+
+# The code is scraping data from the website "https://wsjkw.gd.gov.cn/" to collect information about
+# infectious diseases in Guangdong province.
 origin_url='https://wsjkw.gd.gov.cn/'
 data = []
 name='guangdong'
@@ -40,10 +43,21 @@ for i in range(1, 91):
         if '传染病' in chinese_text:
             url_link = link.get('href')
             data.append([chinese_text, url_link,url])
+
 def get_year_month(title):
+    """
+    The function `get_year_month` takes a title as input and returns the year and month extracted from
+    the title.
+    
+    :param title: The title is a string that represents a title containing a year and month
+    :return: a tuple containing the year and month extracted from the given title.
+    """
     year = title.split('年')[0]
     month = title.split('年')[1].split('月')[0]
     return year, month
+
+# The code snippet you provided is creating a pandas DataFrame called `df` from the `data` list. The
+# DataFrame has three columns: '中文解释' (Chinese explanation), '链接' (link), and 'Referer'.
 df = pd.DataFrame(data, columns=['中文解释', '链接','Referer'])
 df = df[df['中文解释'].str.contains('月')]
 df['年份'],df['月份'] = zip(*df['中文解释'].apply(lambda x: get_year_month(x)))
@@ -55,6 +69,9 @@ df.replace('\u200b', '', regex=True, inplace=True)
 df.replace(' ', '', regex=True, inplace=True)
 df.to_csv(f'./data/province/{name}/{name}_url.csv', index=False, encoding='gbk')
 
+# The above code is reading a CSV file and iterating through each row. It extracts a URL from each row
+# and sends a GET request to that URL with specific headers. It then uses BeautifulSoup to parse the
+# HTML content of the response.
 df=pd.read_csv(f'./data/province/{name}/{name}_url.csv', encoding='gbk')
 for i in range(len(df)):
         url = df.iloc[i]['链接']
@@ -153,6 +170,7 @@ for i in range(len(df)):
             print(f'{df["年份"].iloc[i]}-{df["月份"].iloc[i]}不存在传染病信息',{df.iloc[i]['链接']})
 
 
+# The code snippet you provided is performing the following tasks:
 files = os.listdir(f'./data/province/{name}/')
 a=process_files_combined(f'./data/province/{name}/')
 a.replace('\xa0', '', regex=True, inplace=True)

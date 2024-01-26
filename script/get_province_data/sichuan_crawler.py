@@ -4,7 +4,21 @@ import pandas as pd
 import requests
 import xlrd
 from bs4 import BeautifulSoup
-from liu_script.dataclean import update_url_column, read_docx, remove_space, filetype, process_files_combined
+from dataclean import update_url_column, read_docx, remove_space, filetype, process_files_combined
+
+def get_year_month(title):
+    """
+    The function `get_year_month` takes a title as input and returns the year and month extracted from
+    the title.
+    
+    :param title: The title is a string that represents a title containing a year and month
+    :return: a tuple containing the year and month extracted from the given title.
+    """
+    year = title.split('年')[0]
+    month = title.split('年')[1].split('月')[0]
+    return year, month
+
+# The code scrapes data from a website and saves it to a CSV file.
 
 data = []
 name='sichuan'
@@ -30,18 +44,24 @@ for i in range(1, 30):
         "sec-ch-ua-platform": '"Windows"'
     }
 
-    response = requests.post(url, headers=headers)
-    soup = BeautifulSoup(response.content, "html.parser")
-    links_with_blank_target = soup.find_all('a', {'target': '_blank'})
-    for link in links_with_blank_target:
-        chinese_text = link.text.strip()
-        if '传染病' in chinese_text:
-            url_link = link.get('href')
-            data.append([chinese_text, url_link,url])
-def get_year_month(title):
-    year = title.split('年')[0]
-    month = title.split('年')[1].split('月')[0]
-    return year, month
+# Send a POST request to the specified URL with headers
+response = requests.post(url, headers=headers)
+
+# Parse the response content using BeautifulSoup
+soup = BeautifulSoup(response.content, "html.parser")
+
+# Find all <a> tags with target='_blank'
+links_with_blank_target = soup.find_all('a', {'target': '_blank'})
+
+# Iterate through the links with target='_blank' and extract Chinese text containing '传染病'
+for link in links_with_blank_target:
+    chinese_text = link.text.strip()
+    if '传染病' in chinese_text:
+        url_link = link.get('href')
+        data.append([chinese_text, url_link, url])
+
+# This code block is creating a pandas DataFrame (`df`) from the `data` list. The DataFrame has three
+# columns: '中文解释' (Chinese explanation), '链接' (link), and 'Referer'.
 df = pd.DataFrame(data, columns=['中文解释', '链接','Referer'])
 df = df[df['中文解释'].str.contains('月')]
 df['年份'],df['月份'] = zip(*df['中文解释'].apply(lambda x: get_year_month(x)))
@@ -53,6 +73,7 @@ df.replace(' ', '', regex=True, inplace=True)
 df = df.drop_duplicates(subset=['年份', '月份'], keep='first')
 df.to_csv(f'./data/province/{name}/{name}_url.csv', index=False, encoding='gbk')
 
+#Iterate over the files in each link and save them in csv format
 for i in range(len(df)):
         url = df.iloc[i]['链接']
         headers = {
@@ -143,12 +164,16 @@ for i in range(len(df)):
             print(f'{df["年份"].iloc[i]}-{df["月份"].iloc[i]}不存在传染病信息')
 
 files = os.listdir(f'./data/province/{name}/')
+# Create a dataframe from the files in the specified directory
 a=process_files_combined(f'./data/province/{name}/')
+# Replace any non-breaking spaces with empty strings
 a.replace('\xa0', '', regex=True, inplace=True)
 a.replace('\u3000', '', regex=True, inplace=True)
 a.replace('\u2002', '', regex=True, inplace=True)
 a.replace(' ', '', regex=True, inplace=True)
+# Save the dataframe as a csv file
 a.to_csv(f'./data/province/{name}/{name}.csv',index=False,encoding='gbk')
+# Create a csv file containing the URLs of the files
 update_url_column(f'./data/province/{name}/{name}.csv',f'./data/province/{name}/{name}_url.csv')
 
 #四川省缺失:

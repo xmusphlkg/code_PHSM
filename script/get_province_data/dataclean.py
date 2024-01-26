@@ -10,22 +10,51 @@ import requests
 
 
 def remove_chinese(title):
+    """
+    The function `remove_chinese` takes a title as input and removes all non-digit and non-hyphen
+    characters from it, returning the modified title and its type.
+    
+    :param title: The `title` parameter is a string that represents a file title
+    :return: a tuple containing the modified title and the title type.
+    """
     title_type = title.split('.')[-1]
     title = ''.join([x for x in title if x.isdigit() or x == '-'])
     return title, title_type
 
 
 def filetype(title):
+    """
+    The function `filetype` takes a title as input and returns the file type by extracting the extension
+    from the title.
+    
+    :param title: The title parameter is a string that represents the title of a file
+    :return: The file type of the given title.
+    """
     title_type = title.split('.')[-1]
     return title_type
 
 
 def remove_space(title):
+    """
+    The function removes spaces from a given string.
+    
+    :param title: The parameter "title" is a string that represents a title or a sentence
+    :return: the title with all spaces removed.
+    """
     title = title.replace(' ', '')
     return title
 
 
 def process_files_combined(directory):
+    """
+    Process files in the specified directory and extract data from different file formats (doc, docx, xls, xlsx, csv).
+    
+    Args:
+        directory (str): The directory path where the files are located.
+        
+    Returns:
+        pandas.DataFrame: A DataFrame containing the extracted data with columns ['疾病病种', '发病数', '死亡数', 'date'].
+    """
     try:
         data_list = []
         datatype_list = (np.floating,np.integer,int, float)
@@ -126,6 +155,15 @@ def process_files_combined(directory):
 
 
 def read_docx(file_path):
+    """
+    The function `read_docx` reads the content of a .docx file and returns the text content as a list of
+    paragraphs and the table content as a list of rows.
+    
+    :param file_path: The file path is the location of the .docx file that you want to read. It should
+    be a string that specifies the path to the file, including the file name and extension. For example,
+    "C:/Documents/my_file.docx"
+    :return: The function `read_docx` returns two values: `text_content` and `table_content`.
+    """
     doc = Document(file_path)
     text_content = []
     for paragraph in doc.paragraphs:
@@ -139,12 +177,29 @@ def read_docx(file_path):
 
 
 def get_year_month(title):
+    """
+    The function `get_year_month` takes a title as input and returns the year and month extracted from
+    the title.
+    
+    :param title: The title of a text or document that contains information about a year and month
+    :return: the year and month extracted from the given title.
+    """
     year = title.split('布')[1].split('年')[0]
     month = title.split('年')[1].split('月')[0]
     return year, month
 
 
 def download_and_parse_data(df_row, headers):
+    """
+    The function `download_and_parse_data` downloads and parses data from a given URL, saving it as a
+    CSV file if it contains a table, and as a DOCX file if it contains a downloadable link.
+    
+    :param df_row: The `df_row` parameter is a row from a DataFrame. It contains information about a
+    specific data entry, such as the URL, year, and month
+    :param headers: The `headers` parameter is a dictionary that contains the headers to be sent with
+    the HTTP request. These headers can include information such as user agent, content type, and
+    authorization
+    """
     url = df_row['链接']
     sign = 0
 
@@ -184,6 +239,18 @@ def download_and_parse_data(df_row, headers):
 
 
 def scrape_and_save_table(soup, df, i):
+    """
+    The above code contains several functions related to scraping and manipulating data from tables,
+    updating URL columns, modifying date formats, and finding missing elements in dataframes.
+    
+    :param soup: The parameter `soup` is a BeautifulSoup object that represents the HTML content of a
+    webpage. It is used to extract data from the HTML structure
+    :param df: The parameter `df` is a pandas DataFrame that contains the data you want to scrape and
+    save
+    :param i: The parameter "i" is used as an index to access specific columns or elements in the
+    dataframe. It is used in functions like "scrape_and_save_table" and "find_missing_elements" to
+    specify the column or element to be accessed
+    """
     table = soup.find('tbody')
     rows = table.find_all('tr')
     table_data = []
@@ -200,10 +267,17 @@ def scrape_and_save_table(soup, df, i):
     table_df.to_csv(file_path, encoding='gbk')
 
 
-# 使用方式：
-# scrape_and_save_table(soup, df, i)
-
 def update_url_column(df_csv_path, url_csv_path):
+    """
+    The above code contains three functions: "update_url_column" which updates a URL column in a
+    DataFrame based on another DataFrame, "motify_date" which modifies the date format in a DataFrame,
+    and "find_missing_elements" which finds missing elements in one column of a DataFrame compared to
+    another column.
+    
+    :param df_csv_path: The file path of the CSV file containing the data frame
+    :param url_csv_path: The `url_csv_path` parameter is the file path to the CSV file that contains the
+    URLs
+    """
     try:
         url_df = pd.read_csv(url_csv_path, encoding='gbk')
     except:
@@ -238,6 +312,15 @@ def update_url_column(df_csv_path, url_csv_path):
     df.to_csv(df_csv_path, encoding='gbk', index=False)
 
 def motify_date(df,df_csv_path):
+    """
+    The function `motify_date` takes a DataFrame `df` and a file path `df_csv_path`, modifies the 'date'
+    column in the DataFrame to a standardized format, drops any rows with missing values in the modified
+    'date' column, adds separate '年' and '月' columns based on the modified 'date' column, and saves the
+    modified DataFrame to a CSV file specified by `df_csv_path`.
+    
+    :param df: The parameter `df` is a pandas DataFrame that contains the data you want to modify
+    :param df_csv_path: The path where you want to save the modified dataframe as a CSV file
+    """
     df_1=df
     df_1['date'] = pd.to_datetime(df['date'], format='%b-%y', errors='coerce').dt.strftime('20%y-%m')
     df_1=df_1.dropna(axis=0)

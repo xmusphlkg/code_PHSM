@@ -6,12 +6,16 @@ from openpyxl import load_workbook
 from tqdm import tqdm
 import time
 import shutil
-from liu_script.dataclean import find_missing_elements
+from dataclean import find_missing_elements
 
+# The code is iterating over a list of provinces and for each province, it reads a CSV file containing
+# disease data. It then creates a DataFrame with the data and saves it to an Excel file. The Excel
+# file is used as a data center for storing disease data for different provinces. The code also
+# removes any existing sheets with the same name in the Excel file before adding the new data.
 provinces = os.listdir('./data/province')
 data_center = pd.read_csv('./data/latest_data_center.csv')
 book = load_workbook('./data/nation_and_provinces.xlsx')
-# 同步报告数据
+
 for province in provinces:
     sheet_name = province
     if sheet_name in book.sheetnames:
@@ -36,8 +40,15 @@ for province in provinces:
 book.save('./data/nation_and_provinces.xlsx')
 
 
-# sheet首字母变大写
 def capitalize_sheet_names(file_path):
+    """
+    The function `capitalize_sheet_names` takes a file path as input, loads an Excel workbook, and
+    capitalizes the first letter of each sheet name while removing any non-Chinese or non-alphabetic
+    characters.
+    
+    :param file_path: The file path is the location of the Excel file that you want to modify. In this
+    case, the file path is './data/nation_and_provinces.xlsx'
+    """
     workbook = load_workbook(file_path)
     for sheet_name in workbook.sheetnames:
         first_letter = sheet_name[0].upper()
@@ -48,7 +59,8 @@ def capitalize_sheet_names(file_path):
 file_path = './data/nation_and_provinces.xlsx'
 capitalize_sheet_names(file_path)
 
-# 查找不包含的名词
+# The code is creating a list called `no_str_list` to store disease names that are not present in the
+# `DiseasesCN` column of the `data_center` DataFrame.
 no_str_list = []
 for sheet_name in book.sheetnames:
     df_sheet = pd.read_excel(file_path, sheet_name)
@@ -64,7 +76,13 @@ no_str_list = find_missing_elements(no_str_list, 'disease_cn', diseaseName2Code,
 no_str_list = pd.DataFrame(no_str_list, columns=['disease_cn'])
 no_str_list.to_csv('./liu_script/diseaseName2diseaseNameCN.csv', encoding='gbk', index=False)
 
-# 同步数据中心数据
+
+# The above code is processing data from a data center and saving it to an Excel file. It replaces the
+# value 'Total' in the 'Province' column with 'Nation', sorts the data by 'Province', and resets the
+# index. Then, it iterates over the data and creates a new sheet in the Excel file for each province.
+# It appends the data for each province to a list, and when it reaches the last row for a province or
+# encounters a different province, it creates a DataFrame from the list and saves it to the Excel
+# file. Finally, it makes a copy of the Excel
 file_path = './data/nation_and_provinces.xlsx'
 origin_file_path = './data/origin_nation_and_provinces.xlsx'
 data_center['Province'].replace('Total', 'Nation', inplace=True)
@@ -112,7 +130,8 @@ with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
                               str(data_center['YearMonthDay'][i]).split('/')[1]])
 shutil.copyfile('./data/nation_and_provinces.xlsx', './data/nation_and_provinces_1.xlsx')
 
-#将xlsx按照时间顺序排序
+# The code block is opening an Excel file using `pd.ExcelWriter` and the `openpyxl` engine. It then
+# iterates over each sheet in the Excel file and performs the following steps:
 with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
     writer.book = book
     for sheet_name in writer.book.sheetnames:
@@ -123,17 +142,8 @@ with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
             df_sheet.to_excel(writer, sheet_name=sheet_name, index=False)
         except:
             pass
-# #构建中文-英文字典
-# dict={}
-# for i in tqdm(range(len(data_center)), desc="Processing", unit="iteration"):
-#     dict.update({str(data_center['DiseasesCN'][i]):str(data_center['Diseases'][i])})
-# diseaseName2Code=pd.read_csv('./liu_script/diseaseName2Code.csv',encoding='gbk')
-# for i in tqdm(range(len(diseaseName2Code)), desc="Processing", unit="iteration"):
-#     dict.update({str(diseaseName2Code['Name'][i]):str(diseaseName2Code['Code'][i])})
-# dict_df=pd.DataFrame(dict,index=range(1)).transpose()
-# dict_df.to_csv('./liu_script/dict.csv',encoding='gbk',index=True)
 
-#构建中文-中文字典与中文-英文字典
+#Build Chinese-Chinese dictionary and Chinese-English dictionary
 file_path = './data/nation_and_provinces.xlsx'
 shutil.copyfile('./data/nation_and_provinces.xlsx', './data/nation_and_provinces_1.xlsx')
 dict_cn_df =pd.read_csv('./liu_script/diseaseName2diseaseNameCN.csv',encoding='gbk')
@@ -145,7 +155,7 @@ for i in range(len(dict_cn_df)):
 for i in range(len(dict_df)):
     dict.update({dict_df['Unnamed: 0'][i]:dict_df['0'][i]})
 
-#字典匹配
+#Dictionary matching
 with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
     writer.book = book
     for sheet_name in writer.book.sheetnames[4:]:
@@ -158,6 +168,9 @@ with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
         df_sheet.to_excel(writer, sheet_name, index=False)
 shutil.copyfile('./data/nation_and_provinces.xlsx', './data/nation_and_provinces_1.xlsx')
 
+# The code block is opening an Excel file using `pd.ExcelWriter` and the `openpyxl` engine. It then
+# iterates over each sheet in the Excel file (starting from the 5th sheet) and performs the following
+# steps:
 with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
     writer.book = book
     for sheet_name in writer.book.sheetnames[4:]:
@@ -170,7 +183,6 @@ with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
         df_sheet.to_excel(writer, sheet_name, index=False)
 shutil.copyfile('./data/nation_and_provinces.xlsx', './data/nation_and_provinces_1.xlsx')
 
-#去除空白值
 file_path = './data/nation_and_provinces.xlsx'
 book = load_workbook('./data/nation_and_provinces.xlsx')
 with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
