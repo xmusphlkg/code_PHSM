@@ -4,5 +4,6 @@
     "docwriter.progress.trackClasses": true,
     "docwriter.progress.trackTypes": true,
     "docwriter.language": "English",
-    "docwriter.hotkey.windows": "Alt + ."
+    "docwriter.hotkey.windows": "Alt + .",
+    "commentTranslate.multiLineMerge": false
 }

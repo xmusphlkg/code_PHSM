@@ -1,12 +1,24 @@
-
-
+import os
+import pandas as pd
+import xlrd
 import requests
 import json
 import re
 import pandas as pd
 from bs4 import BeautifulSoup
+from dataclean import update_url_column, motify_date
+name='zhejiang'
 
-
+def remove_chinese(title):
+    title_type=title.split('.')[-1]
+    title = ''.join([x for x in title if x.isdigit() or x == '-'])
+    return title, title_type
+def filetype(title):
+    title_type=title.split('.')[-1]
+    return title_type
+def remove_space(title):
+    title = title.replace(' ', '')
+    return title
 ## get the data from the API
 format_data = "col=1&appid=1&webid=1855&path=%2F&columnid=1229123469&sourceContentType=1&unitid=5939785&webname=%E6%B5%99%E6%B1%9F%E7%9C%81%E5%8D%AB%E7%94%9F%E5%81%A5%E5%BA%B7%E5%A7%94%E5%91%98%E4%BC%9A&permissiontype=0"
 url = "https://wsjkw.zj.gov.cn/module/jpage/dataproxy.jsp?startrecord=1&endrecord=160&perpage=160"
@@ -135,3 +147,72 @@ table_data.to_csv('zhejiang/zhejiang.csv', index=False)
 # save links to csv
 links = pd.DataFrame(links)
 links.to_csv('zhejiang/links.csv', index=False)
+
+files = os.listdir('./data/province/zhejiang')
+#Loop through each file in the zhejiang directory
+for file in files:
+    #Remove any Chinese characters from the file name
+    file_new,file_type= remove_chinese(file)
+    #Rename the file with the new name and file type
+    os.rename('./zhejiang/'+file, './zhejiang/'+file_new+'.'+file_type)
+#Loop through each file in the zhejiang directory
+files = os.listdir('./data/province/zhejiang')
+#Create a dataframe to store the data
+df_template=pd.DataFrame(columns=['疾病病种', '发病数', '死亡数', 'date'])
+#Create an empty list to store the data
+dict=[]
+#Loop through each file in the zhejiang directory
+for file in files:
+    #Get the size of the file
+    file_size=os.path.getsize('./data/province/zhejiang/'+file)
+    #If the file size is greater than 1000 bytes
+    if file_size>1000:
+        #Get the file type
+        file_type= filetype(file)
+        #If the file type is an xls file
+        if file_type=='xls':
+            #Open the xls file
+            sheet = xlrd.open_workbook('./data/province/zhejiang/'+file).sheet_by_index(0)
+            #Get the number of rows and columns in the file
+            num_rows = sheet.nrows
+            num_cols = sheet.ncols
+            #Create an empty list to store the data
+            data = []
+            #Loop through each row in the file
+            for row_index in range(num_rows):
+                #Create an empty list to store the row data
+                row_data = []
+                #Loop through each column in the row
+                for col_index in range(num_cols):
+                    #Get the value of the cell
+                    cell_value = sheet.cell_value(row_index, col_index)
+                    #Append the value to the row data list
+                    row_data.append(cell_value)
+                #Append the row data list to the data list
+                data.append(row_data)
+            #Create a dataframe from the data list
+            df = pd.DataFrame(data)
+            #Loop through each row in the dataframe
+            for i in range(len(df)):
+                #If the value of the first column is a string and the values of the second, third and fourth columns are integers or floats
+                if isinstance(df.iloc[i][0], str) and isinstance(df.iloc[i][1], (int, float)) and isinstance(df.iloc[i][2], (int, float)):
+                    #Append the values of the first, second, third and fourth columns to the list
+                    dict.append([remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
+                #Otherwise, pass
+                else:
+                    pass
+        #If the file type is not an xls file, pass
+        else:
+            pass
+    #Otherwise, pass
+    else:
+        pass
+df = pd.DataFrame(dict, columns=['疾病病种', '发病数', '死亡数', 'date'])
+df.to_csv('./data/province/zhejiang/zhejiang.csv',encoding='gbk')
+update_url_column(f'./data/province/{name}/{name}.csv',f'./data/province/{name}/{name}_url.csv')
+
+file=pd.read_csv('./data/province/zhejiang/zhejiang.csv')
+file.to_csv('./data/province/zhejiang/zhejiang.csv', index=False, encoding='gbk')
+
+
+
