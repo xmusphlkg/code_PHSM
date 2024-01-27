@@ -102,9 +102,11 @@ auto_select_function <- function(i){
      fit_goodness <- data.frame(
           Method = 'Neural Network',
           Index = c('SMAPE', 'RMSE', 'MASE', 'R_Squared'),
-          Train = evaluate_forecast(outcome_plot_1$fit[!is.na(outcome_plot_1$fit)], outcome_plot_1$simu[!is.na(outcome_plot_1$fit)]),
+          Train = evaluate_forecast(outcome_plot_1$fit[!is.na(outcome_plot_1$fit)],
+                                    outcome_plot_1$simu[!is.na(outcome_plot_1$fit)]),
           Test = evaluate_forecast(outcome_plot_2$mean, ts_test_1),
-          'Train and Test' = evaluate_forecast(c(outcome_plot_1$fit[-which(is.na(outcome_plot_1$fit))], outcome_plot_2$mean), ts_obse_1[-which(is.na(outcome_plot_1$fit))])
+          'Train and Test' = evaluate_forecast(c(outcome_plot_1$fit[-which(is.na(outcome_plot_1$fit))],
+                                                 outcome_plot_2$mean), ts_obse_1[-which(is.na(outcome_plot_1$fit))])
      )
      
      fig_nnet_1 <- plot_outcome(
@@ -278,9 +280,11 @@ auto_select_function <- function(i){
                data.frame(
                     Method = 'Hybrid',
                     Index = c('SMAPE', 'RMSE', 'MASE', 'R_Squared'),
-                    Train = evaluate_forecast(outcome_plot_1$simu[!is.na(outcome_plot_1$fit)], outcome_plot_1$fit[!is.na(outcome_plot_1$fit)]),
+                    Train = evaluate_forecast(outcome_plot_1$simu[!is.na(outcome_plot_1$fit)],
+                                              outcome_plot_1$fit[!is.na(outcome_plot_1$fit)]),
                     Test = evaluate_forecast(outcome_plot_2$mean, ts_test_1),
-                    'Train and Test' = evaluate_forecast(c(outcome_plot_1$fit[-which(is.na(outcome_plot_1$fit))], outcome_plot_2$mean), ts_obse_1[-which(is.na(outcome_plot_1$fit))]))
+                    'Train and Test' = evaluate_forecast(c(outcome_plot_1$fit[-which(is.na(outcome_plot_1$fit))],
+                                                           outcome_plot_2$mean), ts_obse_1[-which(is.na(outcome_plot_1$fit))]))
           )
      
      fig_hyb_1 <- plot_outcome(
@@ -322,9 +326,11 @@ auto_select_function <- function(i){
                data.frame(
                     Method = 'Bayesian Structural',
                     Index = c('SMAPE', 'RMSE', 'MASE', 'R_Squared'),
-                    Train = evaluate_forecast(outcome_plot_1$simu[!is.na(outcome_plot_1$fit)], outcome_plot_1$fit[!is.na(outcome_plot_1$fit)]),
+                    Train = evaluate_forecast(outcome_plot_1$simu[!is.na(outcome_plot_1$fit)],
+                                              outcome_plot_1$fit[!is.na(outcome_plot_1$fit)]),
                     Test = evaluate_forecast(outcome_plot_2$mean, ts_test_1),
-                    'Train and Test' = evaluate_forecast(c(outcome_plot_1$fit, outcome_plot_2$mean), ts_obse_1)
+                    'Train and Test' = evaluate_forecast(c(outcome_plot_1$fit, outcome_plot_2$mean),
+                                                         ts_obse_1)
                )
           )
      
@@ -350,44 +356,45 @@ auto_select_function <- function(i){
                                             'ETS', 'SARIMA', 'Hybrid*', 'Bayesian Structural')),
                  Train = round(Train, 2),
                  Test = round(Test, 2),
-                 Train.and.Test = round(Train.and.Test, 2)) |> 
-          arrange(Method)
+                 All = round(Train.and.Test, 2)) |> 
+          arrange(Method) |> 
+          select(Method, Train, Test, All, Index)
      datafile_table[is.na(datafile_table)] <- ""
      
      table1 <- ggtexttable(datafile_table[datafile_table$Index == "RMSE", 1:4],
                            rows = NULL,
-                           cols = c('Method', 'Train', 'Test', 'Train and Test'),
+                           cols = c('Method', 'Train', 'Test', 'All'),
                            theme = ttheme("blank", base_size = 10, padding = unit(c(5, 5), "mm"))) |>
-          tab_add_hline(at.row = nrow(datafile_table)/3+1, row.side = "bottom", linewidth = 1) |>
+          tab_add_hline(at.row = nrow(datafile_table)/4+1, row.side = "bottom", linewidth = 2) |>
           tab_add_hline(at.row = 1:2, row.side = "top", linewidth = 2) |> 
           tab_add_title(paste0(LETTERS[8], " : RMSE of Models"), face = "bold", size = 14) |> 
           tab_add_footnote('*Hybrid: Combined SARIMA, ETS, STL\nand Neural Network model', 
                            just = "left",hjust = 1,size = 10)
      table2 <- ggtexttable(datafile_table[datafile_table$Index == "SMAPE", 1:4],
                            rows = NULL,
-                           cols = c('Method', 'Train', 'Test', 'Train and Test'),
+                           cols = c('Method', 'Train', 'Test', 'All'),
                            theme = ttheme("blank", base_size = 10, padding = unit(c(5, 5), "mm"))) |>
-          tab_add_hline(at.row = nrow(datafile_table)/3+1, row.side = "bottom", linewidth = 1) |>
+          tab_add_hline(at.row = nrow(datafile_table)/4+1, row.side = "bottom", linewidth = 2) |>
           tab_add_hline(at.row = 1:2, row.side = "top", linewidth = 2) |> 
-          tab_add_title(paste0(LETTERS[10], " : SMAPE of Models"), face = "bold", size = 14) |> 
+          tab_add_title(paste0(LETTERS[9], " : SMAPE of Models"), face = "bold", size = 14) |> 
           tab_add_footnote('*Hybrid: Combined SARIMA, ETS, STL\nand Neural Network model', 
                            just = "left",hjust = 1,size = 10)
      table3 <- ggtexttable(datafile_table[datafile_table$Index == "MASE", 1:4],
                            rows = NULL,
-                           cols = c('Method', 'Train', 'Test', 'Train and Test'),
+                           cols = c('Method', 'Train', 'Test', 'All'),
                            theme = ttheme("blank", base_size = 10, padding = unit(c(5, 5), "mm"))) |>
-          tab_add_hline(at.row = nrow(datafile_table)/3+1, row.side = "bottom", linewidth = 1) |>
+          tab_add_hline(at.row = nrow(datafile_table)/4+1, row.side = "bottom", linewidth = 2) |>
           tab_add_hline(at.row = 1:2, row.side = "top", linewidth = 2) |> 
           tab_add_title(paste0(LETTERS[10], " : MASE of Models"), face = "bold", size = 14) |> 
           tab_add_footnote('*Hybrid: Combined SARIMA, ETS, STL\nand Neural Network model', 
                            just = "left",hjust = 1,size = 10)
      table4 <- ggtexttable(datafile_table[datafile_table$Index == "R_Squared", 1:4],
                            rows = NULL,
-                           cols = c('Method', 'Train', 'Test', 'Train and Test'),
+                           cols = c('Method', 'Train', 'Test', 'All'),
                            theme = ttheme("blank", base_size = 10, padding = unit(c(5, 5), "mm"))) |>
-          tab_add_hline(at.row = nrow(datafile_table)/3+1, row.side = "bottom", linewidth = 1) |>
+          tab_add_hline(at.row = nrow(datafile_table)/4+1, row.side = "bottom", linewidth = 2) |>
           tab_add_hline(at.row = 1:2, row.side = "top", linewidth = 2) |> 
-          tab_add_title(paste0(LETTERS[9], " : R-squared of Models"), face = "bold", size = 14) |> 
+          tab_add_title(paste0(LETTERS[11], " : R-squared of Models"), face = "bold", size = 14) |> 
           tab_add_footnote('*Hybrid: Combined SARIMA, ETS, STL\nand Neural Network model', 
                            just = "left",hjust = 1,size = 10)
      
@@ -439,22 +446,15 @@ clusterEvalQ(cl, {
      library(paletteer) 
      
      set.seed(202208)
-     
-     
-     split_date <- as.Date("2019/12/1")
-     train_length <- 12*10
-     test_length <- 12*2
-     forcast_length <- 12+12+12+3
 })
 
-clusterExport(cl, c('datafile_analysis', 'disease_list', 'disease_name', 
+clusterExport(cl, c('datafile_analysis', 'disease_name', 
                     'fill_color', 'evaluate_forecast', 'theme_set', 
-                    'scientific_10', 'plot_outcome'), 
+                    'scientific_10', 'plot_outcome',
+                    'split_date', 'train_length', 'test_length', 'forcast_length'), 
               envir = environment())
 outcome <- parLapply(cl, 1:24, auto_select_function)
 stopCluster(cl)
 
 datafile_outcome <- do.call('rbind', outcome)
 write.xlsx(datafile_outcome, './outcome/appendix/model/pre-epidemic.xlsx')
-
-
