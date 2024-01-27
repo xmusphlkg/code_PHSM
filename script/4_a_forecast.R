@@ -32,28 +32,27 @@ source('./script/ggplot.R')
 
 layout <- '
 ABCDEFG
-HIJKLMN
-OPQRSZZ
-TVWXYZZ
+HIJKLZZ
+MNOPQZZ
+RSTVWXY
 '
 
-datafile_analysis <- read.xlsx('./data/Nation.xlsx', 
-                               sheet = "Sheet 1",
-                               detectDates = T) %>% 
-     filter(date >= as.Date('2008/1/1'))
+datafile_analysis <- read.xlsx('./data/nation_and_provinces.xlsx',
+                               detectDates = T, sheet = 'Nation')|>
+     filter(date >= as.Date("2008-1-1")) |> 
+     mutate(value = as.integer(value))
 
-datafile_class <- read.xlsx('./data/disease_class.xlsx')
+datafile_class <- read.xlsx('./outcome/appendix/data/Fig.1 data.xlsx',
+                            sheet = 'panel A') |> 
+     select(-c(value, label))
 
 datafile_class <- read.xlsx('./outcome/appendix/model/select.xlsx') |>
-     left_join(datafile_class, by = c(disease = 'diseasename')) |> 
+     left_join(datafile_class, by = c(disease = 'disease')) |> 
      rename(Method = 'Best') |> 
      filter(!is.na(class)) |> 
-     mutate(disease = factor(disease, levels = datafile_class$diseasename)) |> 
+     mutate(disease = factor(disease, levels = datafile_class$disease)) |> 
      arrange(disease)
 datafile_class$id <- 1:nrow(datafile_class)
-
-## adjust best model
-datafile_class$Method[datafile_class$disease == 'AHC'] <- "Hybrid"
 
 scientific_10 <- function(x) {
      ifelse(x == 0, 0, parse(text = gsub("[+]", "", gsub("e", "%*%10^", scales::scientific_format()(x)))))
@@ -74,19 +73,23 @@ auto_analysis_function <- function(i){
      split_date_3 <- as.Date("2023/4/1")
      
      datafile_rect <- data.frame(
-          start = c(split_date, split_date_0, split_date_1, split_date_2),
-          end = c(split_date_0, split_date_1, split_date_2, split_date_3),
-          label = c('Pre-epidemic Period', 'PHSMs Period I', 'PHSMs Period II', 'Epidemic Period')
+          start = c(min(datafile_analysis$date), split_date_0, split_date_1, split_date_2, split_date_3),
+          end = c(split_date_0, split_date_1, split_date_2, split_date_3, max(datafile_analysis$date)),
+          label = c('Pre-epidemic Period', 'PHSMs Period I', 'PHSMs Period II', 
+                    'Epidemic Period', 'Post-epidemic Period')
      ) |> 
-          mutate(m = as.Date((as.numeric(start)+as.numeric(end))/2, origin = "1970-01-01"))
+          mutate(m = as.Date((as.numeric(start)+as.numeric(end))/2, origin = "1970-01-01"),
+                 label = factor(label,
+                                levels = c('Pre-epidemic Period', 'PHSMs Period I', 'PHSMs Period II', 
+                                           'Epidemic Period', 'Post-epidemic Period')))
      
      ## prepare data
      train_length <- 12*12
-     forcast_length <- 12+12+12+3
+     forcast_length <- 12*4
      
-     datafile_single <- datafile_analysis %>% 
-          filter(disease_1 == datafile_class$diseaselist[i]) %>% 
-          select(date, disease_1, value) %>% 
+     datafile_single <- datafile_analysis|> 
+          filter(disease_en == datafile_class$disease[i])|> 
+          select(date, disease_en, value) %>% 
           complete(
                date = seq.Date(
                     from = min(date),
@@ -94,17 +97,16 @@ auto_analysis_function <- function(i){
                     by = 'month'
                ),
                fill = list(value = 0,
-                           disease_1 = datafile_class$diseaselist[i])
+                           disease_en = datafile_class$disease[i])
           )
      
      ## simulate date before 2020
-     df_simu <- datafile_single  %>% 
-          arrange(date) %>% 
-          unique() %>% 
-          filter(date < split_date_3)%>% 
+     df_simu <- datafile_single |> 
+          arrange(date)|> 
+          unique() |> 
           select(value)
      
-     ts_obse_1 <- df_simu %>% 
+     ts_obse_1 <- df_simu$value |> 
           ts(frequency = 12,
              start = c(as.numeric(format(min(datafile_single$date), "%Y")),
                        as.numeric(format(min(datafile_single$date), "%m"))))
@@ -121,7 +123,7 @@ auto_analysis_function <- function(i){
      print(datafile_class$disease[i])
      print(datafile_class$Method[i])
      if (datafile_class$Method[i] == 'SARIMA'){
-          mod <- auto.arima(ts_train_1, seasonal = T)
+          mod <- auto.arima(ts_train_1, seasonal = T, ic = "aicc")
           outcome <- forecast(mod, h = forcast_length)
           
           outcome_plot_2 <- data.frame(
@@ -136,7 +138,9 @@ auto_analysis_function <- function(i){
      
      if (datafile_class$Method[i] == 'Prophet'){
           mod <- prophet(data.frame(ds = zoo::as.Date(time(ts_train_1)), y = as.numeric(ts_train_1)),
-                         interval.width = 0.95)
+                         interval.width = 0.95,
+                         weekly.seasonality=FALSE,
+                         daily.seasonality = FALSE)
           future <- make_future_dataframe(mod, periods = forcast_length, freq = "month")
           outcome <- predict(mod, future)
           
@@ -225,7 +229,8 @@ auto_analysis_function <- function(i){
                  color = if_else(diff > 0, 'Decrease', 'Increase'))
      
      write.xlsx(outcome_data,
-                paste0('./outcome/appendix/data/forecast/', datafile_class$disease[i], '.xlsx'))
+                paste0('./outcome/appendix/data/forecast/',
+                       datafile_class$disease[i], '.xlsx'))
      
      outcome_plot_3 <- datafile_single |> 
           filter(date >= split_date)
@@ -235,16 +240,14 @@ auto_analysis_function <- function(i){
           geom_vline(xintercept = datafile_rect$end,
                      show.legend = F,
                      linetype = 'longdash')+
-          geom_hline(yintercept = 0,
-                     show.legend = F)+
-          # geom_rect(data = datafile_rect, 
-          #           aes(xmin = start, 
-          #               xmax = end,
-          #               fill = label), 
-          #           ymax = 0, 
-          #           ymin = -max(plot_breaks)/10, 
-          #           alpha = 0.2,
-          #           show.legend = F)+
+          geom_rect(data = datafile_rect, 
+                    aes(xmin = start, 
+                        xmax = end,
+                        fill = label), 
+                    ymax = 0, 
+                    ymin = max(plot_breaks)/10, 
+                    alpha = 0.2,
+                    show.legend = F)+
           geom_line(mapping = aes(x = date,
                                   y = value,
                                   colour = 'Observed'), 
@@ -259,15 +262,6 @@ auto_analysis_function <- function(i){
                           data = outcome_data, 
                           alpha = 0.3,
                           levels = c('Decreased', 'Increased'))+
-          # coord_cartesian(ylim = c(-max(plot_breaks)/10, NA),
-          #                 xlim = c(split_date, NA))+
-          # scale_x_date(expand = expansion(add = c(0, 0)),
-          #              date_labels = '%Y',
-          #              breaks = seq(min(outcome_plot_3$date), max(outcome_plot_2$date), by="1 years"))+
-          # scale_y_continuous(expand = c(0, 0),
-          #                    label = scientific_10,
-          #                    breaks = plot_breaks,
-          #                    limits = range(plot_breaks))+
           coord_cartesian(ylim = c(0, NA),
                           xlim = c(split_date, NA))+
           scale_x_date(expand = expansion(add = c(0, 0)),
@@ -287,8 +281,8 @@ auto_analysis_function <- function(i){
                                        'Epidemic Period' = "#05215D50"))+
           theme_set()+
           theme(legend.position = 'bottom')+
-          labs(x = 'Date',
-               y = ifelse(i %in% c(1, 8, 15, 20), 'Monthly Incidence', ''),
+          labs(x = NULL,
+               y = ifelse(i %in% c(1, 6, 13, 20),'Cases', ''),
                color = '',
                title = paste0(LETTERS[i], ': ', datafile_class$disease[i]))
      
@@ -340,8 +334,13 @@ ggsave('./outcome/publish/fig4.pdf',
        limitsize = FALSE, device = cairo_pdf,
        width = 25, height = 14)
 
-ggsave('./outcome/publish/fig4.png',
-       plot,
-       limitsize = FALSE,
-       width = 25, height = 14)
+# merge data file ---------------------------------------------------------
+
+file_list <- paste0('./outcome/appendix/data/forecast/',
+                    datafile_class$disease,
+                    '.xlsx')
+data_list <- lapply(file_list, read.xlsx, detectDates = T)
+names(data_list) <- paste0(LETTERS[1:24], ' ', datafile_class$disease)
+write.xlsx(data_list,
+           file = './outcome/appendix/data/Fig.4 data.xlsx')
 

@@ -1,11 +1,3 @@
-#####################################
-## @Description:
-## @version:
-## @Author: Li Kangguo
-## @Date: 2023-10-19 10:21:17
-## @LastEditors: Li Kangguo
-## @LastEditTime: 2023-10-19 12:07:03
-#####################################
 
 # packages ----------------------------------------------------------------
 
@@ -24,10 +16,11 @@ source('./script/ggplot.R')
 # data --------------------------------------------------------------------
 
 DataRaw <- read.xlsx("./outcome/appendix/model/pre-epidemic.xlsx")
-DataRaw$Index <- rep(c("RMSE", "R-squared", "MAE"), times = nrow(DataRaw) / 3)
-datafile_class <- read.xlsx("./data/disease_class.xlsx")
+datafile_class <- read.xlsx('./outcome/appendix/data/Fig.1 data.xlsx',
+                            sheet = 'panel A') |> 
+     select(-c(value, label))
 
-DataRaw$disease <- factor(DataRaw$disease, levels = datafile_class$diseasename)
+DataRaw$disease <- factor(DataRaw$disease, levels = datafile_class$disease)
 
 # best model --------------------------------------------------------------
 
@@ -35,21 +28,21 @@ DataClean <- DataRaw |>
   select(disease, Index, Method, Test) |>
   pivot_wider(names_from = Index, values_from = Test)
 
-## reverse the sign of rmse and mae
-DataClean$`R-squared`[is.na(DataClean$`R-squared`)] <- 0
-DataClean$RMSE <- -DataClean$RMSE
-DataClean$MAE <- -DataClean$MAE
-
 ## z-normalization for each disease
 DataClean <- DataClean |>
-  group_by(disease) |>
-  mutate(
-    norRMSE = (RMSE - mean(RMSE)) / sd(RMSE),
-    norR2 = (`R-squared` - mean(`R-squared`)) / sd(`R-squared`),
-    norMAE = (MAE - mean(MAE)) / sd(MAE),
-    Index = norRMSE + norR2 + norMAE
-  ) |>
-  ungroup()
+     group_by(disease) |>
+     mutate(
+          norR2 = (R_Squared - mean(R_Squared, na.rm =T)) / sd(R_Squared, na.rm =T),
+          norSMAPE = -(SMAPE - mean(SMAPE, na.rm =T)) / sd(SMAPE, na.rm =T),  # 取负值
+          norRMSE = -(RMSE - mean(RMSE, na.rm =T)) / sd(RMSE, na.rm =T),  # 取负值
+          norMASE = -(MASE - mean(MASE, na.rm =T)) / sd(MASE, na.rm =T),  # 取负值
+          Index = sum(norR2, norSMAPE, norRMSE, norMASE, na.rm = T)
+     ) |> 
+     rowwise() |>
+     mutate(
+          Index = sum(c_across(norR2:norMASE), na.rm = T)
+     )|>
+     ungroup()
 
 ## find the best method for each disease based on the maximum index
 DataClean <- DataClean |>
@@ -68,9 +61,10 @@ write.xlsx(DataSelect, "./outcome/appendix/model/select.xlsx")
 
 ## save normalized composite index
 DataTable <- DataClean |> 
-     mutate(across(where(is.numeric), ~round(., 2)))
+     mutate(across(where(is.numeric), ~round(., 2))) |>
+     select(disease, Method, Best, Index, contains('nor'))
 write.xlsx(DataTable, 
-           "./outcome/appendix/data/Table S1.xlsx")
+           "./outcome/appendix/data/Fig.3 data.xlsx")
 
 # plot for each model -----------------------------------------------------
 
@@ -82,13 +76,13 @@ DataClean$Method <- factor(DataClean$Method,
                                       'ETS', 'SARIMA', 'Hybrid*', 'Bayesian Structural')
 )
 
-diseases <- datafile_class$diseasename
+diseases <- datafile_class$disease
 
 layout <- '
 ABCDEFG
-HIJKLMN
-OPQRSZZ
-TVWXYZZ
+HIJKLZZ
+MNOPQZZ
+RSTVWXY
 '
 
 plot_function <- function(i, diseases) {
@@ -111,7 +105,7 @@ plot_function <- function(i, diseases) {
           ))+
           scale_y_discrete(limits = rev(levels(Data$Method))) +
           scale_fill_manual(
-               values = fill_color[5:4],
+               values = fill_color[c(1, 3)],
                labels = c("Alternative Models", "Best Model")
           ) +
           theme_bw() +
@@ -121,7 +115,7 @@ plot_function <- function(i, diseases) {
                fill = NULL,
                title = paste0(LETTERS[i], ': ', diseases[i])
           )
-     if (i %in% c(1, 8, 15, 20)) {
+     if (i %in% c(1, 8, 13, 18)) {
           fig <- fig +
                theme(
                     legend.position = c(0.9, 0.1),
@@ -147,17 +141,16 @@ outcome[[25]] <- guide_area()
 
 plot <- do.call(wrap_plots, outcome) +
      plot_layout(design = layout, guides = 'collect')&
-     theme(
-          title = element_text(size = 8)
-     )
+     theme(plot.title = element_text(face = "bold", size = 13, hjust = 0),
+           legend.text = element_text(face = 'bold', size = 12),
+           legend.title = element_text(face = 'bold', size = 12),
+           legend.box.background = element_rect(fill = "transparent", colour = 'transparent'),
+           legend.background = element_rect(fill = "transparent", colour = 'transparent'),
+           axis.title.x = element_text(face = 'bold', size = 12, color = 'black'),
+           axis.text.x = element_text(size = 12, color = 'black'))
 
-ggsave('./outcome/publish/fig2.pdf',
+ggsave('./outcome/publish/fig3.pdf',
        plot,
        family = "Times New Roman",
        limitsize = FALSE, device = cairo_pdf,
-       width = 14, height = 8)
-
-ggsave('./outcome/publish/fig2.png',
-       plot,
-       limitsize = FALSE,
        width = 14, height = 8)
