@@ -153,4 +153,4 @@ ggsave('./outcome/publish/fig3.pdf',
        plot,
        family = "Times New Roman",
        limitsize = FALSE, device = cairo_pdf,
-       width = 18, height = 9)
+       width = 15, height = 9)
