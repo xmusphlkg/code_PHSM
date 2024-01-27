@@ -105,7 +105,7 @@ plot_function <- function(i, diseases) {
           # ))+
           scale_y_discrete(limits = rev(levels(Data$Method))) +
           scale_fill_manual(
-               values = fill_color[c(1, 3)],
+               values = c("#E64B35FF", '#00A087FF'),
                labels = c("Alternative Models", "Best Model")
           ) +
           theme_bw() +

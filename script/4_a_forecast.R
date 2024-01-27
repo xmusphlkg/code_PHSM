@@ -239,6 +239,7 @@ auto_analysis_function <- function(i){
      fig1 <- ggplot()+
           geom_vline(xintercept = datafile_rect$end,
                      show.legend = F,
+                     color = 'grey',
                      linetype = 'longdash')+
           geom_rect(data = datafile_rect, 
                     aes(xmin = start, 
@@ -275,10 +276,7 @@ auto_analysis_function <- function(i){
                                         Observed = '#00A087FF'))+
           scale_fill_manual(values = c(Decreased = "#E64B3550",
                                        Increased = '#00A08750',
-                                       'Pre-epidemic Period' = "#3381A850",
-                                       'PHSMs Period I' = "#E6383350",
-                                       'PHSMs Period II' = "#5E954650",
-                                       'Epidemic Period' = "#05215D50"))+
+                                       back_color))+
           theme_set()+
           theme(legend.position = 'bottom')+
           labs(x = NULL,
