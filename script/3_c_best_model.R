@@ -99,10 +99,10 @@ plot_function <- function(i, diseases) {
           )
      ) +
           geom_col() +
-          geom_text(mapping = aes(
-               label = sprintf("%.2f", Index),
-               hjust = Index >= 0
-          ))+
+          # geom_text(mapping = aes(
+          #      label = sprintf("%.2f", Index),
+          #      hjust = Index >= 0
+          # ))+
           scale_y_discrete(limits = rev(levels(Data$Method))) +
           scale_fill_manual(
                values = fill_color[c(1, 3)],
@@ -141,16 +141,16 @@ outcome[[25]] <- guide_area()
 
 plot <- do.call(wrap_plots, outcome) +
      plot_layout(design = layout, guides = 'collect')&
-     theme(plot.title = element_text(face = "bold", size = 13, hjust = 0),
+     theme(plot.title = element_text(face = "bold", size = 14, hjust = 0),
            legend.text = element_text(face = 'bold', size = 12),
            legend.title = element_text(face = 'bold', size = 12),
            legend.box.background = element_rect(fill = "transparent", colour = 'transparent'),
            legend.background = element_rect(fill = "transparent", colour = 'transparent'),
-           axis.title.x = element_text(face = 'bold', size = 12, color = 'black'),
-           axis.text.x = element_text(size = 12, color = 'black'))
+           axis.title.x = element_text(face = 'bold', color = 'black'),
+           axis.text.x = element_text(color = 'black'))
 
 ggsave('./outcome/publish/fig3.pdf',
        plot,
        family = "Times New Roman",
        limitsize = FALSE, device = cairo_pdf,
-       width = 14, height = 8)
+       width = 18, height = 9)
