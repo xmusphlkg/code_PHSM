@@ -410,10 +410,11 @@ auto_select_function <- function(i){
      
      fig <- cowplot::plot_grid(fig_ts, fig_table, ncol = 1, rel_heights = c(3, 1))
      
-     ggsave(filename = paste0('./outcome/appendix/figure/', disease_name[i],'.pdf'),
+     ggsave(filename = paste0('./outcome/appendix/Supplementary_1/', disease_name[i],'.png'),
             fig,
             width = 14, height = 15, family = "Times New Roman",
-            limitsize = FALSE, device = cairo_pdf)
+            limitsize = FALSE,
+            dpi = 300)
      fit_goodness$disease <- disease_name[i]
      
      return(fit_goodness)
