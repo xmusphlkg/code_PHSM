@@ -29,33 +29,45 @@ split_date_3 <- as.Date("2023/4/1")
 datafile_plot <- datafile_analysis |> 
      filter(disease_en %in% datafile_class$diseasename) |> 
      select(date, disease_en, value) |> 
-     mutate(disease = factor(disease_en,
+     rename(c(disease = 'disease_en')) |> 
+     mutate(disease = factor(disease,
                              levels = datafile_class$diseasename,
                              labels = datafile_class$diseasename),
             phase = case_when(date < split_date_1 ~ 'Pre-epidemic Periods',
                               date >= split_date_1 & date < split_date_2 ~ 'PHSMs Periods',
-                              date >= split_date_2 ~ 'Epidemic Periods',),
+                              date >= split_date_2 & date < split_date_3 ~ 'Epidemic Periods',
+                              date >= split_date_3 ~ 'Post-epidemic Period'),
             phase = factor(phase,
-                           levels = c('Pre-epidemic Periods', 'PHSMs Periods', 'Epidemic Periods')),
+                           levels = c('Pre-epidemic Periods', 'PHSMs Periods', 'Epidemic Periods', 'Post-epidemic Period')),
             value = as.integer(value)) |> 
      left_join(datafile_class, by = c('disease' = 'diseasename')) |> 
      mutate(class = factor(class,
-                           levels = c("Blood borne and sexually transmitted diseases",
-                                      "Intestinal infectious diseases",
+                           levels = c("Intestinal infectious diseases",
+                                      "Blood borne and sexually transmitted diseases",
                                       "Respiratory infectious diseases",
                                       "Zoonotic infectious diseases")))
-datafile_bubble <- datafile_plot |> 
+
+table(datafile_plot$disease)
+
+# data check --------------------------------------------------------------
+
+date_range <- seq.Date(min(datafile_analysis$date), max(datafile_analysis$date), by='month')
+for (d in datafile_class$diseasename) {
+     data <- datafile_plot |> 
+          filter(disease == d)
+     if(all(date_range %in% data$date)){
+          
+     }else{
+          print(d)
+     }
+}
+
+data_fig_A <- datafile_plot |> 
      group_by(disease, class, level) |> 
      summarise(value = sum(value),
-               .groups = 'drop')
-datafile_legend <- data.frame(
-     disease = LETTERS[1:4],
-     class = 'legend',
-     level = 'A',
-     value = c(2e4, 2e5, 2e6, 2.8e7)
-)
-
-data_fig_A <- rbind(datafile_bubble, datafile_legend)
+               .groups = 'drop') |> 
+     arrange(class, desc(value)) |> 
+     mutate(label = formatC(value, format = "f", big.mark = ",", digits = 0))
 
 # summary of NID ----------------------------------------------------------
 
@@ -114,9 +126,7 @@ datafile_rect <- data.frame(
 datafile_plot <- datafile_plot  |> 
      group_by(phase, date, class) |> 
      summarise(value = sum(value),
-               .groups = 'drop') |> 
-     mutate(class = factor(class,
-                           levels = unique(datafile_class$class))) |> 
+               .groups = 'drop') |>
      group_by(date) |> 
      mutate(percent = value/sum(value))
 
@@ -158,7 +168,7 @@ fig1 <- ggplot(data = datafile_plot)+
                              y = value,
                              color = class))+
      scale_color_manual(values = fill_color)+
-     scale_fill_manual(values = c("#EDD74650", "#DD412450", "#ED8B0050", "#0F85A050", "#00496F50"))+
+     scale_fill_manual(values = back_color)+
      scale_y_continuous(expand = c(0, 0),
                         trans = 'log10',
                         label = scientific_10,
@@ -186,8 +196,8 @@ ggsave(filename = './outcome/publish/fig1_2.pdf',
 # figure data
 data_fig <- list(
      'panel A' = data_fig_A,
-     'panel B' = datafile_plot[,1:3],
-     'panel C' = datafile_plot[,c(1:2, 4)]
+     'panel B' = datafile_plot[,1:4],
+     'panel C' = datafile_plot[,c(1:3, 5)]
 )
 write.xlsx(data_fig,
            file = './outcome/appendix/data/Fig.1 data.xlsx')

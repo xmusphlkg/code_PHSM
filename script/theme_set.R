@@ -1,6 +1,7 @@
 library(lubridate)
 library(extrafont)
 library(RColorBrewer)
+library(paletteer)
 
 # suppressWarnings(font_import(pattern = "times", prompt = F))
 
@@ -49,4 +50,8 @@ func_rmse <-
      }
 
 
-fill_color <- paletteer_d("ggsci::default_jama")
+fill_color <- paletteer_d("MetBrewer::Egypt")
+back_color <- c("#EDD74650", "#DD412450", "#ED8B0050", "#0F85A050", "#00496F50")
+     
+     
+     

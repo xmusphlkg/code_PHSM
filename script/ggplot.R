@@ -63,5 +63,15 @@ plot_outcome <- function(outcome_plot_1,
      return(fig1)
 }
 
-
+evaluate_forecast <- function(actual, forecast) {
+     
+     smape <- mean(200 * abs(actual - forecast) / (abs(actual) + abs(forecast)))
+     rmse <- sqrt(mean((actual - forecast) ^ 2))
+     mase <- mean(abs(actual - forecast)) / mean(abs(diff(actual)))
+     
+     correlation <- cor(actual, forecast)
+     r_squared <- correlation^2
+     
+     return(c('SMAPE' = smape, 'RMSE' = rmse, 'MASE' = mase, 'R_Squared' = r_squared))
+}
 
