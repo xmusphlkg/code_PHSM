@@ -367,7 +367,7 @@ auto_select_function <- function(i){
                            theme = ttheme("blank", base_size = 10, padding = unit(c(5, 5), "mm"))) |>
           tab_add_hline(at.row = nrow(datafile_table)/4+1, row.side = "bottom", linewidth = 2) |>
           tab_add_hline(at.row = 1:2, row.side = "top", linewidth = 2) |> 
-          tab_add_title(paste0(LETTERS[8], " : RMSE of Models"), face = "bold", size = 14) |> 
+          tab_add_title(paste0(LETTERS[7], " : RMSE of Models"), face = "bold", size = 14) |> 
           tab_add_footnote('*Hybrid: Combined SARIMA, ETS, STL\nand Neural Network model', 
                            just = "left",hjust = 1,size = 10)
      table2 <- ggtexttable(datafile_table[datafile_table$Index == "SMAPE", 1:4],
@@ -376,7 +376,7 @@ auto_select_function <- function(i){
                            theme = ttheme("blank", base_size = 10, padding = unit(c(5, 5), "mm"))) |>
           tab_add_hline(at.row = nrow(datafile_table)/4+1, row.side = "bottom", linewidth = 2) |>
           tab_add_hline(at.row = 1:2, row.side = "top", linewidth = 2) |> 
-          tab_add_title(paste0(LETTERS[9], " : SMAPE of Models"), face = "bold", size = 14) |> 
+          tab_add_title(paste0(LETTERS[8], " : SMAPE of Models"), face = "bold", size = 14) |> 
           tab_add_footnote('*Hybrid: Combined SARIMA, ETS, STL\nand Neural Network model', 
                            just = "left",hjust = 1,size = 10)
      table3 <- ggtexttable(datafile_table[datafile_table$Index == "MASE", 1:4],
@@ -385,7 +385,7 @@ auto_select_function <- function(i){
                            theme = ttheme("blank", base_size = 10, padding = unit(c(5, 5), "mm"))) |>
           tab_add_hline(at.row = nrow(datafile_table)/4+1, row.side = "bottom", linewidth = 2) |>
           tab_add_hline(at.row = 1:2, row.side = "top", linewidth = 2) |> 
-          tab_add_title(paste0(LETTERS[10], " : MASE of Models"), face = "bold", size = 14) |> 
+          tab_add_title(paste0(LETTERS[9], " : MASE of Models"), face = "bold", size = 14) |> 
           tab_add_footnote('*Hybrid: Combined SARIMA, ETS, STL\nand Neural Network model', 
                            just = "left",hjust = 1,size = 10)
      table4 <- ggtexttable(datafile_table[datafile_table$Index == "R_Squared", 1:4],
@@ -394,7 +394,7 @@ auto_select_function <- function(i){
                            theme = ttheme("blank", base_size = 10, padding = unit(c(5, 5), "mm"))) |>
           tab_add_hline(at.row = nrow(datafile_table)/4+1, row.side = "bottom", linewidth = 2) |>
           tab_add_hline(at.row = 1:2, row.side = "top", linewidth = 2) |> 
-          tab_add_title(paste0(LETTERS[11], " : R-squared of Models"), face = "bold", size = 14) |> 
+          tab_add_title(paste0(LETTERS[10], " : R-squared of Models"), face = "bold", size = 14) |> 
           tab_add_footnote('*Hybrid: Combined SARIMA, ETS, STL\nand Neural Network model', 
                            just = "left",hjust = 1,size = 10)
      
