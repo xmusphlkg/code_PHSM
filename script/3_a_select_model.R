@@ -28,22 +28,25 @@ remove(list = ls())
 source('./script/theme_set.R')
 source('./script/ggplot.R')
 
-datafile_analysis <- read.xlsx('./data/Nation.xlsx', detectDates = T) %>% 
-     filter(date >= as.Date('2008/1/1'))
+datafile_analysis <- read.xlsx('./data/nation_and_provinces.xlsx',
+                               detectDates = T, sheet = 'Nation')|>
+     filter(date >= as.Date("2008-1-1")) |> 
+     mutate(value = as.integer(value))
+
+datafile_class <- read.xlsx('./outcome/appendix/data/Fig.1 data.xlsx',
+                            sheet = 'panel A') |> 
+     select(-c(value, label))
 
 split_date <- as.Date("2019/12/1")
 train_length <- 12*10
 test_length <- 12*2
-forcast_length <- 12+12+12+3
+forcast_length <- 12*4
 
 scientific_10 <- function(x) {
      ifelse(x == 0, 0, parse(text = gsub("[+]", "", gsub("e", "%*%10^", scales::scientific_format()(x)))))
 }
 
-datafile_class <- read.xlsx("./data/disease_class.xlsx")
-
-disease_list <- datafile_class$diseaselist
-disease_name <- datafile_class$diseasename
+disease_name <- datafile_class$disease
 
 # data clean --------------------------------------------------------------
 
@@ -51,9 +54,9 @@ i <- 1
 
 auto_select_function <- function(i){
      set.seed(202208)
-     datafile_single <- datafile_analysis %>% 
-          filter(disease_1 == disease_list[i]) %>% 
-          select(date, disease_1, value) %>% 
+     datafile_single <- datafile_analysis|> 
+          filter(disease_en == disease_name[i])|> 
+          select(date, disease_en, value) |> 
           complete(
                date = seq.Date(
                     from = min(date),
@@ -61,7 +64,7 @@ auto_select_function <- function(i){
                     by = 'month'
                ),
                fill = list(value = 0,
-                           disease_1 = disease_list[i])
+                           disease_en = disease_name[i])
           )
      
      ## simulate date before 2020
@@ -71,7 +74,7 @@ auto_select_function <- function(i){
           filter(date <= split_date)%>% 
           select(value)
      
-     max_case <- max(df_simu)
+     max_case <- max(df_simu$value)
      
      ts_obse_1 <- df_simu %>% 
           ts(frequency = 12,
@@ -98,9 +101,10 @@ auto_select_function <- function(i){
      
      fit_goodness <- data.frame(
           Method = 'Neural Network',
-          Train = postResample(outcome_plot_1$fit[!is.na(outcome_plot_1$fit)], outcome_plot_1$simu[!is.na(outcome_plot_1$fit)]),
-          Test = postResample(outcome_plot_2$mean, ts_test_1),
-          'Train and Test' = postResample(c(outcome_plot_1$fit[-which(is.na(outcome_plot_1$fit))], outcome_plot_2$mean), ts_obse_1[-which(is.na(outcome_plot_1$fit))])
+          Index = c('SMAPE', 'RMSE', 'MASE', 'R_Squared'),
+          Train = evaluate_forecast(outcome_plot_1$fit[!is.na(outcome_plot_1$fit)], outcome_plot_1$simu[!is.na(outcome_plot_1$fit)]),
+          Test = evaluate_forecast(outcome_plot_2$mean, ts_test_1),
+          'Train and Test' = evaluate_forecast(c(outcome_plot_1$fit[-which(is.na(outcome_plot_1$fit))], outcome_plot_2$mean), ts_obse_1[-which(is.na(outcome_plot_1$fit))])
      )
      
      fig_nnet_1 <- plot_outcome(
@@ -118,7 +122,9 @@ auto_select_function <- function(i){
      # Prophet -------------------------------------------------------------------
      
      mod <- prophet(data.frame(ds = zoo::as.Date(time(ts_train_1)), y = as.numeric(ts_train_1)),
-                    interval.width = 0.95)
+                    interval.width = 0.95,
+                    weekly.seasonality = FALSE,
+                    daily.seasonality = FALSE)
      future <- make_future_dataframe(mod, periods = test_length, freq = "month")
      forecast <- predict(mod, future)
      
@@ -141,9 +147,10 @@ auto_select_function <- function(i){
           rbind(
                data.frame(
                     Method = 'Prophet',
-                    Train = postResample(outcome_plot_1$simu, outcome_plot_1$fit),
-                    Test = postResample(outcome_plot_2$mean, ts_test_1),
-                    'Train and Test' = postResample(c(outcome_plot_1$fit, outcome_plot_2$mean), ts_obse_1)
+                    Index = c('SMAPE', 'RMSE', 'MASE', 'R_Squared'),
+                    Train = evaluate_forecast(outcome_plot_1$simu, outcome_plot_1$fit),
+                    Test = evaluate_forecast(outcome_plot_2$mean, ts_test_1),
+                    'Train and Test' = evaluate_forecast(c(outcome_plot_1$fit, outcome_plot_2$mean), ts_obse_1)
                )
           )
      
@@ -183,9 +190,10 @@ auto_select_function <- function(i){
           rbind(
                data.frame(
                     Method = 'ETS',
-                    Train = postResample(outcome_plot_1$simu, outcome_plot_1$fit),
-                    Test = postResample(outcome_plot_2$mean, ts_test_1),
-                    'Train and Test' = postResample(c(outcome_plot_1$fit, outcome_plot_2$mean), ts_obse_1))
+                    Index = c('SMAPE', 'RMSE', 'MASE', 'R_Squared'),
+                    Train = evaluate_forecast(outcome_plot_1$simu, outcome_plot_1$fit),
+                    Test = evaluate_forecast(outcome_plot_2$mean, ts_test_1),
+                    'Train and Test' = evaluate_forecast(c(outcome_plot_1$fit, outcome_plot_2$mean), ts_obse_1))
           )
      
      fig_ets_1 <- plot_outcome(
@@ -224,9 +232,10 @@ auto_select_function <- function(i){
           rbind(
                data.frame(
                     Method = 'SARIMA',
-                    Train = postResample(outcome_plot_1$fit, outcome_plot_1$simu),
-                    Test = postResample(outcome_plot_2$mean, ts_test_1),
-                    'Train and Test' = postResample(c(outcome_plot_1$fit, outcome_plot_2$mean), ts_obse_1)
+                    Index = c('SMAPE', 'RMSE', 'MASE', 'R_Squared'),
+                    Train = evaluate_forecast(outcome_plot_1$fit, outcome_plot_1$simu),
+                    Test = evaluate_forecast(outcome_plot_2$mean, ts_test_1),
+                    'Train and Test' = evaluate_forecast(c(outcome_plot_1$fit, outcome_plot_2$mean), ts_obse_1)
                )
           )
      
@@ -268,9 +277,10 @@ auto_select_function <- function(i){
           rbind(
                data.frame(
                     Method = 'Hybrid',
-                    Train = postResample(outcome_plot_1$simu[!is.na(outcome_plot_1$fit)], outcome_plot_1$fit[!is.na(outcome_plot_1$fit)]),
-                    Test = postResample(outcome_plot_2$mean, ts_test_1),
-                    'Train and Test' = postResample(c(outcome_plot_1$fit[-which(is.na(outcome_plot_1$fit))], outcome_plot_2$mean), ts_obse_1[-which(is.na(outcome_plot_1$fit))]))
+                    Index = c('SMAPE', 'RMSE', 'MASE', 'R_Squared'),
+                    Train = evaluate_forecast(outcome_plot_1$simu[!is.na(outcome_plot_1$fit)], outcome_plot_1$fit[!is.na(outcome_plot_1$fit)]),
+                    Test = evaluate_forecast(outcome_plot_2$mean, ts_test_1),
+                    'Train and Test' = evaluate_forecast(c(outcome_plot_1$fit[-which(is.na(outcome_plot_1$fit))], outcome_plot_2$mean), ts_obse_1[-which(is.na(outcome_plot_1$fit))]))
           )
      
      fig_hyb_1 <- plot_outcome(
@@ -311,9 +321,10 @@ auto_select_function <- function(i){
           rbind(
                data.frame(
                     Method = 'Bayesian Structural',
-                    Train = postResample(outcome_plot_1$simu[!is.na(outcome_plot_1$fit)], outcome_plot_1$fit[!is.na(outcome_plot_1$fit)]),
-                    Test = postResample(outcome_plot_2$mean, ts_test_1),
-                    'Train and Test' = postResample(c(outcome_plot_1$fit, outcome_plot_2$mean), ts_obse_1)
+                    Index = c('SMAPE', 'RMSE', 'MASE', 'R_Squared'),
+                    Train = evaluate_forecast(outcome_plot_1$simu[!is.na(outcome_plot_1$fit)], outcome_plot_1$fit[!is.na(outcome_plot_1$fit)]),
+                    Test = evaluate_forecast(outcome_plot_2$mean, ts_test_1),
+                    'Train and Test' = evaluate_forecast(c(outcome_plot_1$fit, outcome_plot_2$mean), ts_obse_1)
                )
           )
      
@@ -342,7 +353,6 @@ auto_select_function <- function(i){
                  Train.and.Test = round(Train.and.Test, 2)) |> 
           arrange(Method)
      datafile_table[is.na(datafile_table)] <- ""
-     datafile_table$Index <- str_remove_all(rownames(datafile_table), "[0-9]+")
      
      table1 <- ggtexttable(datafile_table[datafile_table$Index == "RMSE", 1:4],
                            rows = NULL,
@@ -353,7 +363,25 @@ auto_select_function <- function(i){
           tab_add_title(paste0(LETTERS[8], " : RMSE of Models"), face = "bold", size = 14) |> 
           tab_add_footnote('*Hybrid: Combined SARIMA, ETS, STL\nand Neural Network model', 
                            just = "left",hjust = 1,size = 10)
-     table2 <- ggtexttable(datafile_table[datafile_table$Index == "Rsquared", 1:4],
+     table2 <- ggtexttable(datafile_table[datafile_table$Index == "SMAPE", 1:4],
+                           rows = NULL,
+                           cols = c('Method', 'Train', 'Test', 'Train and Test'),
+                           theme = ttheme("blank", base_size = 10, padding = unit(c(5, 5), "mm"))) |>
+          tab_add_hline(at.row = nrow(datafile_table)/3+1, row.side = "bottom", linewidth = 1) |>
+          tab_add_hline(at.row = 1:2, row.side = "top", linewidth = 2) |> 
+          tab_add_title(paste0(LETTERS[10], " : SMAPE of Models"), face = "bold", size = 14) |> 
+          tab_add_footnote('*Hybrid: Combined SARIMA, ETS, STL\nand Neural Network model', 
+                           just = "left",hjust = 1,size = 10)
+     table3 <- ggtexttable(datafile_table[datafile_table$Index == "MASE", 1:4],
+                           rows = NULL,
+                           cols = c('Method', 'Train', 'Test', 'Train and Test'),
+                           theme = ttheme("blank", base_size = 10, padding = unit(c(5, 5), "mm"))) |>
+          tab_add_hline(at.row = nrow(datafile_table)/3+1, row.side = "bottom", linewidth = 1) |>
+          tab_add_hline(at.row = 1:2, row.side = "top", linewidth = 2) |> 
+          tab_add_title(paste0(LETTERS[10], " : MASE of Models"), face = "bold", size = 14) |> 
+          tab_add_footnote('*Hybrid: Combined SARIMA, ETS, STL\nand Neural Network model', 
+                           just = "left",hjust = 1,size = 10)
+     table4 <- ggtexttable(datafile_table[datafile_table$Index == "R_Squared", 1:4],
                            rows = NULL,
                            cols = c('Method', 'Train', 'Test', 'Train and Test'),
                            theme = ttheme("blank", base_size = 10, padding = unit(c(5, 5), "mm"))) |>
@@ -362,19 +390,9 @@ auto_select_function <- function(i){
           tab_add_title(paste0(LETTERS[9], " : R-squared of Models"), face = "bold", size = 14) |> 
           tab_add_footnote('*Hybrid: Combined SARIMA, ETS, STL\nand Neural Network model', 
                            just = "left",hjust = 1,size = 10)
-     table3 <- ggtexttable(datafile_table[datafile_table$Index == "MAE", 1:4],
-                           rows = NULL,
-                           cols = c('Method', 'Train', 'Test', 'Train and Test'),
-                           theme = ttheme("blank", base_size = 10, padding = unit(c(5, 5), "mm"))) |>
-          tab_add_hline(at.row = nrow(datafile_table)/3+1, row.side = "bottom", linewidth = 1) |>
-          tab_add_hline(at.row = 1:2, row.side = "top", linewidth = 2) |> 
-          tab_add_title(paste0(LETTERS[10], " : MAE of Models"), face = "bold", size = 14) |> 
-          tab_add_footnote('*Hybrid: Combined SARIMA, ETS, STL\nand Neural Network model', 
-                           just = "left",hjust = 1,size = 10)
      
-     fig_table <- table1 + table2 + table3 +
-          plot_layout(ncol = 3)
-     # fig_com <- fig1 + table + plot_layout(widths = c(1.7, 1))
+     fig_table <- table1 + table2 + table3 + table4 +
+          plot_layout(ncol = 4)
      
      # save --------------------------------------------------------------------
      
@@ -430,7 +448,7 @@ clusterEvalQ(cl, {
 })
 
 clusterExport(cl, c('datafile_analysis', 'disease_list', 'disease_name', 
-                    'fill_color', 'postResample', 'theme_set', 
+                    'fill_color', 'evaluate_forecast', 'theme_set', 
                     'scientific_10', 'plot_outcome'), 
               envir = environment())
 outcome <- parLapply(cl, 1:24, auto_select_function)
