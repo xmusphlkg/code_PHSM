@@ -47,9 +47,10 @@ datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.1 data.xlsx",
 ) |>
   select(-c(value, label))
 
-datafile_class <- read.xlsx("./outcome/appendix/model/select.xlsx") |>
+datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.3 data.xlsx") |>
+  filter(Best == 1) |> 
+  select(disease, Method) |> 
   left_join(datafile_class, by = c(disease = "disease")) |>
-  rename(Method = "Best") |>
   filter(!is.na(class)) |>
   mutate(disease = factor(disease, levels = datafile_class$disease)) |>
   arrange(disease)
@@ -60,8 +61,6 @@ scientific_10 <- function(x) {
 }
 
 # data clean --------------------------------------------------------------
-
-i <- 9
 
 auto_analysis_function <- function(i) {
   set.seed(202305)
@@ -97,7 +96,7 @@ auto_analysis_function <- function(i) {
 
   datafile_single <- datafile_analysis |>
     filter(disease_en == datafile_class$disease[i]) |>
-    select(date, disease_en, value) %>%
+    select(date, disease_en, value) |> 
     complete(
       date = seq.Date(
         from = min(date),
@@ -110,7 +109,7 @@ auto_analysis_function <- function(i) {
       )
     )
 
-  ## simulate date before 2020
+  ## simulate
   df_simu <- datafile_single |>
     arrange(date) |>
     unique() |>
@@ -137,7 +136,7 @@ auto_analysis_function <- function(i) {
   print(datafile_class$disease[i])
   print(datafile_class$Method[i])
   if (datafile_class$Method[i] == "SARIMA") {
-    mod <- auto.arima(ts_train_1, seasonal = T, ic = "aicc")
+    mod <- auto.arima(ts_train_1, seasonal = T, ic = "aicc", lambda = 'auto')
     outcome <- forecast(mod, h = forcast_length)
 
     outcome_plot_2 <- data.frame(
@@ -171,7 +170,8 @@ auto_analysis_function <- function(i) {
   }
 
   if (datafile_class$Method[i] == "ETS") {
-    outcome <- forecast(ets(ts_train_1), h = forcast_length)
+    outcome <- forecast(ets(ts_train_1, ic = 'aicc', lambda = 'auto'),
+                        h = forcast_length)
 
     outcome_plot_2 <- data.frame(
       date = zoo::as.Date(time(outcome$mean)),
@@ -184,7 +184,7 @@ auto_analysis_function <- function(i) {
   }
 
   if (datafile_class$Method[i] == "Neural Network") {
-    mod <- nnetar(ts_train_1)
+    mod <- nnetar(ts_train_1, lambda = 'auto')
 
     outcome_2 <- forecast(mod, h = forcast_length)
 
@@ -198,7 +198,7 @@ auto_analysis_function <- function(i) {
     )
   }
 
-  if (datafile_class$Method[i] == "Hybrid") {
+  if (datafile_class$Method[i] == "Hybrid*") {
     mod <- hybridModel(ts_train_1,
       models = c("aesn"),
       a.args = list(seasonal = T),
@@ -249,7 +249,7 @@ auto_analysis_function <- function(i) {
   write.xlsx(
     outcome_data,
     paste0(
-      "./outcome/appendix/data/forecast/",
+      "./outcome/appendix/forecast/",
       datafile_class$disease[i], ".xlsx"
     )
   )
@@ -391,7 +391,7 @@ ggsave("./outcome/publish/fig4.pdf",
 # merge data file ---------------------------------------------------------
 
 file_list <- paste0(
-  "./outcome/appendix/data/forecast/",
+  "./outcome/appendix/forecast/",
   datafile_class$disease,
   ".xlsx"
 )

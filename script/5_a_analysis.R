@@ -15,7 +15,7 @@ datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.1 data.xlsx",
 ) |>
   select(-c(value, label))
 file_list <- paste0(
-  "./outcome/appendix/Supplementary_3/",
+  "./outcome/appendix/forecast/",
   datafile_class$disease,
   ".xlsx"
 )

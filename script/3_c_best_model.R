@@ -14,7 +14,7 @@ source("./script/ggplot.R")
 
 # data --------------------------------------------------------------------
 
-DataRaw <- read.xlsx("./outcome/appendix/model/pre-epidemic.xlsx")
+DataRaw <- read.xlsx("./outcome/appendix/Supplementary Appendix 2.xlsx")
 datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.1 data.xlsx",
   sheet = "panel A"
 ) |>
@@ -51,6 +51,18 @@ DataClean <- DataClean |>
     Best = Method[which.max(Index)],
   ) |>
   ungroup()
+DataClean$Best <- as.numeric(DataClean$Method == DataClean$Best)
+DataClean$Method <- factor(DataClean$Method,
+                           levels = c(
+                                "Neural Network", "Prophet",
+                                "ETS", "SARIMA", "Hybrid", "Bayesian Structural"
+                           ),
+                           labels = c(
+                                "Neural Network", "Prophet",
+                                "ETS", "SARIMA", "Hybrid*", "Bayesian Structural"
+                           )
+)
+diseases <- datafile_class$disease
 
 ## save normalized composite index
 DataTable <- DataClean |>
@@ -62,20 +74,6 @@ write.xlsx(
 )
 
 # plot for each model -----------------------------------------------------
-
-DataClean$Best <- as.numeric(DataClean$Method == DataClean$Best)
-DataClean$Method <- factor(DataClean$Method,
-  levels = c(
-    "Neural Network", "Prophet",
-    "ETS", "SARIMA", "Hybrid", "Bayesian Structural"
-  ),
-  labels = c(
-    "Neural Network", "Prophet",
-    "ETS", "SARIMA", "Hybrid*", "Bayesian Structural"
-  )
-)
-
-diseases <- datafile_class$disease
 
 layout <- "
 ABCDEFG

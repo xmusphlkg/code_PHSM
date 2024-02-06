@@ -93,7 +93,7 @@ auto_select_function <- function(i) {
 
   # NNET --------------------------------------------------------------------
 
-  mod <- nnetar(ts_train_1)
+  mod <- nnetar(ts_train_1, lambda = 'auto')
   outcome <- forecast(mod, h = test_length)
 
   outcome_plot_1 <- data.frame(
@@ -134,7 +134,10 @@ auto_select_function <- function(i) {
 
   # Prophet -------------------------------------------------------------------
 
-  mod <- prophet(data.frame(ds = zoo::as.Date(time(ts_train_1)), y = as.numeric(ts_train_1)),
+  mod <- prophet(data.frame(
+       ds = zoo::as.Date(time(ts_train_1)), 
+       y = as.numeric(ts_train_1)
+    ),
     interval.width = 0.95,
     weekly.seasonality = FALSE,
     daily.seasonality = FALSE
@@ -183,7 +186,7 @@ auto_select_function <- function(i) {
 
   # ETS ---------------------------------------------------------------------
 
-  mod <- ets(ts_train_1)
+  mod <- ets(ts_train_1, ic = 'aicc', lambda = 'auto')
   outcome <- forecast(mod, h = test_length)
 
   outcome_plot_1 <- data.frame(
@@ -226,7 +229,7 @@ auto_select_function <- function(i) {
 
   # SARIMA -------------------------------------------------------------------
 
-  mod <- auto.arima(ts_train_1, seasonal = T)
+  mod <- auto.arima(ts_train_1, seasonal = T, ic = 'aicc', lambda = 'auto')
   outcome <- forecast(mod, h = test_length)
 
   outcome_plot_1 <- data.frame(
@@ -271,7 +274,8 @@ auto_select_function <- function(i) {
   mod <- hybridModel(ts_train_1,
     models = c("aesn"),
     a.args = list(seasonal = T),
-    weights = "equal", parallel = TRUE, num.cores = 10
+    weights = "equal", parallel = TRUE, num.cores = 10,
+    errorMethod = 'MAE'
   )
   outcome <- forecast(mod, h = test_length)
 
@@ -503,4 +507,4 @@ outcome <- parLapply(cl, 1:24, auto_select_function)
 stopCluster(cl)
 
 datafile_outcome <- do.call("rbind", outcome)
-write.xlsx(datafile_outcome, "./outcome/appendix/Supplementary_2.xlsx")
+write.xlsx(datafile_outcome, "./outcome/appendix/Supplementary Appendix 2.xlsx")

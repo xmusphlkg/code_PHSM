@@ -29,7 +29,7 @@ datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.1 data.xlsx",
   select(-c(value, label))
 
 DataAll <- list.files(
-  path = "./outcome/appendix/data/forecast/",
+  path = "./outcome/appendix/forecast/",
   pattern = "*.xlsx",
   full.names = TRUE
 ) |>
@@ -70,7 +70,7 @@ Data <- DataAll |>
 
 write.xlsx(
   Data,
-  "./outcome/appendix/data/Table S3.xlsx"
+  "./outcome/appendix/Table S1.xlsx"
 )
 
 Data <- DataAll |>

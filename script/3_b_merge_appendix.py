@@ -7,11 +7,11 @@ import pandas as pd
 from reportlab.lib import utils
 
 # read data
-nation_and_provinces_df = pd.read_excel('../data/nation_and_provinces.xlsx', sheet_name='Class')
-fig1_data_df = pd.read_excel('../outcome/appendix/Figure Data/Fig.1 data.xlsx', sheet_name='panel A')
+nation_and_provinces_df = pd.read_excel('./data/nation_and_provinces.xlsx', sheet_name='Class')
+fig1_data_df = pd.read_excel('./outcome/appendix/Figure Data/Fig.1 data.xlsx', sheet_name='panel A')
 
 # empty pdf file
-pdf_filename = '../outcome/appendix/Supplementary_1/Supplementary Appendix 1.pdf'
+pdf_filename = './outcome/appendix/Supplementary Appendix 1.pdf'
 doc = SimpleDocTemplate(pdf_filename, pagesize=A4, leftMargin=20, rightMargin=20, topMargin=15, bottomMargin=20)
 story = []
 
@@ -44,7 +44,7 @@ for index, row in fig1_data_df.iterrows():
     label = nation_and_provinces_df[nation_and_provinces_df['diseasename'] == disease_name]['label'].values[0]
 
     # add figure
-    img_path = f'../outcome/appendix/Supplementary_1/{disease_name}.png'
+    img_path = f'./outcome/appendix/Supplementary_1/{disease_name}.png'
     img = utils.ImageReader(img_path)
     image = Image(img_path, width=560, height=600)
     story.append(image)
