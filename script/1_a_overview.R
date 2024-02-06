@@ -201,5 +201,5 @@ data_fig <- list(
      'panel C' = datafile_plot[,c(1:3, 5)]
 )
 write.xlsx(data_fig,
-           file = './outcome/appendix/data/Fig.1 data.xlsx')
+           file = './outcome/appendix/Figure Data/Fig.1 data.xlsx')
 

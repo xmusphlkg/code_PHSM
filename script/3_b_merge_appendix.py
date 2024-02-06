@@ -8,7 +8,7 @@ from reportlab.lib import utils
 
 # read data
 nation_and_provinces_df = pd.read_excel('../data/nation_and_provinces.xlsx', sheet_name='Class')
-fig1_data_df = pd.read_excel('../outcome/appendix/data/Fig.1 data.xlsx', sheet_name='panel A')
+fig1_data_df = pd.read_excel('../outcome/appendix/Figure Data/Fig.1 data.xlsx', sheet_name='panel A')
 
 # empty pdf file
 pdf_filename = '../outcome/appendix/Supplementary_1/Supplementary Appendix 1.pdf'
