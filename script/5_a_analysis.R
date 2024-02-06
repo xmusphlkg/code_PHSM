@@ -3,6 +3,10 @@ library(tidyverse)
 library(patchwork)
 library(openxlsx)
 
+scientific_10 <- function(x) {
+     parse(text = gsub("[+]", "", gsub("1e", "10^", scales::scientific_format()(x))))
+}
+
 # read data ---------------------------------------------------------------
 
 file_list <- paste0('./outcome/appendix/data/forecast/',
