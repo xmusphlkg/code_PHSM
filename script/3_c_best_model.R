@@ -141,9 +141,9 @@ outcome[[25]] <- guide_area()
 
 plot <- do.call(wrap_plots, outcome) +
      plot_layout(design = layout, guides = 'collect')&
-     theme(plot.title = element_text(face = "bold", size = 14, hjust = 0),
-           legend.text = element_text(face = 'bold', size = 12),
-           legend.title = element_text(face = 'bold', size = 12),
+     theme(plot.title = element_text(face = "bold", size = 10, hjust = 0),
+           legend.text = element_text(face = 'bold'),
+           legend.title = element_text(face = 'bold'),
            legend.box.background = element_rect(fill = "transparent", colour = 'transparent'),
            legend.background = element_rect(fill = "transparent", colour = 'transparent'),
            axis.title.x = element_text(face = 'bold', color = 'black'),
@@ -153,4 +153,4 @@ ggsave('./outcome/publish/fig3.pdf',
        plot,
        family = "Times New Roman",
        limitsize = FALSE, device = cairo_pdf,
-       width = 15, height = 9)
+       width = 12, height = 6)
