@@ -15,7 +15,9 @@ scientific_10 <- function(x) {
      parse(text = gsub("[+]", "", gsub("1e", "10^", scales::scientific_format()(x))))
 }
 
-datafile_analysis <- read.xlsx('./data/nation_and_provinces.xlsx', detectDates = T, sheet = 'Nation')
+datafile_analysis <- read.xlsx('./data/nation_and_provinces.xlsx',
+                               detectDates = T, sheet = 'Nation')
+datafile_analysis$date <- as.Date(datafile_analysis$date)
 datafile_class <- read.xlsx('./data/nation_and_provinces.xlsx', sheet = 'Class')
 
 # left border
@@ -51,7 +53,9 @@ table(datafile_plot$disease)
 
 # data check --------------------------------------------------------------
 
-date_range <- seq.Date(min(datafile_analysis$date), max(datafile_analysis$date), by='month')
+date_range <- seq.Date(min(datafile_analysis$date),
+                       max(datafile_analysis$date),
+                       by='month')
 for (d in datafile_class$diseasename) {
      data <- datafile_plot |> 
           filter(disease == d)
@@ -108,9 +112,6 @@ datafile_plot |>
      geom_line(mapping = aes(x = date,
                              y = value,
                              color = disease))
-19178/1480 - 1
-23525/1665 - 1
-
 
 # background rect ---------------------------------------------------------
 

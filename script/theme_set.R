@@ -58,8 +58,7 @@ func_rmse <-
     )
   }
 
-
-fill_color <- paletteer_d("MetBrewer::Egypt")
+fill_color <- c("#BC3C29FF", "#0072B5FF", "#E18727FF", "#20854EFF")
 fill_color_disease <- paletteer_d("ggsci::nrc_npg")
 back_color <- c('Pre-epidemic Period' = "#3381A850",
                 'PHSMs Period I' = "#E6383350",
