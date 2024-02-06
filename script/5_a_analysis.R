@@ -102,7 +102,7 @@ fig <- ggplot(data = data_single_group)+
                                 title = NULL))
 
 ggsave('./outcome/publish/fig5_1.pdf',
-       plot,
+       fig,
        family = "Times New Roman",
        limitsize = FALSE, device = cairo_pdf,
        width = 6, height = 3)
