@@ -75,3 +75,34 @@ ggsave('./outcome/publish/fig5.pdf',
 
 write.xlsx(data_list,
            file = './outcome/appendix/data/Fig.5 data.xlsx')
+
+fig <- ggplot(data = data_single_group)+
+     geom_col(mapping = aes(x = date,
+                            y = diff,
+                            fill = disease_en))+
+     geom_hline(yintercept = 0)+
+     theme_set()+
+     scale_x_date(
+          expand = expansion(add = c(15, 15)),
+          date_breaks = "1 year",
+          date_labels = "%Y"
+     ) +
+     scale_y_continuous(
+          expand = expansion(mult = c(0.15, 0.15)),
+          labels = scientific_10
+     ) +
+     scale_fill_manual(values = fill_color_disease)+
+     theme(legend.position = 'none')+
+     labs(x = NULL,
+          y = NULL,
+          fill = NULL,
+          title = NULL)+
+     guides(fill = guide_legend(ncol = 3,
+                                byrow = T,
+                                title = NULL))
+
+ggsave('./outcome/publish/fig5_1.pdf',
+       plot,
+       family = "Times New Roman",
+       limitsize = FALSE, device = cairo_pdf,
+       width = 6, height = 3)
