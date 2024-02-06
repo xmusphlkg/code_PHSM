@@ -3,12 +3,17 @@ library(tidyverse)
 library(patchwork)
 library(openxlsx)
 
+source('./script/theme_set.R')
+source('./script/ggplot.R')
+
 scientific_10 <- function(x) {
      parse(text = gsub("[+]", "", gsub("1e", "10^", scales::scientific_format()(x))))
 }
 
 # read data ---------------------------------------------------------------
-
+datafile_class <- read.xlsx('./outcome/appendix/data/Fig.1 data.xlsx',
+                            sheet = 'panel A') |> 
+     select(-c(value, label))
 file_list <- paste0('./outcome/appendix/data/forecast/',
                     datafile_class$disease,
                     '.xlsx')
@@ -39,7 +44,6 @@ for (i in 1:4) {
                                  y = diff,
                                  fill = disease_en))+
           geom_hline(yintercept = 0)+
-          theme_set()+
           scale_x_date(
                expand = expansion(add = c(15, 15)),
                date_breaks = "1 year",
@@ -51,6 +55,7 @@ for (i in 1:4) {
                labels = scientific_10
           ) +
           scale_fill_manual(values = fill_color_disease)+
+          theme_set()+
           theme(legend.position = c(0.01, 0.01),
                 legend.justification = c(0, 0))+
           labs(x = 'Date',
