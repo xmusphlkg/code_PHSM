@@ -8,7 +8,11 @@ All data were collected from the monthly Notifiable Infectious Diseases Reports 
 
 ## Code
 
-The code is written in R 4.3.1. The code for the analysis is available at [code](./code) folder. The code is organized as follows:
+The code is written in R 4.3.2.
+
+### Run
+
+The code for the analysis is available at [code](./code) folder. The code is organized as follows:
 
 - [1](./script/1_a_overview.R): data preparation and analysis
 - [2](./script/2_b_diseases.R): analysis each disease

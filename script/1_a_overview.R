@@ -76,10 +76,16 @@ data_fig_A <- datafile_plot |>
 # summary of NID ----------------------------------------------------------
 
 ## disease list
-unique(datafile_plot$disease)
+print('The disease list:')
+print(table(datafile_plot$disease))
 
 ## total
-sum(datafile_plot$value)
+print('The total number:')
+print(sum(datafile_plot$value))
+
+## disease number
+print('The disease number:')
+print(aggregate(value ~ disease, data = datafile_plot, sum))
 
 ## each group
 datafile_plot |> 
@@ -184,11 +190,9 @@ fig1 <- ggplot(data = datafile_plot)+
           y = "Monthly incidence",
           color = NULL,
           title = 'B')
-fig1
-
-fig1 + fig2 + plot_layout(ncol = 1)
 
 ggsave(filename = './outcome/publish/fig1_2.pdf',
+       fig1 + fig2 + plot_layout(ncol = 1),
        width = 14,
        height = 8,
        device = cairo_pdf,
@@ -200,6 +204,7 @@ data_fig <- list(
      'panel B' = datafile_plot[,1:4],
      'panel C' = datafile_plot[,c(1:3, 5)]
 )
+
 write.xlsx(data_fig,
            file = './outcome/appendix/Figure Data/Fig.1 data.xlsx')
 

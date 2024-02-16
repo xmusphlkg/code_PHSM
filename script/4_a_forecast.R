@@ -234,6 +234,9 @@ auto_analysis_function <- function(i) {
       upper_95 = outcome$interval[4, ]
     )
   }
+  
+  # correct all negative value into zero
+  outcome_plot_2[outcome_plot_2 < 0] <- 0
 
   max_value <- max(outcome_plot_2[, 2], max_case, na.rm = T)
   min_value <- min(outcome_plot_2[, 2], na.rm = T)
@@ -283,7 +286,8 @@ auto_analysis_function <- function(i) {
         y = value,
         colour = "Observed"
       ),
-      linewidth = 0.7, data = outcome_plot_3
+      linewidth = 0.7,
+      data = outcome_plot_3
     ) +
     geom_line(
       mapping = aes(
@@ -291,7 +295,8 @@ auto_analysis_function <- function(i) {
         y = mean,
         colour = "Forecasted"
       ),
-      linewidth = 0.7, data = outcome_plot_2
+      linewidth = 0.7,
+      data = outcome_plot_2
     ) +
     stat_difference(
       mapping = aes(
@@ -301,7 +306,8 @@ auto_analysis_function <- function(i) {
       ),
       data = outcome_data,
       alpha = 0.3,
-      levels = c("Decreased", "Increased")
+      levels = c("Decreased", "Increased"),
+      show.legend = F,
     ) +
     coord_cartesian(
       ylim = c(0, NA),

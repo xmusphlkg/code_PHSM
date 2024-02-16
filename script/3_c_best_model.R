@@ -32,23 +32,24 @@ DataClean <- DataRaw |>
 DataClean <- DataClean |>
   group_by(disease) |>
   mutate(
-    norR2 = (R_Squared - mean(R_Squared, na.rm = T)) / sd(R_Squared, na.rm = T),
-    norSMAPE = -(SMAPE - mean(SMAPE, na.rm = T)) / sd(SMAPE, na.rm = T),
-    norRMSE = -(RMSE - mean(RMSE, na.rm = T)) / sd(RMSE, na.rm = T),
-    norMASE = -(MASE - mean(MASE, na.rm = T)) / sd(MASE, na.rm = T),
-    Index = sum(norR2, norSMAPE, na.rm = T)
+    # norR2 = (R_Squared - mean(R_Squared, na.rm = T)) / sd(R_Squared, na.rm = T),
+    norSMAPE = (SMAPE - mean(SMAPE, na.rm = T)) / sd(SMAPE, na.rm = T),
+    norRMSE = (RMSE - mean(RMSE, na.rm = T)) / sd(RMSE, na.rm = T),
+    norMASE = (MASE - mean(MASE, na.rm = T)) / sd(MASE, na.rm = T),
+    Index = sum(norSMAPE, norRMSE, norMASE, na.rm = T)
   ) |>
   rowwise() |>
   mutate(
-    Index = sum(c_across(norR2:norMASE), na.rm = T)
+    Index = sum(c_across(norSMAPE:norMASE), na.rm = T)
   ) |>
+  # mutate(Index = SMAPE) |> 
   ungroup()
 
 ## find the best method for each disease based on the maximum index
 DataClean <- DataClean |>
   group_by(disease) |>
   mutate(
-    Best = Method[which.max(Index)],
+    Best = Method[which.min(Index)]
   ) |>
   ungroup()
 DataClean$Best <- as.numeric(DataClean$Method == DataClean$Best)
@@ -100,6 +101,7 @@ plot_function <- function(i, diseases) {
     #      hjust = Index >= 0
     # ))+
     scale_y_discrete(limits = rev(levels(Data$Method))) +
+    scale_x_continuous(limits = c(-6, 6))+
     scale_fill_manual(
       values = c("#E64B35FF", "#00A087FF"),
       labels = c("Alternative Models", "Best Model")
