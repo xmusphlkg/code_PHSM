@@ -11,7 +11,7 @@ nation_and_provinces_df = pd.read_excel('./data/nation_and_provinces.xlsx', shee
 fig1_data_df = pd.read_excel('./outcome/appendix/Figure Data/Fig.1 data.xlsx', sheet_name='panel A')
 
 # empty pdf file
-pdf_filename = './outcome/appendix/Supplementary Appendix 1.pdf'
+pdf_filename = './outcome/appendix/Supplementary Appendix 1_1.pdf'
 doc = SimpleDocTemplate(pdf_filename, pagesize=A4, leftMargin=20, rightMargin=20, topMargin=15, bottomMargin=20)
 story = []
 
@@ -59,7 +59,7 @@ for index, row in fig1_data_df.iterrows():
     <b>(D)</b> Seasonal autoregressive integrated moving average (SARIMA) model; <b>(E)</b> Hybrid models combining
     SARIMA, ETS, STL (seasonal and trend decomposition using loess), and neural network model;
     <b>(F)</b> Bayesian structural model; <b>(G)</b> Root mean square error (RMSE) of variant models;
-    <b>(H)</b> Symmetric mean absolute percentage error of variant models; <b>(I)</b> Mean absolute scaled error (MASE)
+    <b>(H)</b> Symmetric mean absolute percentage error (SMAPE) of variant models; <b>(I)</b> Mean absolute scaled error (MASE)
     of variant models; <b>(J)</b> R-squared of variant models."""
     title = Paragraph(title_content, styles['Normal'])
     story.append(title)

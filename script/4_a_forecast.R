@@ -66,7 +66,7 @@ auto_analysis_function <- function(i) {
   set.seed(202305)
 
   ## set split date
-  split_date <- as.Date("2019/1/1")
+  split_date <- as.Date("2018/1/1")
   split_date_0 <- as.Date("2020/1/1")
   split_date_1 <- as.Date("2020/4/1")
   split_date_2 <- as.Date("2022/11/1")
@@ -108,6 +108,13 @@ auto_analysis_function <- function(i) {
         disease_en = datafile_class$disease[i]
       )
     )
+  
+  ## Rubella outbreak from March 2019 to July 2019
+  if (datafile_class$disease[i] == 'Rubella') {
+    train_length <- 12 * 12 - 12
+    forcast_length <- 12 * 4 + 12
+    datafile_class$Method[i] <- "SARIMA"
+  }
 
   ## simulate
   df_simu <- datafile_single |>

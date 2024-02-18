@@ -6,9 +6,15 @@ This is the code and data for the paper "Temporal trends and shifts of 24 notifi
 
 All data were collected from the monthly Notifiable Infectious Diseases Reports published by the National Health Commission of China. These reports aggregate data derived from the National Notifiable Disease Surveillance System, which was established in 2004. The study period spans from January 2008 to July 2023. However, for specific monthly reports in 2013 (January, February, April, and August), data were sourced directly from the Chinese public health science data center (https://www.phsciencedata.cn/share/ky_sjml.jsp). And avaliable data for the study period is available at [data](./data) folder.
 
-## Code
+### Code
 
-The code is written in R 4.3.2.
+The code is scripted in R version 4.3.2 and Python version 3.11.5.
+
+### Preparation
+
+The replication of this project's code is advised to be executed on a server, with the following recommended specifications:
+
+The CPU offering no fewer than 30 threads and a minimum of 32GB of operating memory.
 
 ### Run
 

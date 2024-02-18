@@ -69,6 +69,11 @@ auto_select_function <- function(i) {
         disease_en = disease_name[i]
       )
     )
+  
+  ## Rubella outbreak from March 2019 to July 2019
+  if (disease_name[i] == 'Rubella') {
+    datafile_single$value[datafile_single$date >= as.Date('2019-01-01')] <- NA
+  }
 
   ## simulate date before 2020
   df_simu <- datafile_single %>%
@@ -77,7 +82,7 @@ auto_select_function <- function(i) {
     filter(date <= split_date) %>%
     select(value)
 
-  max_case <- max(df_simu$value)
+  max_case <- max(df_simu$value, na.rm = T)
 
   ts_obse_1 <- df_simu %>%
     ts(
@@ -457,7 +462,8 @@ auto_select_function <- function(i) {
   ggsave(
     filename = paste0("./outcome/appendix/Supplementary_1/", disease_name[i], ".png"),
     fig,
-    width = 14, height = 15, family = "Times New Roman",
+    device = 'png',
+    width = 14, height = 15,
     limitsize = FALSE,
     dpi = 300
   )

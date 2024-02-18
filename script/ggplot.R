@@ -64,6 +64,12 @@ plot_outcome <- function(outcome_plot_1,
 }
 
 evaluate_forecast <- function(actual, forecast) {
+     # find na values
+     na_value <- is.na(actual) | is.na(forecast)
+     
+     # drop na values
+     actual <- actual[!na_value]
+     forecast <- forecast[!na_value]
      
      smape <- mean(200 * abs(actual - forecast) / (abs(actual) + abs(forecast)))
      rmse <- sqrt(mean((actual - forecast) ^ 2))

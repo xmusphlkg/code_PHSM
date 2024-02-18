@@ -115,7 +115,10 @@ plot_single <- function(i) {
   group_list <- group_lists[i]
   datafile_group_single <- datafile_group |>
     filter(class == group_list)
-  datafile_plot_single <- data_fig[[LETTERS[i]]]
+  datafile_plot_single <- data_fig[[LETTERS[i]]] |> 
+    mutate(out_label = if_else(value_norm > 10,
+                               '*',
+                               ''))
 
   fig1 <- ggplot(data = datafile_group_single) +
     geom_rect(
@@ -172,12 +175,17 @@ plot_single <- function(i) {
     )
   ) +
     geom_tile() +
+    geom_text(
+      mapping = aes(
+        label = out_label
+      ),
+      vjust = 0.5
+    )+
     coord_equal(3) +
     scale_fill_gradientn(
       colors = paletteer_d("awtools::a_palette"),
       trans = log_fill,
-      limits = c(-5, 10),
-      na.value = "black"
+      limits = c(-5, 10)
     ) +
     scale_x_discrete(
       breaks = paste(seq(2008, 2023), "01", sep = "."),
@@ -198,7 +206,7 @@ plot_single <- function(i) {
     labs(
       x = "Date",
       y = NULL,
-      fill = "Monthly Incidence (Normalize)"
+      fill = "Normalized monthly incidence"
     )
 
   return(fig1 + fig2 + plot_layout(ncol = 1, heights = c(1, 1)))

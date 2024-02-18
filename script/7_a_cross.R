@@ -1,11 +1,3 @@
-#####################################
-## @Description:
-## @version:
-## @Author: Li Kangguo
-## @Date: 2023-10-21 14:52:14
-## @LastEditors: Li Kangguo
-## @LastEditTime: 2023-10-21 15:08:20
-#####################################
 
 # packages ----------------------------------------------------------------
 
@@ -25,32 +17,32 @@ remove(list = ls())
 
 source("./script/theme_set.R")
 
-select_disease <- c('HFMD', 'Dengue fever', 'Japanese encephalitis',
-                    'Malaria', 'Pertussis', 'Scarlet fever',
-                    'Mumps', 'Rubella')
+select_disease <- c('HFMD', 'Dengue fever', 'Rubella', 'Scarlet fever',
+                    'HFRS', 'Pertussis', 'Mumps')
 
 # data --------------------------------------------------------------------
 
 DataAll <- list.files(
-  path = "./outcome/appendix/data/forecast/",
+  path = "./outcome/appendix/forecast/",
   pattern = "*.xlsx",
   full.names = TRUE
 ) |>
   lapply(read.xlsx, detectDates = T) |>
   bind_rows()
 
-datafile_class <- read.xlsx('./data/disease_class.xlsx')
-datafile_class$diseasename <- factor(datafile_class$diseasename, levels = datafile_class$diseasename)
-datafile_class$class <- factor(datafile_class$class, levels = unique(datafile_class$class))
+datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.1 data.xlsx",
+                            sheet = "panel A"
+) |>
+  select(-c(value, label))
 
 DataAll <- DataAll |>
   left_join(datafile_class,
-    by = c("disease_1" = "diseaselist")
+    by = c("disease_en" = "disease")
   ) |>
   mutate(
-    RR = value / mean
+    IRR = (value + 1) / (mean + 1)
   ) |> 
-     filter(diseasename %in% select_disease & date < as.Date('2022/11/1'))
+     filter(diseasename %in% select_disease)
 
 # cross-correlation analysis ------------------------------------------------------
 

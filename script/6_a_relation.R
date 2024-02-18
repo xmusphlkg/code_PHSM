@@ -10,6 +10,8 @@ library(lubridate)
 library(scales)
 library(factoextra)
 library(ggdendroplot)
+library(forecast)
+library(NbClust)
 
 remove(list = ls())
 
@@ -34,7 +36,8 @@ DataAll <- list.files(
   full.names = TRUE
 ) |>
   lapply(read.xlsx, detectDates = T) |>
-  bind_rows()
+  bind_rows() |> 
+  filter(date >= split_date_0)
 
 datafile_class$disease <- factor(datafile_class$disease,
   levels = datafile_class$disease
@@ -48,12 +51,13 @@ DataAll <- DataAll |>
     by = c("disease_en" = "disease")
   ) |>
   mutate(
-    RR = value / mean,
+    IRR = (value + 1) / (mean + 1),
     Periods = case_when(
-      date < split_date_1 ~ "Pre-epidemic Periods",
-      date >= split_date_1 & date < split_date_2 ~ "PHSMs Periods",
-      date >= split_date_2 & date < split_date_3 ~ "Epidemic Periods",
-      date >= split_date_3 ~ "Post-epidemic Period"
+      date < split_date_0 ~ "Pre-epidemic period",
+      date >= split_date_0 & date < split_date_1 ~ "PHSMs period I",
+      date >= split_date_1 & date < split_date_2 ~ "PHSMs period II",
+      date >= split_date_2 & date < split_date_3 ~ "Epidemic period",
+      date >= split_date_3 ~ "Post-epidemic period"
     )
   )
 
@@ -73,30 +77,46 @@ write.xlsx(
   "./outcome/appendix/Table S1.xlsx"
 )
 
-Data <- DataAll |>
-  group_by(class, disease_en, Periods) |>
-  summarise(
-    q2 = quantile(RR, 0.5, na.rm = T),
-    q1 = quantile(RR, 0.25, na.rm = T),
-    q3 = quantile(RR, 0.75, na.rm = T),
-    s = wilcox.test(RR, mu = 1)$statistic,
-    P = round(wilcox.test(RR, mu = 1)$p.value, 4),
-    .groups = "drop"
-  )
-
-write.xlsx(
-  Data,
-  "./outcome/appendix/Table S2.xlsx"
-)
-
 # plot --------------------------------------------------------------------
 
+# figure data
+data_fig <- list()
+
+for (i in 1:4) {
+  Class <- levels(datafile_class$class)[i]
+  # save figure data
+  DataTable1 <- DataAll |>
+    filter(class == Class) |>
+    group_by(class, disease_en, Periods) |>
+    summarise(
+      q2 = quantile(IRR, 0.5, na.rm = T),
+      q1 = quantile(IRR, 0.25, na.rm = T),
+      q3 = quantile(IRR, 0.75, na.rm = T),
+      s = wilcox.test(IRR, mu = 1)$statistic,
+      P = round(wilcox.test(IRR, mu = 1)$p.value, 4),
+      .groups = "drop"
+    ) |> 
+    as.data.frame()
+  data_fig[[paste('panel', LETTERS[i*2-1])]] <- DataTable1
+  
+  
+  DataTable2 <- DataAll |>
+    filter(class == Class) |>
+    mutate(date = format(ymd(date), "%Y.%m"),
+           label = if_else(IRR > 4, '*', '')) |> 
+    select(disease_en, class, Periods, date, value, mean, IRR, label) |> 
+    as.data.frame()
+  data_fig[[paste('panel', LETTERS[i*2])]] <- DataTable2
+  
+  remove(DataTable1, DataTable2)
+}
 
 plot_rr <- function(i) {
   Class <- levels(datafile_class$class)[i]
   Data <- DataAll |>
     filter(class == Class) |>
-    mutate(date = format(ymd(date), "%Y.%m"))
+    mutate(date = format(ymd(date), "%Y.%m"),
+           label = if_else(IRR > 4, '*', ''))
   fill_value <- fill_color[i]
 
   fig1 <- ggplot(data = Data) +
@@ -107,7 +127,7 @@ plot_rr <- function(i) {
     ) +
     geom_boxplot(mapping = aes(
       y = disease_en,
-      x = RR,
+      x = IRR,
       fill = class
     ),
     show.legend = F) +
@@ -124,13 +144,19 @@ plot_rr <- function(i) {
   fig2 <- ggplot(
     data = Data,
     mapping = aes(
-      fill = RR,
+      fill = IRR,
       x = date,
       y = disease_en
     )
   ) +
     geom_tile() +
-    geom_vline(xintercept = c(3.5, 34.5)) +
+    geom_vline(xintercept = c(3.5, 34.5, 39.5)) +
+    geom_text(
+      mapping = aes(
+        label = label
+        ),
+      vjust = 0.5
+    )+
     scale_fill_gradientn(
       colors = paletteer_d("awtools::a_palette"),
       limits = c(0, 4)
@@ -147,12 +173,14 @@ plot_rr <- function(i) {
     theme_bw() +
     theme(
       axis.text.y = element_blank(),
-      legend.position = "bottom"
+      legend.position = "bottom",
+      plot.title.position = "plot"
     ) +
     guides(fill = guide_colourbar(barwidth = 20, barheight = 0.5, color = "black")) +
     labs(
       x = NULL,
       y = NULL,
+      fill = 'Adjusted IRR',
       title = paste0(LETTERS[2 * i])
     )
   fig1 + fig2 + plot_layout(widths = c(1, 3))
@@ -164,7 +192,7 @@ plot <- do.call(wrap_plots, c(outcome, ncol = 1, byrow = FALSE)) +
   plot_layout(guides = "collect") &
   theme(legend.position = "bottom")
 
-# plot cluster ----------------------------------------------------------------
+# incidence cluster -------------------------------------------------------
 
 set.seed(20231021)
 
@@ -198,14 +226,54 @@ DataMatInci <- DataMatInci |>
   select(-disease) |>
   as.matrix()
 rownames(DataMatInci) <- diseasename
-# DataMatInci <- scale(DataMatInci)
+DataMatInci <- scale(DataMatInci)
 
-# cluster for report case
+log_trans_with_zero <- function() {
+  trans_new(name = 'log_with_zero',
+            trans = function(x) log10(ifelse(x == 0, 0.05, x)),
+            inverse = function(x) exp(x))
+}
+
+hcdata <- hkmeans(DataMatInci, 2)
+fig1 <- fviz_dend(hcdata,
+                  cex = 0.6,
+                  k_colors = fill_color_disease[9:8],
+                  rect = TRUE,
+                  rect_fill = TRUE,
+                  horiz = TRUE,
+                  # type = "circular",
+                  main = LETTERS[9]
+) +
+  theme(
+    axis.ticks.y = element_blank(),
+    axis.text.x = element_text(size = 12, color = "black"),
+    plot.title.position = "plot",
+    plot.caption.position = "plot",
+    plot.title = element_text(face = "bold", size = 14, hjust = 0)
+  )+
+  scale_y_continuous(trans = scales::pseudo_log_trans(base = 10))
+
+data_fig[[paste0(LETTERS[9])]] <- data.frame(
+  disease = names(hcdata$cluster),
+  cluster = as.integer(hcdata$cluster)
+) |> 
+  left_join(
+    data.frame(
+      disease = rownames(hcdata[["data"]]),
+      as.data.frame(hcdata[["data"]])
+    )
+  )
+
+# IRR cluster -------------------------------------------------------------
+
+set.seed(20240218)
+
+# cluster for IRR
 DataMatRR <- DataAll |>
-  select(RR, date, disease_en) |>
+  select(IRR, date, disease_en) |>
   pivot_wider(
     names_from = date,
-    values_from = RR
+    values_from = IRR
   )
 
 diseasename <- DataMatRR$disease_en
@@ -213,77 +281,114 @@ DataMatRR <- DataMatRR |>
   select(-disease_en) |>
   as.matrix()
 rownames(DataMatRR) <- diseasename
-# DataMatRR <- scale(DataMatRR)
+# lambda <- BoxCox.lambda(DataMatRR)
+# DataMatRR <- BoxCox(DataMatRR, lambda)
+DataMatRR <- log(DataMatRR)
+DataMatRR <- scale(DataMatRR)
 
-## Pre-epidemic incidence
-hcdata <- hkmeans(DataMatInci, 2)
-fig1 <- fviz_dend(hcdata,
-  cex = 0.6,
-  k_colors = fill_color_disease[2:1],
-  rect = TRUE,
-  rect_fill = TRUE,
-  main = LETTERS[9]
-) +
-  theme(
-    axis.text.x = element_blank(),
-    axis.text.y = element_blank(),
-    axis.ticks = element_blank(),
-    axis.title = element_blank()
-  )
-hcdata <- hkmeans(DataMatRR[, 1:3], 2)
-fig2 <- fviz_dend(hcdata,
-  cex = 0.6,
-  k_colors = fill_color_disease[5:4],
-  rect = TRUE,
-  rect_fill = TRUE,
-  main = LETTERS[10]
-) +
-  theme(
-    axis.text.x = element_blank(),
-    axis.text.y = element_blank(),
-    axis.ticks = element_blank(),
-    axis.title = element_blank()
+## PHSMs period I
+hcdata <- hkmeans(DataMatRR[, 1:3], 3)
+fig2 <- fviz_cluster(hcdata,
+             data = DataMatRR[, 1:3],
+             main = LETTERS[10],
+             ggtheme = theme_set(),
+             repel = TRUE,
+             k_colors = fill_color_disease[5:3],
+             palette = "npg"
+             )+
+  theme(legend.position = 'none')
+data_fig[[paste0(LETTERS[10])]] <- data.frame(
+  disease = names(hcdata$cluster),
+  cluster = as.integer(hcdata$cluster)
+) |>
+  left_join(
+    data.frame(
+      disease = rownames(hcdata[["data"]]),
+      as.data.frame(hcdata[["data"]])
+    )
   )
 
 ## PHSMs period II
-hcdata <- hkmeans(DataMatRR[, 4:34], 2)
-fig3 <- fviz_dend(hcdata,
-  cex = 0.6,
-  k_colors = fill_color_disease[5:4],
-  rect = TRUE,
-  rect_fill = TRUE,
-  main = LETTERS[11]
-) +
-  theme(
-    axis.text.x = element_blank(),
-    axis.text.y = element_blank(),
-    axis.ticks = element_blank(),
-    axis.title = element_blank()
+hcdata <- hkmeans(DataMatRR[, 4:34], 3)
+fig3 <- fviz_cluster(hcdata,
+                     data = DataMatRR[, 4:34],
+                     main = LETTERS[11],
+                     ggtheme = theme_set(),
+                     repel = TRUE,
+                     k_colors = fill_color_disease[5:3],
+                     palette = "npg"
+)+
+  theme(legend.position = 'none')
+data_fig[[paste0(LETTERS[11])]] <- data.frame(
+  disease = names(hcdata$cluster),
+  cluster = as.integer(hcdata$cluster)
+) |>
+  left_join(
+    data.frame(
+      disease = rownames(hcdata[["data"]]),
+      as.data.frame(hcdata[["data"]])
+    )
   )
 
 ## Epidemic period
-hcdata <- hkmeans(DataMatRR[, 35:39], 2)
-fig4 <- fviz_dend(hcdata,
-  cex = 0.6,
-  k_colors = fill_color_disease[5:4],
-  rect = TRUE,
-  rect_fill = TRUE,
-  main = LETTERS[12]
-) +
-  theme(
-    axis.text.x = element_blank(),
-    axis.text.y = element_blank(),
-    axis.ticks = element_blank(),
-    axis.title = element_blank()
+hcdata <- hkmeans(DataMatRR[, 35:39], 3)
+fig4 <- fviz_cluster(hcdata,
+                     data = DataMatRR[, 35:39],
+                     main = LETTERS[12],
+                     ggtheme = theme_set(),
+                     repel = TRUE,
+                     k_colors = fill_color_disease[5:3],
+                     palette = "npg"
+)+
+  theme(legend.position = 'none')
+data_fig[[paste0(LETTERS[12])]] <- data.frame(
+  disease = names(hcdata$cluster),
+  cluster = as.integer(hcdata$cluster)
+) |>
+  left_join(
+    data.frame(
+      disease = rownames(hcdata[["data"]]),
+      as.data.frame(hcdata[["data"]])
+    )
   )
 
-plot1 <- fig1 + fig2 + fig3 + fig4 +
-  plot_layout(ncol = 2, byrow = T)
+## Post-epidemic period
+hcdata <- hkmeans(DataMatRR[, 40:48], 3)
+fig5 <- fviz_cluster(hcdata,
+                     data = DataMatRR[, 40:48],
+                     main = LETTERS[13],
+                     ggtheme = theme_set(),
+                     repel = TRUE,
+                     k_colors = fill_color_disease[5:3],
+                     palette = "npg"
+)+
+  theme(legend.position = 'none')
+data_fig[[paste0(LETTERS[13])]] <- data.frame(
+  disease = names(hcdata$cluster),
+  cluster = as.integer(hcdata$cluster)
+) |>
+  left_join(
+    data.frame(
+      disease = rownames(hcdata[["data"]]),
+      as.data.frame(hcdata[["data"]])
+    )
+  )
+
+layout <- "
+ABC
+ADE
+"
+
+plot1 <- fig1 + fig2 + fig3 + fig4 + fig5 +
+  plot_layout(design = layout)
 
 
-ggsave("./outcome/publish/fig5.pdf",
+ggsave("./outcome/publish/fig6.pdf",
   cowplot::plot_grid(plot, plot1, ncol = 1, rel_heights = c(2.2, 2)),
   family = "Times New Roman",
   limitsize = FALSE, device = cairo_pdf,
   width = 14, height = 14
 )
+
+write.xlsx(data_fig,
+           file = './outcome/appendix/Figure Data/Fig.6 data.xlsx')
