@@ -170,5 +170,11 @@ ggsave("./outcome/publish/fig7.pdf",
        limitsize = FALSE, device = cairo_pdf,
        width = 8, height = 5)
 
+data_fig <- list()
+for (i in 1:length(select_disease)) {
+     data_fig[[paste('panel', LETTERS[i])]] <- cross_correlation_results |> 
+          filter(diseasename == select_disease[i])
+}
+
 write.xlsx(data_fig,
            file = './outcome/appendix/Figure Data/Fig.7 data.xlsx')
