@@ -26,7 +26,9 @@ data_list <- do.call("rbind", data_list) |>
   left_join(datafile_class, by = c(disease_en = "disease")) |>
   mutate(disease_en = factor(disease_en,
     levels = datafile_class$disease
-  ))
+  )) |> 
+  filter(!is.na(class))
+
 group_lists <- unique(datafile_class$class)
 data_scale <- data_list |>
   group_by(date, class) |>
@@ -94,10 +96,6 @@ ggsave("./outcome/publish/fig5.pdf",
   width = 12, height = 7
 )
 
-write.xlsx(data_list,
-  file = "./outcome/appendix/Figure Data/Fig.5 data.xlsx"
-)
-
 fig <- ggplot(data = data_single_group) +
   geom_col(mapping = aes(
     x = date,
@@ -126,7 +124,7 @@ fig <- ggplot(data = data_single_group) +
   guides(fill = guide_legend(
     ncol = 3,
     byrow = T,
-    title = NULL
+    title = LETTERS[5]
   ))
 
 ggsave("./outcome/publish/fig5_1.pdf",
@@ -135,3 +133,15 @@ ggsave("./outcome/publish/fig5_1.pdf",
   limitsize = FALSE, device = cairo_pdf,
   width = 6, height = 3
 )
+
+data_fig <- list()
+for (i in 1:length(group_lists)) {
+     data_fig[[paste('panel', LETTERS[i])]] <- data_list |>
+          filter(class == group_lists[i])
+}
+data_fig[[paste('panel', LETTERS[5])]] <- data_list |>
+     filter(class == group_lists[4])
+
+write.xlsx(data_fig,
+           file = './outcome/appendix/Figure Data/Fig.5 data.xlsx')
+
