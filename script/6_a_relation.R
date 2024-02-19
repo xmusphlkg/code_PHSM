@@ -119,7 +119,7 @@ plot_rr <- function(i) {
            label = if_else(IRR > 4, '*', ''))
   fill_value <- fill_color[i]
 
-  fig1 <- ggplot(data = Data) +
+  fig1 <- ggplot(data = filter(Data, Periods %in% c("PHSMs period I", "PHSMs period II", "Epidemic period"))) +
     geom_vline(
       xintercept = 1,
       show.legend = F,
@@ -194,7 +194,7 @@ plot <- do.call(wrap_plots, c(outcome, ncol = 1, byrow = FALSE)) +
 
 # incidence cluster -------------------------------------------------------
 
-set.seed(20231021)
+set.seed(20240218)
 
 # cluster for incidence
 datafile_analysis <- read.xlsx('./data/nation_and_provinces.xlsx',
@@ -287,9 +287,9 @@ DataMatRR <- log(DataMatRR)
 DataMatRR <- scale(DataMatRR)
 
 ## PHSMs period I
-hcdata <- hkmeans(DataMatRR[, 1:3], 3)
+hcdata <- hkmeans(DataMatRR[, 1:40], 4)
 fig2 <- fviz_cluster(hcdata,
-             data = DataMatRR[, 1:3],
+             data = DataMatRR[, 1:40],
              main = LETTERS[10],
              ggtheme = theme_set(),
              repel = TRUE,
@@ -297,6 +297,7 @@ fig2 <- fviz_cluster(hcdata,
              palette = "npg"
              )+
   theme(legend.position = 'none')
+
 data_fig[[paste0(LETTERS[10])]] <- data.frame(
   disease = names(hcdata$cluster),
   cluster = as.integer(hcdata$cluster)
@@ -309,16 +310,21 @@ data_fig[[paste0(LETTERS[10])]] <- data.frame(
   )
 
 ## PHSMs period II
-hcdata <- hkmeans(DataMatRR[, 4:34], 3)
 fig3 <- fviz_cluster(hcdata,
-                     data = DataMatRR[, 4:34],
+                     data = DataMatRR[, 1:40],
                      main = LETTERS[11],
                      ggtheme = theme_set(),
                      repel = TRUE,
                      k_colors = fill_color_disease[5:3],
                      palette = "npg"
 )+
-  theme(legend.position = 'none')
+  theme(legend.position = 'none',
+        panel.background = element_rect(fill='transparent'),
+        plot.background = element_rect(fill='transparent', color = 'black'))+
+  labs(color = 'Cluster')+
+  coord_cartesian(xlim = c(0, 5),
+                  ylim = c(-1, 2))
+
 data_fig[[paste0(LETTERS[11])]] <- data.frame(
   disease = names(hcdata$cluster),
   cluster = as.integer(hcdata$cluster)
@@ -330,56 +336,16 @@ data_fig[[paste0(LETTERS[11])]] <- data.frame(
     )
   )
 
-## Epidemic period
-hcdata <- hkmeans(DataMatRR[, 35:39], 3)
-fig4 <- fviz_cluster(hcdata,
-                     data = DataMatRR[, 35:39],
-                     main = LETTERS[12],
-                     ggtheme = theme_set(),
-                     repel = TRUE,
-                     k_colors = fill_color_disease[5:3],
-                     palette = "npg"
-)+
-  theme(legend.position = 'none')
-data_fig[[paste0(LETTERS[12])]] <- data.frame(
-  disease = names(hcdata$cluster),
-  cluster = as.integer(hcdata$cluster)
-) |>
-  left_join(
-    data.frame(
-      disease = rownames(hcdata[["data"]]),
-      as.data.frame(hcdata[["data"]])
-    )
-  )
-
-## Post-epidemic period
-hcdata <- hkmeans(DataMatRR[, 40:48], 3)
-fig5 <- fviz_cluster(hcdata,
-                     data = DataMatRR[, 40:48],
-                     main = LETTERS[13],
-                     ggtheme = theme_set(),
-                     repel = TRUE,
-                     k_colors = fill_color_disease[5:3],
-                     palette = "npg"
-)+
-  theme(legend.position = 'none')
-data_fig[[paste0(LETTERS[13])]] <- data.frame(
-  disease = names(hcdata$cluster),
-  cluster = as.integer(hcdata$cluster)
-) |>
-  left_join(
-    data.frame(
-      disease = rownames(hcdata[["data"]]),
-      as.data.frame(hcdata[["data"]])
-    )
-  )
+fig2 <- fig2 + inset_element(fig3, left = 0.05, bottom = 0.2, right = 0.55, top = 1)
 
 layout <- "
-ABC
-ADE
+ACC
+ABB
+ABB
+ABB
 "
 
-plot1 <- fig1 + fig2 + fig3 + fig4 + fig5 +
+plot1 <- fig1 + fig2 + guide_area()+
   plot_layout(design = layout)
 
 
