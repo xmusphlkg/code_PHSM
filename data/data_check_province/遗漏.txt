@@ -1,0 +1,1235 @@
+Anhui 2020 1 手足口病 HFMD
+Anhui 2020 2 手足口病 HFMD
+Anhui 2020 4 手足口病 HFMD
+Anhui 2020 6 手足口病 HFMD
+Anhui 2020 8 手足口病 HFMD
+Anhui 2020 9 手足口病 HFMD
+Anhui 2020 10 手足口病 HFMD
+Anhui 2020 11 手足口病 HFMD
+Anhui 2021 1 手足口病 HFMD
+Chongqing 2020 10 急性出血性结膜炎 AHC
+Chongqing 2020 10 手足口病 HFMD
+Chongqing 2020 10 其它感染性腹泻病 Infectious diarrhea
+Chongqing 2020 10 包虫病 Echinococcosis
+Chongqing 2020 10 斑疹伤寒 Typhus
+Chongqing 2020 10 流行性腮腺炎 Mumps
+Chongqing 2020 10 风疹 Rubella
+Chongqing 2020 10 艾滋病 AIDS
+Chongqing 2020 10 乙肝 Hepatitis B
+Chongqing 2020 10 丙肝 Hepatitis C
+Guangdong 2005 12 急性出血性结膜炎 AHC
+Guangdong 2005 12 手足口病 HFMD
+Guangdong 2005 12 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2005 12 包虫病 Echinococcosis
+Guangdong 2005 12 斑疹伤寒 Typhus
+Guangdong 2005 12 流行性腮腺炎 Mumps
+Guangdong 2005 12 风疹 Rubella
+Guangdong 2008 5 急性出血性结膜炎 AHC
+Guangdong 2008 5 手足口病 HFMD
+Guangdong 2008 5 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2008 5 包虫病 Echinococcosis
+Guangdong 2008 5 斑疹伤寒 Typhus
+Guangdong 2008 5 流行性腮腺炎 Mumps
+Guangdong 2008 5 风疹 Rubella
+Guangdong 2008 6 急性出血性结膜炎 AHC
+Guangdong 2008 6 手足口病 HFMD
+Guangdong 2008 6 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2008 6 包虫病 Echinococcosis
+Guangdong 2008 6 斑疹伤寒 Typhus
+Guangdong 2008 6 流行性腮腺炎 Mumps
+Guangdong 2008 6 风疹 Rubella
+Guangdong 2008 7 急性出血性结膜炎 AHC
+Guangdong 2008 7 手足口病 HFMD
+Guangdong 2008 7 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2008 7 包虫病 Echinococcosis
+Guangdong 2008 7 斑疹伤寒 Typhus
+Guangdong 2008 7 流行性腮腺炎 Mumps
+Guangdong 2008 7 风疹 Rubella
+Guangdong 2008 8 急性出血性结膜炎 AHC
+Guangdong 2008 8 手足口病 HFMD
+Guangdong 2008 8 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2008 8 包虫病 Echinococcosis
+Guangdong 2008 8 斑疹伤寒 Typhus
+Guangdong 2008 8 流行性腮腺炎 Mumps
+Guangdong 2008 8 风疹 Rubella
+Guangdong 2008 9 急性出血性结膜炎 AHC
+Guangdong 2008 9 手足口病 HFMD
+Guangdong 2008 9 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2008 9 包虫病 Echinococcosis
+Guangdong 2008 9 斑疹伤寒 Typhus
+Guangdong 2008 9 流行性腮腺炎 Mumps
+Guangdong 2008 9 风疹 Rubella
+Guangdong 2008 10 急性出血性结膜炎 AHC
+Guangdong 2008 10 手足口病 HFMD
+Guangdong 2008 10 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2008 10 包虫病 Echinococcosis
+Guangdong 2008 10 斑疹伤寒 Typhus
+Guangdong 2008 10 流行性腮腺炎 Mumps
+Guangdong 2008 10 风疹 Rubella
+Guangdong 2008 11 急性出血性结膜炎 AHC
+Guangdong 2008 11 手足口病 HFMD
+Guangdong 2008 11 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2008 11 包虫病 Echinococcosis
+Guangdong 2008 11 斑疹伤寒 Typhus
+Guangdong 2008 11 流行性腮腺炎 Mumps
+Guangdong 2008 11 风疹 Rubella
+Guangdong 2008 12 急性出血性结膜炎 AHC
+Guangdong 2008 12 手足口病 HFMD
+Guangdong 2008 12 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2008 12 包虫病 Echinococcosis
+Guangdong 2008 12 斑疹伤寒 Typhus
+Guangdong 2008 12 流行性腮腺炎 Mumps
+Guangdong 2008 12 风疹 Rubella
+Guangdong 2009 1 急性出血性结膜炎 AHC
+Guangdong 2009 1 手足口病 HFMD
+Guangdong 2009 1 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2009 1 包虫病 Echinococcosis
+Guangdong 2009 1 斑疹伤寒 Typhus
+Guangdong 2009 1 流行性腮腺炎 Mumps
+Guangdong 2009 1 风疹 Rubella
+Guangdong 2009 2 急性出血性结膜炎 AHC
+Guangdong 2009 2 手足口病 HFMD
+Guangdong 2009 2 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2009 2 包虫病 Echinococcosis
+Guangdong 2009 2 斑疹伤寒 Typhus
+Guangdong 2009 2 流行性腮腺炎 Mumps
+Guangdong 2009 2 风疹 Rubella
+Guangdong 2009 3 急性出血性结膜炎 AHC
+Guangdong 2009 3 手足口病 HFMD
+Guangdong 2009 3 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2009 3 包虫病 Echinococcosis
+Guangdong 2009 3 斑疹伤寒 Typhus
+Guangdong 2009 3 流行性腮腺炎 Mumps
+Guangdong 2009 3 风疹 Rubella
+Guangdong 2009 4 急性出血性结膜炎 AHC
+Guangdong 2009 4 手足口病 HFMD
+Guangdong 2009 4 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2009 4 包虫病 Echinococcosis
+Guangdong 2009 4 斑疹伤寒 Typhus
+Guangdong 2009 4 流行性腮腺炎 Mumps
+Guangdong 2009 4 风疹 Rubella
+Guangdong 2009 5 急性出血性结膜炎 AHC
+Guangdong 2009 5 手足口病 HFMD
+Guangdong 2009 5 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2009 5 包虫病 Echinococcosis
+Guangdong 2009 5 斑疹伤寒 Typhus
+Guangdong 2009 5 流行性腮腺炎 Mumps
+Guangdong 2009 5 风疹 Rubella
+Guangdong 2009 6 急性出血性结膜炎 AHC
+Guangdong 2009 6 手足口病 HFMD
+Guangdong 2009 6 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2009 6 包虫病 Echinococcosis
+Guangdong 2009 6 斑疹伤寒 Typhus
+Guangdong 2009 6 流行性腮腺炎 Mumps
+Guangdong 2009 6 风疹 Rubella
+Guangdong 2009 7 急性出血性结膜炎 AHC
+Guangdong 2009 7 手足口病 HFMD
+Guangdong 2009 7 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2009 7 包虫病 Echinococcosis
+Guangdong 2009 7 斑疹伤寒 Typhus
+Guangdong 2009 7 流行性腮腺炎 Mumps
+Guangdong 2009 7 风疹 Rubella
+Guangdong 2009 8 急性出血性结膜炎 AHC
+Guangdong 2009 8 手足口病 HFMD
+Guangdong 2009 8 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2009 8 包虫病 Echinococcosis
+Guangdong 2009 8 斑疹伤寒 Typhus
+Guangdong 2009 8 流行性腮腺炎 Mumps
+Guangdong 2009 8 风疹 Rubella
+Guangdong 2009 9 急性出血性结膜炎 AHC
+Guangdong 2009 9 手足口病 HFMD
+Guangdong 2009 9 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2009 9 包虫病 Echinococcosis
+Guangdong 2009 9 斑疹伤寒 Typhus
+Guangdong 2009 9 流行性腮腺炎 Mumps
+Guangdong 2009 9 风疹 Rubella
+Guangdong 2009 10 急性出血性结膜炎 AHC
+Guangdong 2009 10 手足口病 HFMD
+Guangdong 2009 10 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2009 10 疟疾 Malaria
+Guangdong 2009 10 包虫病 Echinococcosis
+Guangdong 2009 10 斑疹伤寒 Typhus
+Guangdong 2009 10 流行性腮腺炎 Mumps
+Guangdong 2009 10 风疹 Rubella
+Guangdong 2009 11 急性出血性结膜炎 AHC
+Guangdong 2009 11 手足口病 HFMD
+Guangdong 2009 11 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2009 11 包虫病 Echinococcosis
+Guangdong 2009 11 斑疹伤寒 Typhus
+Guangdong 2009 11 流行性腮腺炎 Mumps
+Guangdong 2009 11 风疹 Rubella
+Guangdong 2009 12 急性出血性结膜炎 AHC
+Guangdong 2009 12 手足口病 HFMD
+Guangdong 2009 12 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2009 12 包虫病 Echinococcosis
+Guangdong 2009 12 斑疹伤寒 Typhus
+Guangdong 2009 12 流行性腮腺炎 Mumps
+Guangdong 2009 12 风疹 Rubella
+Guangdong 2010 2 急性出血性结膜炎 AHC
+Guangdong 2010 2 手足口病 HFMD
+Guangdong 2010 2 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2010 2 包虫病 Echinococcosis
+Guangdong 2010 2 斑疹伤寒 Typhus
+Guangdong 2010 2 流行性腮腺炎 Mumps
+Guangdong 2010 2 风疹 Rubella
+Guangdong 2010 3 急性出血性结膜炎 AHC
+Guangdong 2010 3 手足口病 HFMD
+Guangdong 2010 3 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2010 3 包虫病 Echinococcosis
+Guangdong 2010 3 斑疹伤寒 Typhus
+Guangdong 2010 3 流行性腮腺炎 Mumps
+Guangdong 2010 3 风疹 Rubella
+Guangdong 2010 4 急性出血性结膜炎 AHC
+Guangdong 2010 4 手足口病 HFMD
+Guangdong 2010 4 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2010 4 包虫病 Echinococcosis
+Guangdong 2010 4 斑疹伤寒 Typhus
+Guangdong 2010 4 流行性腮腺炎 Mumps
+Guangdong 2010 4 风疹 Rubella
+Guangdong 2010 5 急性出血性结膜炎 AHC
+Guangdong 2010 5 手足口病 HFMD
+Guangdong 2010 5 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2010 5 包虫病 Echinococcosis
+Guangdong 2010 5 斑疹伤寒 Typhus
+Guangdong 2010 5 流行性腮腺炎 Mumps
+Guangdong 2010 5 风疹 Rubella
+Guangdong 2010 6 急性出血性结膜炎 AHC
+Guangdong 2010 6 手足口病 HFMD
+Guangdong 2010 6 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2010 6 包虫病 Echinococcosis
+Guangdong 2010 6 斑疹伤寒 Typhus
+Guangdong 2010 6 流行性腮腺炎 Mumps
+Guangdong 2010 6 风疹 Rubella
+Guangdong 2010 7 急性出血性结膜炎 AHC
+Guangdong 2010 7 手足口病 HFMD
+Guangdong 2010 7 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2010 7 包虫病 Echinococcosis
+Guangdong 2010 7 斑疹伤寒 Typhus
+Guangdong 2010 7 流行性腮腺炎 Mumps
+Guangdong 2010 7 风疹 Rubella
+Guangdong 2010 8 急性出血性结膜炎 AHC
+Guangdong 2010 8 手足口病 HFMD
+Guangdong 2010 8 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2010 8 包虫病 Echinococcosis
+Guangdong 2010 8 斑疹伤寒 Typhus
+Guangdong 2010 8 流行性腮腺炎 Mumps
+Guangdong 2010 8 风疹 Rubella
+Guangdong 2010 11 急性出血性结膜炎 AHC
+Guangdong 2010 11 手足口病 HFMD
+Guangdong 2010 11 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2010 11 包虫病 Echinococcosis
+Guangdong 2010 11 斑疹伤寒 Typhus
+Guangdong 2010 11 流行性腮腺炎 Mumps
+Guangdong 2010 11 风疹 Rubella
+Guangdong 2014 1 急性出血性结膜炎 AHC
+Guangdong 2014 1 手足口病 HFMD
+Guangdong 2014 1 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2014 1 包虫病 Echinococcosis
+Guangdong 2014 1 斑疹伤寒 Typhus
+Guangdong 2014 1 流行性腮腺炎 Mumps
+Guangdong 2014 1 风疹 Rubella
+Guangdong 2015 1 急性出血性结膜炎 AHC
+Guangdong 2015 1 手足口病 HFMD
+Guangdong 2015 1 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2015 1 包虫病 Echinococcosis
+Guangdong 2015 1 斑疹伤寒 Typhus
+Guangdong 2015 1 流行性腮腺炎 Mumps
+Guangdong 2015 1 风疹 Rubella
+Guangdong 2015 2 急性出血性结膜炎 AHC
+Guangdong 2015 2 手足口病 HFMD
+Guangdong 2015 2 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2015 2 包虫病 Echinococcosis
+Guangdong 2015 2 斑疹伤寒 Typhus
+Guangdong 2015 2 流行性腮腺炎 Mumps
+Guangdong 2015 2 风疹 Rubella
+Guangdong 2016 11 急性出血性结膜炎 AHC
+Guangdong 2016 11 手足口病 HFMD
+Guangdong 2016 11 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2016 11 包虫病 Echinococcosis
+Guangdong 2016 11 斑疹伤寒 Typhus
+Guangdong 2016 11 流行性腮腺炎 Mumps
+Guangdong 2016 11 风疹 Rubella
+Guangdong 2017 3 急性出血性结膜炎 AHC
+Guangdong 2017 3 手足口病 HFMD
+Guangdong 2017 3 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2017 3 包虫病 Echinococcosis
+Guangdong 2017 3 斑疹伤寒 Typhus
+Guangdong 2017 3 流行性腮腺炎 Mumps
+Guangdong 2017 3 风疹 Rubella
+Guangdong 2017 10 急性出血性结膜炎 AHC
+Guangdong 2017 10 手足口病 HFMD
+Guangdong 2017 10 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2017 10 包虫病 Echinococcosis
+Guangdong 2017 10 斑疹伤寒 Typhus
+Guangdong 2017 10 流行性腮腺炎 Mumps
+Guangdong 2017 10 风疹 Rubella
+Guangdong 2017 11 急性出血性结膜炎 AHC
+Guangdong 2017 11 手足口病 HFMD
+Guangdong 2017 11 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2017 11 包虫病 Echinococcosis
+Guangdong 2017 11 斑疹伤寒 Typhus
+Guangdong 2017 11 流行性腮腺炎 Mumps
+Guangdong 2017 11 风疹 Rubella
+Guangdong 2017 12 急性出血性结膜炎 AHC
+Guangdong 2017 12 手足口病 HFMD
+Guangdong 2017 12 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2017 12 包虫病 Echinococcosis
+Guangdong 2017 12 斑疹伤寒 Typhus
+Guangdong 2017 12 流行性腮腺炎 Mumps
+Guangdong 2017 12 风疹 Rubella
+Guangdong 2018 2 急性出血性结膜炎 AHC
+Guangdong 2018 2 手足口病 HFMD
+Guangdong 2018 2 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2018 2 包虫病 Echinococcosis
+Guangdong 2018 2 斑疹伤寒 Typhus
+Guangdong 2018 2 流行性腮腺炎 Mumps
+Guangdong 2018 2 风疹 Rubella
+Guangdong 2018 3 急性出血性结膜炎 AHC
+Guangdong 2018 3 手足口病 HFMD
+Guangdong 2018 3 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2018 3 包虫病 Echinococcosis
+Guangdong 2018 3 斑疹伤寒 Typhus
+Guangdong 2018 3 流行性腮腺炎 Mumps
+Guangdong 2018 3 风疹 Rubella
+Guangdong 2018 4 急性出血性结膜炎 AHC
+Guangdong 2018 4 手足口病 HFMD
+Guangdong 2018 4 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2018 4 包虫病 Echinococcosis
+Guangdong 2018 4 斑疹伤寒 Typhus
+Guangdong 2018 4 流行性腮腺炎 Mumps
+Guangdong 2018 4 风疹 Rubella
+Guangdong 2018 5 急性出血性结膜炎 AHC
+Guangdong 2018 5 手足口病 HFMD
+Guangdong 2018 5 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2018 5 包虫病 Echinococcosis
+Guangdong 2018 5 斑疹伤寒 Typhus
+Guangdong 2018 5 流行性腮腺炎 Mumps
+Guangdong 2018 5 风疹 Rubella
+Guangdong 2018 6 急性出血性结膜炎 AHC
+Guangdong 2018 6 手足口病 HFMD
+Guangdong 2018 6 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2018 6 包虫病 Echinococcosis
+Guangdong 2018 6 斑疹伤寒 Typhus
+Guangdong 2018 6 流行性腮腺炎 Mumps
+Guangdong 2018 6 风疹 Rubella
+Guangdong 2018 7 急性出血性结膜炎 AHC
+Guangdong 2018 7 手足口病 HFMD
+Guangdong 2018 7 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2018 7 包虫病 Echinococcosis
+Guangdong 2018 7 斑疹伤寒 Typhus
+Guangdong 2018 7 流行性腮腺炎 Mumps
+Guangdong 2018 7 风疹 Rubella
+Guangdong 2018 8 急性出血性结膜炎 AHC
+Guangdong 2018 8 手足口病 HFMD
+Guangdong 2018 8 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2018 8 包虫病 Echinococcosis
+Guangdong 2018 8 斑疹伤寒 Typhus
+Guangdong 2018 8 流行性腮腺炎 Mumps
+Guangdong 2018 8 风疹 Rubella
+Guangdong 2018 9 急性出血性结膜炎 AHC
+Guangdong 2018 9 手足口病 HFMD
+Guangdong 2018 9 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2018 9 包虫病 Echinococcosis
+Guangdong 2018 9 斑疹伤寒 Typhus
+Guangdong 2018 9 流行性腮腺炎 Mumps
+Guangdong 2018 9 风疹 Rubella
+Guangdong 2018 10 急性出血性结膜炎 AHC
+Guangdong 2018 10 手足口病 HFMD
+Guangdong 2018 10 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2018 10 包虫病 Echinococcosis
+Guangdong 2018 10 斑疹伤寒 Typhus
+Guangdong 2018 10 流行性腮腺炎 Mumps
+Guangdong 2018 10 风疹 Rubella
+Guangdong 2018 11 急性出血性结膜炎 AHC
+Guangdong 2018 11 手足口病 HFMD
+Guangdong 2018 11 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2018 11 包虫病 Echinococcosis
+Guangdong 2018 11 斑疹伤寒 Typhus
+Guangdong 2018 11 流行性腮腺炎 Mumps
+Guangdong 2018 11 风疹 Rubella
+Guangdong 2018 12 急性出血性结膜炎 AHC
+Guangdong 2018 12 手足口病 HFMD
+Guangdong 2018 12 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2018 12 包虫病 Echinococcosis
+Guangdong 2018 12 斑疹伤寒 Typhus
+Guangdong 2018 12 流行性腮腺炎 Mumps
+Guangdong 2018 12 风疹 Rubella
+Guangdong 2019 1 急性出血性结膜炎 AHC
+Guangdong 2019 1 手足口病 HFMD
+Guangdong 2019 1 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2019 1 包虫病 Echinococcosis
+Guangdong 2019 1 斑疹伤寒 Typhus
+Guangdong 2019 1 流行性腮腺炎 Mumps
+Guangdong 2019 1 风疹 Rubella
+Guangdong 2019 2 急性出血性结膜炎 AHC
+Guangdong 2019 2 手足口病 HFMD
+Guangdong 2019 2 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2019 2 包虫病 Echinococcosis
+Guangdong 2019 2 斑疹伤寒 Typhus
+Guangdong 2019 2 流行性腮腺炎 Mumps
+Guangdong 2019 2 风疹 Rubella
+Guangdong 2019 3 急性出血性结膜炎 AHC
+Guangdong 2019 3 手足口病 HFMD
+Guangdong 2019 3 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2019 3 包虫病 Echinococcosis
+Guangdong 2019 3 斑疹伤寒 Typhus
+Guangdong 2019 3 流行性腮腺炎 Mumps
+Guangdong 2019 3 风疹 Rubella
+Guangdong 2019 4 急性出血性结膜炎 AHC
+Guangdong 2019 4 手足口病 HFMD
+Guangdong 2019 4 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2019 4 包虫病 Echinococcosis
+Guangdong 2019 4 斑疹伤寒 Typhus
+Guangdong 2019 4 流行性腮腺炎 Mumps
+Guangdong 2019 4 风疹 Rubella
+Guangdong 2019 5 急性出血性结膜炎 AHC
+Guangdong 2019 5 手足口病 HFMD
+Guangdong 2019 5 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2019 5 包虫病 Echinococcosis
+Guangdong 2019 5 斑疹伤寒 Typhus
+Guangdong 2019 5 流行性腮腺炎 Mumps
+Guangdong 2019 5 风疹 Rubella
+Guangdong 2019 6 急性出血性结膜炎 AHC
+Guangdong 2019 6 手足口病 HFMD
+Guangdong 2019 6 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2019 6 包虫病 Echinococcosis
+Guangdong 2019 6 斑疹伤寒 Typhus
+Guangdong 2019 6 流行性腮腺炎 Mumps
+Guangdong 2019 6 风疹 Rubella
+Guangdong 2019 7 急性出血性结膜炎 AHC
+Guangdong 2019 7 手足口病 HFMD
+Guangdong 2019 7 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2019 7 包虫病 Echinococcosis
+Guangdong 2019 7 斑疹伤寒 Typhus
+Guangdong 2019 7 流行性腮腺炎 Mumps
+Guangdong 2019 7 风疹 Rubella
+Guangdong 2019 8 急性出血性结膜炎 AHC
+Guangdong 2019 8 手足口病 HFMD
+Guangdong 2019 8 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2019 8 包虫病 Echinococcosis
+Guangdong 2019 8 斑疹伤寒 Typhus
+Guangdong 2019 8 流行性腮腺炎 Mumps
+Guangdong 2019 8 风疹 Rubella
+Guangdong 2019 9 急性出血性结膜炎 AHC
+Guangdong 2019 9 手足口病 HFMD
+Guangdong 2019 9 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2019 9 包虫病 Echinococcosis
+Guangdong 2019 9 斑疹伤寒 Typhus
+Guangdong 2019 9 流行性腮腺炎 Mumps
+Guangdong 2019 9 风疹 Rubella
+Guangdong 2019 10 急性出血性结膜炎 AHC
+Guangdong 2019 10 手足口病 HFMD
+Guangdong 2019 10 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2019 10 包虫病 Echinococcosis
+Guangdong 2019 10 斑疹伤寒 Typhus
+Guangdong 2019 10 流行性腮腺炎 Mumps
+Guangdong 2019 10 风疹 Rubella
+Guangdong 2019 11 急性出血性结膜炎 AHC
+Guangdong 2019 11 手足口病 HFMD
+Guangdong 2019 11 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2019 11 包虫病 Echinococcosis
+Guangdong 2019 11 斑疹伤寒 Typhus
+Guangdong 2019 11 流行性腮腺炎 Mumps
+Guangdong 2019 11 风疹 Rubella
+Guangdong 2019 12 急性出血性结膜炎 AHC
+Guangdong 2019 12 手足口病 HFMD
+Guangdong 2019 12 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2019 12 包虫病 Echinococcosis
+Guangdong 2019 12 斑疹伤寒 Typhus
+Guangdong 2019 12 流行性腮腺炎 Mumps
+Guangdong 2019 12 风疹 Rubella
+Guangdong 2020 1 急性出血性结膜炎 AHC
+Guangdong 2020 1 手足口病 HFMD
+Guangdong 2020 1 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2020 1 包虫病 Echinococcosis
+Guangdong 2020 1 斑疹伤寒 Typhus
+Guangdong 2020 1 流行性腮腺炎 Mumps
+Guangdong 2020 1 风疹 Rubella
+Guangdong 2020 2 急性出血性结膜炎 AHC
+Guangdong 2020 2 手足口病 HFMD
+Guangdong 2020 2 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2020 2 包虫病 Echinococcosis
+Guangdong 2020 2 斑疹伤寒 Typhus
+Guangdong 2020 2 流行性腮腺炎 Mumps
+Guangdong 2020 2 风疹 Rubella
+Guangdong 2020 3 急性出血性结膜炎 AHC
+Guangdong 2020 3 手足口病 HFMD
+Guangdong 2020 3 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2020 3 包虫病 Echinococcosis
+Guangdong 2020 3 斑疹伤寒 Typhus
+Guangdong 2020 3 流行性腮腺炎 Mumps
+Guangdong 2020 3 风疹 Rubella
+Guangdong 2020 4 急性出血性结膜炎 AHC
+Guangdong 2020 4 手足口病 HFMD
+Guangdong 2020 4 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2020 4 包虫病 Echinococcosis
+Guangdong 2020 4 斑疹伤寒 Typhus
+Guangdong 2020 4 流行性腮腺炎 Mumps
+Guangdong 2020 4 风疹 Rubella
+Guangdong 2020 5 急性出血性结膜炎 AHC
+Guangdong 2020 5 手足口病 HFMD
+Guangdong 2020 5 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2020 5 包虫病 Echinococcosis
+Guangdong 2020 5 斑疹伤寒 Typhus
+Guangdong 2020 5 流行性腮腺炎 Mumps
+Guangdong 2020 5 风疹 Rubella
+Guangdong 2020 6 急性出血性结膜炎 AHC
+Guangdong 2020 6 手足口病 HFMD
+Guangdong 2020 6 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2020 6 包虫病 Echinococcosis
+Guangdong 2020 6 斑疹伤寒 Typhus
+Guangdong 2020 6 流行性腮腺炎 Mumps
+Guangdong 2020 6 风疹 Rubella
+Guangdong 2020 7 急性出血性结膜炎 AHC
+Guangdong 2020 7 手足口病 HFMD
+Guangdong 2020 7 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2020 7 包虫病 Echinococcosis
+Guangdong 2020 7 斑疹伤寒 Typhus
+Guangdong 2020 7 流行性腮腺炎 Mumps
+Guangdong 2020 7 风疹 Rubella
+Guangdong 2020 8 急性出血性结膜炎 AHC
+Guangdong 2020 8 手足口病 HFMD
+Guangdong 2020 8 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2020 8 包虫病 Echinococcosis
+Guangdong 2020 8 斑疹伤寒 Typhus
+Guangdong 2020 8 流行性腮腺炎 Mumps
+Guangdong 2020 8 风疹 Rubella
+Guangdong 2020 9 急性出血性结膜炎 AHC
+Guangdong 2020 9 手足口病 HFMD
+Guangdong 2020 9 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2020 9 包虫病 Echinococcosis
+Guangdong 2020 9 斑疹伤寒 Typhus
+Guangdong 2020 9 流行性腮腺炎 Mumps
+Guangdong 2020 9 风疹 Rubella
+Guangdong 2020 10 急性出血性结膜炎 AHC
+Guangdong 2020 10 手足口病 HFMD
+Guangdong 2020 10 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2020 10 包虫病 Echinococcosis
+Guangdong 2020 10 斑疹伤寒 Typhus
+Guangdong 2020 10 流行性腮腺炎 Mumps
+Guangdong 2020 10 风疹 Rubella
+Guangdong 2020 11 急性出血性结膜炎 AHC
+Guangdong 2020 11 手足口病 HFMD
+Guangdong 2020 11 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2020 11 包虫病 Echinococcosis
+Guangdong 2020 11 斑疹伤寒 Typhus
+Guangdong 2020 11 流行性腮腺炎 Mumps
+Guangdong 2020 11 风疹 Rubella
+Guangdong 2020 12 急性出血性结膜炎 AHC
+Guangdong 2020 12 手足口病 HFMD
+Guangdong 2020 12 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2020 12 包虫病 Echinococcosis
+Guangdong 2020 12 斑疹伤寒 Typhus
+Guangdong 2020 12 流行性腮腺炎 Mumps
+Guangdong 2020 12 风疹 Rubella
+Guangdong 2021 1 急性出血性结膜炎 AHC
+Guangdong 2021 1 手足口病 HFMD
+Guangdong 2021 1 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2021 1 包虫病 Echinococcosis
+Guangdong 2021 1 斑疹伤寒 Typhus
+Guangdong 2021 1 流行性腮腺炎 Mumps
+Guangdong 2021 1 风疹 Rubella
+Guangdong 2021 2 急性出血性结膜炎 AHC
+Guangdong 2021 2 手足口病 HFMD
+Guangdong 2021 2 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2021 2 包虫病 Echinococcosis
+Guangdong 2021 2 斑疹伤寒 Typhus
+Guangdong 2021 2 流行性腮腺炎 Mumps
+Guangdong 2021 2 风疹 Rubella
+Guangdong 2021 3 急性出血性结膜炎 AHC
+Guangdong 2021 3 手足口病 HFMD
+Guangdong 2021 3 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2021 3 包虫病 Echinococcosis
+Guangdong 2021 3 斑疹伤寒 Typhus
+Guangdong 2021 3 流行性腮腺炎 Mumps
+Guangdong 2021 3 风疹 Rubella
+Guangdong 2021 4 急性出血性结膜炎 AHC
+Guangdong 2021 4 手足口病 HFMD
+Guangdong 2021 4 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2021 4 包虫病 Echinococcosis
+Guangdong 2021 4 斑疹伤寒 Typhus
+Guangdong 2021 4 流行性腮腺炎 Mumps
+Guangdong 2021 4 风疹 Rubella
+Guangdong 2021 5 急性出血性结膜炎 AHC
+Guangdong 2021 5 手足口病 HFMD
+Guangdong 2021 5 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2021 5 包虫病 Echinococcosis
+Guangdong 2021 5 斑疹伤寒 Typhus
+Guangdong 2021 5 流行性腮腺炎 Mumps
+Guangdong 2021 5 风疹 Rubella
+Guangdong 2021 6 急性出血性结膜炎 AHC
+Guangdong 2021 6 手足口病 HFMD
+Guangdong 2021 6 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2021 6 包虫病 Echinococcosis
+Guangdong 2021 6 斑疹伤寒 Typhus
+Guangdong 2021 6 流行性腮腺炎 Mumps
+Guangdong 2021 6 风疹 Rubella
+Guangdong 2021 7 急性出血性结膜炎 AHC
+Guangdong 2021 7 手足口病 HFMD
+Guangdong 2021 7 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2021 7 包虫病 Echinococcosis
+Guangdong 2021 7 斑疹伤寒 Typhus
+Guangdong 2021 7 流行性腮腺炎 Mumps
+Guangdong 2021 7 风疹 Rubella
+Guangdong 2021 8 急性出血性结膜炎 AHC
+Guangdong 2021 8 手足口病 HFMD
+Guangdong 2021 8 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2021 8 包虫病 Echinococcosis
+Guangdong 2021 8 斑疹伤寒 Typhus
+Guangdong 2021 8 流行性腮腺炎 Mumps
+Guangdong 2021 8 风疹 Rubella
+Guangdong 2021 9 急性出血性结膜炎 AHC
+Guangdong 2021 9 手足口病 HFMD
+Guangdong 2021 9 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2021 9 包虫病 Echinococcosis
+Guangdong 2021 9 斑疹伤寒 Typhus
+Guangdong 2021 9 流行性腮腺炎 Mumps
+Guangdong 2021 9 风疹 Rubella
+Guangdong 2021 11 急性出血性结膜炎 AHC
+Guangdong 2021 11 手足口病 HFMD
+Guangdong 2021 11 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2021 11 包虫病 Echinococcosis
+Guangdong 2021 11 斑疹伤寒 Typhus
+Guangdong 2021 11 流行性腮腺炎 Mumps
+Guangdong 2021 11 风疹 Rubella
+Guangdong 2021 12 急性出血性结膜炎 AHC
+Guangdong 2021 12 手足口病 HFMD
+Guangdong 2021 12 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2021 12 包虫病 Echinococcosis
+Guangdong 2021 12 斑疹伤寒 Typhus
+Guangdong 2021 12 流行性腮腺炎 Mumps
+Guangdong 2021 12 风疹 Rubella
+Guangdong 2022 2 急性出血性结膜炎 AHC
+Guangdong 2022 2 手足口病 HFMD
+Guangdong 2022 2 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2022 2 包虫病 Echinococcosis
+Guangdong 2022 2 斑疹伤寒 Typhus
+Guangdong 2022 2 流行性腮腺炎 Mumps
+Guangdong 2022 2 风疹 Rubella
+Guangdong 2022 5 急性出血性结膜炎 AHC
+Guangdong 2022 5 手足口病 HFMD
+Guangdong 2022 5 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2022 5 包虫病 Echinococcosis
+Guangdong 2022 5 斑疹伤寒 Typhus
+Guangdong 2022 5 流行性腮腺炎 Mumps
+Guangdong 2022 5 风疹 Rubella
+Guangdong 2022 6 急性出血性结膜炎 AHC
+Guangdong 2022 6 手足口病 HFMD
+Guangdong 2022 6 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2022 6 包虫病 Echinococcosis
+Guangdong 2022 6 斑疹伤寒 Typhus
+Guangdong 2022 6 流行性腮腺炎 Mumps
+Guangdong 2022 6 风疹 Rubella
+Guangdong 2022 7 急性出血性结膜炎 AHC
+Guangdong 2022 7 手足口病 HFMD
+Guangdong 2022 7 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2022 7 包虫病 Echinococcosis
+Guangdong 2022 7 斑疹伤寒 Typhus
+Guangdong 2022 7 流行性腮腺炎 Mumps
+Guangdong 2022 7 风疹 Rubella
+Guangdong 2022 8 急性出血性结膜炎 AHC
+Guangdong 2022 8 手足口病 HFMD
+Guangdong 2022 8 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2022 8 包虫病 Echinococcosis
+Guangdong 2022 8 斑疹伤寒 Typhus
+Guangdong 2022 8 流行性腮腺炎 Mumps
+Guangdong 2022 8 风疹 Rubella
+Guangdong 2022 9 急性出血性结膜炎 AHC
+Guangdong 2022 9 手足口病 HFMD
+Guangdong 2022 9 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2022 9 包虫病 Echinococcosis
+Guangdong 2022 9 斑疹伤寒 Typhus
+Guangdong 2022 9 流行性腮腺炎 Mumps
+Guangdong 2022 9 风疹 Rubella
+Guangdong 2022 10 急性出血性结膜炎 AHC
+Guangdong 2022 10 手足口病 HFMD
+Guangdong 2022 10 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2022 10 包虫病 Echinococcosis
+Guangdong 2022 10 斑疹伤寒 Typhus
+Guangdong 2022 10 流行性腮腺炎 Mumps
+Guangdong 2022 10 风疹 Rubella
+Guangdong 2022 11 急性出血性结膜炎 AHC
+Guangdong 2022 11 手足口病 HFMD
+Guangdong 2022 11 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2022 11 包虫病 Echinococcosis
+Guangdong 2022 11 斑疹伤寒 Typhus
+Guangdong 2022 11 流行性腮腺炎 Mumps
+Guangdong 2022 11 风疹 Rubella
+Guangdong 2022 12 急性出血性结膜炎 AHC
+Guangdong 2022 12 手足口病 HFMD
+Guangdong 2022 12 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2022 12 包虫病 Echinococcosis
+Guangdong 2022 12 斑疹伤寒 Typhus
+Guangdong 2022 12 流行性腮腺炎 Mumps
+Guangdong 2022 12 风疹 Rubella
+Guangdong 2023 1 急性出血性结膜炎 AHC
+Guangdong 2023 1 手足口病 HFMD
+Guangdong 2023 1 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2023 1 包虫病 Echinococcosis
+Guangdong 2023 1 斑疹伤寒 Typhus
+Guangdong 2023 1 流行性腮腺炎 Mumps
+Guangdong 2023 1 风疹 Rubella
+Guangdong 2023 2 急性出血性结膜炎 AHC
+Guangdong 2023 2 手足口病 HFMD
+Guangdong 2023 2 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2023 2 包虫病 Echinococcosis
+Guangdong 2023 2 斑疹伤寒 Typhus
+Guangdong 2023 2 流行性腮腺炎 Mumps
+Guangdong 2023 2 风疹 Rubella
+Guangdong 2023 3 急性出血性结膜炎 AHC
+Guangdong 2023 3 手足口病 HFMD
+Guangdong 2023 3 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2023 3 包虫病 Echinococcosis
+Guangdong 2023 3 斑疹伤寒 Typhus
+Guangdong 2023 3 流行性腮腺炎 Mumps
+Guangdong 2023 3 风疹 Rubella
+Guangdong 2023 4 急性出血性结膜炎 AHC
+Guangdong 2023 4 手足口病 HFMD
+Guangdong 2023 4 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2023 4 包虫病 Echinococcosis
+Guangdong 2023 4 斑疹伤寒 Typhus
+Guangdong 2023 4 流行性腮腺炎 Mumps
+Guangdong 2023 4 风疹 Rubella
+Guangdong 2023 5 急性出血性结膜炎 AHC
+Guangdong 2023 5 手足口病 HFMD
+Guangdong 2023 5 其它感染性腹泻病 Infectious diarrhea
+Guangdong 2023 5 包虫病 Echinococcosis
+Guangdong 2023 5 斑疹伤寒 Typhus
+Guangdong 2023 5 流行性腮腺炎 Mumps
+Guangdong 2023 5 风疹 Rubella
+Henan 2013 12 戊肝 Hepatitis E
+Henan 2013 12 伤寒+副伤寒 Enteric fever
+Henan 2013 12 急性出血性结膜炎 AHC
+Henan 2013 12 痢疾 Dysentery
+Henan 2013 12 手足口病 HFMD
+Henan 2013 12 布病 Brucellosis
+Henan 2013 12 登革热 Dengue fever
+Henan 2013 12 乙型脑炎 JE
+Henan 2013 12 疟疾 Malaria
+Henan 2013 12 包虫病 Echinococcosis
+Henan 2013 12 斑疹伤寒 Typhus
+Henan 2013 12 百日咳 Pertussis
+Henan 2013 12 猩红热 Scarlet fever
+Henan 2013 12 流行性腮腺炎 Mumps
+Henan 2013 12 风疹 Rubella
+Henan 2013 12 淋病 Gonorrhea
+Henan 2013 12 梅毒 Syphilis
+Henan 2014 3 戊肝 Hepatitis E
+Henan 2014 3 伤寒+副伤寒 Enteric fever
+Henan 2014 3 急性出血性结膜炎 AHC
+Henan 2014 3 痢疾 Dysentery
+Henan 2014 3 其它感染性腹泻病 Infectious diarrhea
+Henan 2014 3 布病 Brucellosis
+Henan 2014 3 登革热 Dengue fever
+Henan 2014 3 流行性出血热 HFRS
+Henan 2014 3 乙型脑炎 JE
+Henan 2014 3 疟疾 Malaria
+Henan 2014 3 包虫病 Echinococcosis
+Henan 2014 3 斑疹伤寒 Typhus
+Henan 2014 3 百日咳 Pertussis
+Henan 2014 3 猩红热 Scarlet fever
+Henan 2014 3 流行性腮腺炎 Mumps
+Henan 2014 3 风疹 Rubella
+Henan 2014 3 淋病 Gonorrhea
+Henan 2014 3 乙肝 Hepatitis B
+Henan 2014 3 梅毒 Syphilis
+Henan 2014 4 戊肝 Hepatitis E
+Henan 2014 4 伤寒+副伤寒 Enteric fever
+Henan 2014 4 急性出血性结膜炎 AHC
+Henan 2014 4 痢疾 Dysentery
+Henan 2014 4 其它感染性腹泻病 Infectious diarrhea
+Henan 2014 4 布病 Brucellosis
+Henan 2014 4 登革热 Dengue fever
+Henan 2014 4 流行性出血热 HFRS
+Henan 2014 4 乙型脑炎 JE
+Henan 2014 4 疟疾 Malaria
+Henan 2014 4 包虫病 Echinococcosis
+Henan 2014 4 斑疹伤寒 Typhus
+Henan 2014 4 百日咳 Pertussis
+Henan 2014 4 猩红热 Scarlet fever
+Henan 2014 4 流行性腮腺炎 Mumps
+Henan 2014 4 风疹 Rubella
+Henan 2014 4 淋病 Gonorrhea
+Henan 2014 4 丙肝 Hepatitis C
+Henan 2014 4 梅毒 Syphilis
+Henan 2014 7 手足口病 HFMD
+Henan 2014 7 其它感染性腹泻病 Infectious diarrhea
+Henan 2014 7 包虫病 Echinococcosis
+Henan 2014 7 斑疹伤寒 Typhus
+Henan 2015 8 戊肝 Hepatitis E
+Henan 2015 8 伤寒+副伤寒 Enteric fever
+Henan 2015 8 急性出血性结膜炎 AHC
+Henan 2015 8 痢疾 Dysentery
+Henan 2015 8 布病 Brucellosis
+Henan 2015 8 登革热 Dengue fever
+Henan 2015 8 流行性出血热 HFRS
+Henan 2015 8 乙型脑炎 JE
+Henan 2015 8 疟疾 Malaria
+Henan 2015 8 包虫病 Echinococcosis
+Henan 2015 8 斑疹伤寒 Typhus
+Henan 2015 8 百日咳 Pertussis
+Henan 2015 8 猩红热 Scarlet fever
+Henan 2015 8 流行性腮腺炎 Mumps
+Henan 2015 8 风疹 Rubella
+Henan 2015 8 淋病 Gonorrhea
+Henan 2016 2 戊肝 Hepatitis E
+Henan 2016 2 伤寒+副伤寒 Enteric fever
+Henan 2016 2 急性出血性结膜炎 AHC
+Henan 2016 2 痢疾 Dysentery
+Henan 2016 2 其它感染性腹泻病 Infectious diarrhea
+Henan 2016 2 布病 Brucellosis
+Henan 2016 2 登革热 Dengue fever
+Henan 2016 2 流行性出血热 HFRS
+Henan 2016 2 乙型脑炎 JE
+Henan 2016 2 疟疾 Malaria
+Henan 2016 2 包虫病 Echinococcosis
+Henan 2016 2 斑疹伤寒 Typhus
+Henan 2016 2 百日咳 Pertussis
+Henan 2016 2 猩红热 Scarlet fever
+Henan 2016 2 流行性腮腺炎 Mumps
+Henan 2016 2 风疹 Rubella
+Henan 2016 2 淋病 Gonorrhea
+Henan 2016 2 乙肝 Hepatitis B
+Henan 2016 2 梅毒 Syphilis
+Henan 2016 4 戊肝 Hepatitis E
+Henan 2016 4 伤寒+副伤寒 Enteric fever
+Henan 2016 4 急性出血性结膜炎 AHC
+Henan 2016 4 痢疾 Dysentery
+Henan 2016 4 手足口病 HFMD
+Henan 2016 4 其它感染性腹泻病 Infectious diarrhea
+Henan 2016 4 布病 Brucellosis
+Henan 2016 4 登革热 Dengue fever
+Henan 2016 4 流行性出血热 HFRS
+Henan 2016 4 乙型脑炎 JE
+Henan 2016 4 疟疾 Malaria
+Henan 2016 4 包虫病 Echinococcosis
+Henan 2016 4 斑疹伤寒 Typhus
+Henan 2016 4 百日咳 Pertussis
+Henan 2016 4 猩红热 Scarlet fever
+Henan 2016 4 流行性腮腺炎 Mumps
+Henan 2016 4 风疹 Rubella
+Henan 2016 4 淋病 Gonorrhea
+Henan 2016 6 戊肝 Hepatitis E
+Henan 2016 6 伤寒+副伤寒 Enteric fever
+Henan 2016 6 急性出血性结膜炎 AHC
+Henan 2016 6 痢疾 Dysentery
+Henan 2016 6 其它感染性腹泻病 Infectious diarrhea
+Henan 2016 6 布病 Brucellosis
+Henan 2016 6 登革热 Dengue fever
+Henan 2016 6 流行性出血热 HFRS
+Henan 2016 6 乙型脑炎 JE
+Henan 2016 6 疟疾 Malaria
+Henan 2016 6 包虫病 Echinococcosis
+Henan 2016 6 斑疹伤寒 Typhus
+Henan 2016 6 百日咳 Pertussis
+Henan 2016 6 猩红热 Scarlet fever
+Henan 2016 6 流行性腮腺炎 Mumps
+Henan 2016 6 风疹 Rubella
+Henan 2016 6 淋病 Gonorrhea
+Henan 2016 6 梅毒 Syphilis
+Henan 2016 8 戊肝 Hepatitis E
+Henan 2016 8 伤寒+副伤寒 Enteric fever
+Henan 2016 8 急性出血性结膜炎 AHC
+Henan 2016 8 痢疾 Dysentery
+Henan 2016 8 其它感染性腹泻病 Infectious diarrhea
+Henan 2016 8 布病 Brucellosis
+Henan 2016 8 登革热 Dengue fever
+Henan 2016 8 流行性出血热 HFRS
+Henan 2016 8 疟疾 Malaria
+Henan 2016 8 包虫病 Echinococcosis
+Henan 2016 8 斑疹伤寒 Typhus
+Henan 2016 8 百日咳 Pertussis
+Henan 2016 8 猩红热 Scarlet fever
+Henan 2016 8 流行性腮腺炎 Mumps
+Henan 2016 8 风疹 Rubella
+Henan 2016 8 淋病 Gonorrhea
+Henan 2018 1 戊肝 Hepatitis E
+Henan 2018 1 伤寒+副伤寒 Enteric fever
+Henan 2018 1 急性出血性结膜炎 AHC
+Henan 2018 1 痢疾 Dysentery
+Henan 2018 1 其它感染性腹泻病 Infectious diarrhea
+Henan 2018 1 布病 Brucellosis
+Henan 2018 1 登革热 Dengue fever
+Henan 2018 1 乙型脑炎 JE
+Henan 2018 1 疟疾 Malaria
+Henan 2018 1 包虫病 Echinococcosis
+Henan 2018 1 斑疹伤寒 Typhus
+Henan 2018 1 百日咳 Pertussis
+Henan 2018 1 猩红热 Scarlet fever
+Henan 2018 1 流行性腮腺炎 Mumps
+Henan 2018 1 风疹 Rubella
+Henan 2018 1 淋病 Gonorrhea
+Henan 2018 1 梅毒 Syphilis
+Jiangsu 2020 10 戊肝 Hepatitis E
+Jiangsu 2020 10 急性出血性结膜炎 AHC
+Jiangsu 2020 10 手足口病 HFMD
+Jiangsu 2020 10 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2020 10 包虫病 Echinococcosis
+Jiangsu 2020 10 斑疹伤寒 Typhus
+Jiangsu 2020 10 流行性腮腺炎 Mumps
+Jiangsu 2020 10 风疹 Rubella
+Jiangsu 2020 10 乙肝 Hepatitis B
+Jiangsu 2020 10 丙肝 Hepatitis C
+Jiangsu 2020 11 戊肝 Hepatitis E
+Jiangsu 2020 11 急性出血性结膜炎 AHC
+Jiangsu 2020 11 手足口病 HFMD
+Jiangsu 2020 11 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2020 11 包虫病 Echinococcosis
+Jiangsu 2020 11 斑疹伤寒 Typhus
+Jiangsu 2020 11 流行性腮腺炎 Mumps
+Jiangsu 2020 11 风疹 Rubella
+Jiangsu 2020 11 乙肝 Hepatitis B
+Jiangsu 2020 11 丙肝 Hepatitis C
+Jiangsu 2020 12 戊肝 Hepatitis E
+Jiangsu 2020 12 急性出血性结膜炎 AHC
+Jiangsu 2020 12 手足口病 HFMD
+Jiangsu 2020 12 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2020 12 包虫病 Echinococcosis
+Jiangsu 2020 12 斑疹伤寒 Typhus
+Jiangsu 2020 12 流行性腮腺炎 Mumps
+Jiangsu 2020 12 风疹 Rubella
+Jiangsu 2020 12 乙肝 Hepatitis B
+Jiangsu 2020 12 丙肝 Hepatitis C
+Jiangsu 2021 1 戊肝 Hepatitis E
+Jiangsu 2021 1 急性出血性结膜炎 AHC
+Jiangsu 2021 1 手足口病 HFMD
+Jiangsu 2021 1 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2021 1 包虫病 Echinococcosis
+Jiangsu 2021 1 斑疹伤寒 Typhus
+Jiangsu 2021 1 流行性腮腺炎 Mumps
+Jiangsu 2021 1 风疹 Rubella
+Jiangsu 2021 1 乙肝 Hepatitis B
+Jiangsu 2021 1 丙肝 Hepatitis C
+Jiangsu 2021 2 戊肝 Hepatitis E
+Jiangsu 2021 2 急性出血性结膜炎 AHC
+Jiangsu 2021 2 手足口病 HFMD
+Jiangsu 2021 2 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2021 2 包虫病 Echinococcosis
+Jiangsu 2021 2 斑疹伤寒 Typhus
+Jiangsu 2021 2 流行性腮腺炎 Mumps
+Jiangsu 2021 2 风疹 Rubella
+Jiangsu 2021 2 乙肝 Hepatitis B
+Jiangsu 2021 2 丙肝 Hepatitis C
+Jiangsu 2021 3 戊肝 Hepatitis E
+Jiangsu 2021 3 急性出血性结膜炎 AHC
+Jiangsu 2021 3 手足口病 HFMD
+Jiangsu 2021 3 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2021 3 包虫病 Echinococcosis
+Jiangsu 2021 3 斑疹伤寒 Typhus
+Jiangsu 2021 3 流行性腮腺炎 Mumps
+Jiangsu 2021 3 风疹 Rubella
+Jiangsu 2021 3 乙肝 Hepatitis B
+Jiangsu 2021 3 丙肝 Hepatitis C
+Jiangsu 2021 4 戊肝 Hepatitis E
+Jiangsu 2021 4 急性出血性结膜炎 AHC
+Jiangsu 2021 4 手足口病 HFMD
+Jiangsu 2021 4 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2021 4 包虫病 Echinococcosis
+Jiangsu 2021 4 斑疹伤寒 Typhus
+Jiangsu 2021 4 流行性腮腺炎 Mumps
+Jiangsu 2021 4 风疹 Rubella
+Jiangsu 2021 4 乙肝 Hepatitis B
+Jiangsu 2021 4 丙肝 Hepatitis C
+Jiangsu 2021 5 戊肝 Hepatitis E
+Jiangsu 2021 5 急性出血性结膜炎 AHC
+Jiangsu 2021 5 手足口病 HFMD
+Jiangsu 2021 5 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2021 5 包虫病 Echinococcosis
+Jiangsu 2021 5 斑疹伤寒 Typhus
+Jiangsu 2021 5 流行性腮腺炎 Mumps
+Jiangsu 2021 5 风疹 Rubella
+Jiangsu 2021 5 乙肝 Hepatitis B
+Jiangsu 2021 5 丙肝 Hepatitis C
+Jiangsu 2021 6 戊肝 Hepatitis E
+Jiangsu 2021 6 急性出血性结膜炎 AHC
+Jiangsu 2021 6 手足口病 HFMD
+Jiangsu 2021 6 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2021 6 包虫病 Echinococcosis
+Jiangsu 2021 6 斑疹伤寒 Typhus
+Jiangsu 2021 6 流行性腮腺炎 Mumps
+Jiangsu 2021 6 风疹 Rubella
+Jiangsu 2021 6 乙肝 Hepatitis B
+Jiangsu 2021 6 丙肝 Hepatitis C
+Jiangsu 2021 7 戊肝 Hepatitis E
+Jiangsu 2021 7 急性出血性结膜炎 AHC
+Jiangsu 2021 7 手足口病 HFMD
+Jiangsu 2021 7 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2021 7 包虫病 Echinococcosis
+Jiangsu 2021 7 斑疹伤寒 Typhus
+Jiangsu 2021 7 流行性腮腺炎 Mumps
+Jiangsu 2021 7 风疹 Rubella
+Jiangsu 2021 7 乙肝 Hepatitis B
+Jiangsu 2021 7 丙肝 Hepatitis C
+Jiangsu 2021 8 戊肝 Hepatitis E
+Jiangsu 2021 8 急性出血性结膜炎 AHC
+Jiangsu 2021 8 手足口病 HFMD
+Jiangsu 2021 8 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2021 8 包虫病 Echinococcosis
+Jiangsu 2021 8 斑疹伤寒 Typhus
+Jiangsu 2021 8 流行性腮腺炎 Mumps
+Jiangsu 2021 8 风疹 Rubella
+Jiangsu 2021 8 乙肝 Hepatitis B
+Jiangsu 2021 8 丙肝 Hepatitis C
+Jiangsu 2021 9 戊肝 Hepatitis E
+Jiangsu 2021 9 急性出血性结膜炎 AHC
+Jiangsu 2021 9 手足口病 HFMD
+Jiangsu 2021 9 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2021 9 包虫病 Echinococcosis
+Jiangsu 2021 9 斑疹伤寒 Typhus
+Jiangsu 2021 9 流行性腮腺炎 Mumps
+Jiangsu 2021 9 风疹 Rubella
+Jiangsu 2021 9 乙肝 Hepatitis B
+Jiangsu 2021 9 丙肝 Hepatitis C
+Jiangsu 2021 10 戊肝 Hepatitis E
+Jiangsu 2021 10 急性出血性结膜炎 AHC
+Jiangsu 2021 10 手足口病 HFMD
+Jiangsu 2021 10 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2021 10 包虫病 Echinococcosis
+Jiangsu 2021 10 斑疹伤寒 Typhus
+Jiangsu 2021 10 流行性腮腺炎 Mumps
+Jiangsu 2021 10 风疹 Rubella
+Jiangsu 2021 10 乙肝 Hepatitis B
+Jiangsu 2021 10 丙肝 Hepatitis C
+Jiangsu 2021 11 戊肝 Hepatitis E
+Jiangsu 2021 11 急性出血性结膜炎 AHC
+Jiangsu 2021 11 手足口病 HFMD
+Jiangsu 2021 11 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2021 11 包虫病 Echinococcosis
+Jiangsu 2021 11 斑疹伤寒 Typhus
+Jiangsu 2021 11 流行性腮腺炎 Mumps
+Jiangsu 2021 11 风疹 Rubella
+Jiangsu 2021 11 乙肝 Hepatitis B
+Jiangsu 2021 11 丙肝 Hepatitis C
+Jiangsu 2021 12 戊肝 Hepatitis E
+Jiangsu 2021 12 急性出血性结膜炎 AHC
+Jiangsu 2021 12 手足口病 HFMD
+Jiangsu 2021 12 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2021 12 包虫病 Echinococcosis
+Jiangsu 2021 12 斑疹伤寒 Typhus
+Jiangsu 2021 12 流行性腮腺炎 Mumps
+Jiangsu 2021 12 风疹 Rubella
+Jiangsu 2021 12 乙肝 Hepatitis B
+Jiangsu 2021 12 丙肝 Hepatitis C
+Jiangsu 2022 1 戊肝 Hepatitis E
+Jiangsu 2022 1 急性出血性结膜炎 AHC
+Jiangsu 2022 1 手足口病 HFMD
+Jiangsu 2022 1 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2022 1 包虫病 Echinococcosis
+Jiangsu 2022 1 斑疹伤寒 Typhus
+Jiangsu 2022 1 流行性腮腺炎 Mumps
+Jiangsu 2022 1 风疹 Rubella
+Jiangsu 2022 1 乙肝 Hepatitis B
+Jiangsu 2022 1 丙肝 Hepatitis C
+Jiangsu 2022 2 戊肝 Hepatitis E
+Jiangsu 2022 2 急性出血性结膜炎 AHC
+Jiangsu 2022 2 手足口病 HFMD
+Jiangsu 2022 2 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2022 2 包虫病 Echinococcosis
+Jiangsu 2022 2 斑疹伤寒 Typhus
+Jiangsu 2022 2 流行性腮腺炎 Mumps
+Jiangsu 2022 2 风疹 Rubella
+Jiangsu 2022 2 乙肝 Hepatitis B
+Jiangsu 2022 2 丙肝 Hepatitis C
+Jiangsu 2022 3 戊肝 Hepatitis E
+Jiangsu 2022 3 急性出血性结膜炎 AHC
+Jiangsu 2022 3 手足口病 HFMD
+Jiangsu 2022 3 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2022 3 包虫病 Echinococcosis
+Jiangsu 2022 3 斑疹伤寒 Typhus
+Jiangsu 2022 3 流行性腮腺炎 Mumps
+Jiangsu 2022 3 风疹 Rubella
+Jiangsu 2022 3 乙肝 Hepatitis B
+Jiangsu 2022 3 丙肝 Hepatitis C
+Jiangsu 2022 4 戊肝 Hepatitis E
+Jiangsu 2022 4 急性出血性结膜炎 AHC
+Jiangsu 2022 4 手足口病 HFMD
+Jiangsu 2022 4 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2022 4 包虫病 Echinococcosis
+Jiangsu 2022 4 斑疹伤寒 Typhus
+Jiangsu 2022 4 流行性腮腺炎 Mumps
+Jiangsu 2022 4 风疹 Rubella
+Jiangsu 2022 4 乙肝 Hepatitis B
+Jiangsu 2022 4 丙肝 Hepatitis C
+Jiangsu 2022 5 戊肝 Hepatitis E
+Jiangsu 2022 5 急性出血性结膜炎 AHC
+Jiangsu 2022 5 手足口病 HFMD
+Jiangsu 2022 5 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2022 5 包虫病 Echinococcosis
+Jiangsu 2022 5 斑疹伤寒 Typhus
+Jiangsu 2022 5 流行性腮腺炎 Mumps
+Jiangsu 2022 5 风疹 Rubella
+Jiangsu 2022 5 乙肝 Hepatitis B
+Jiangsu 2022 5 丙肝 Hepatitis C
+Jiangsu 2022 6 戊肝 Hepatitis E
+Jiangsu 2022 6 急性出血性结膜炎 AHC
+Jiangsu 2022 6 手足口病 HFMD
+Jiangsu 2022 6 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2022 6 包虫病 Echinococcosis
+Jiangsu 2022 6 斑疹伤寒 Typhus
+Jiangsu 2022 6 流行性腮腺炎 Mumps
+Jiangsu 2022 6 风疹 Rubella
+Jiangsu 2022 6 乙肝 Hepatitis B
+Jiangsu 2022 6 丙肝 Hepatitis C
+Jiangsu 2022 7 戊肝 Hepatitis E
+Jiangsu 2022 7 急性出血性结膜炎 AHC
+Jiangsu 2022 7 手足口病 HFMD
+Jiangsu 2022 7 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2022 7 包虫病 Echinococcosis
+Jiangsu 2022 7 斑疹伤寒 Typhus
+Jiangsu 2022 7 流行性腮腺炎 Mumps
+Jiangsu 2022 7 风疹 Rubella
+Jiangsu 2022 7 乙肝 Hepatitis B
+Jiangsu 2022 7 丙肝 Hepatitis C
+Jiangsu 2022 8 戊肝 Hepatitis E
+Jiangsu 2022 8 急性出血性结膜炎 AHC
+Jiangsu 2022 8 手足口病 HFMD
+Jiangsu 2022 8 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2022 8 包虫病 Echinococcosis
+Jiangsu 2022 8 斑疹伤寒 Typhus
+Jiangsu 2022 8 流行性腮腺炎 Mumps
+Jiangsu 2022 8 风疹 Rubella
+Jiangsu 2022 8 乙肝 Hepatitis B
+Jiangsu 2022 8 丙肝 Hepatitis C
+Jiangsu 2022 9 戊肝 Hepatitis E
+Jiangsu 2022 9 急性出血性结膜炎 AHC
+Jiangsu 2022 9 手足口病 HFMD
+Jiangsu 2022 9 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2022 9 包虫病 Echinococcosis
+Jiangsu 2022 9 斑疹伤寒 Typhus
+Jiangsu 2022 9 流行性腮腺炎 Mumps
+Jiangsu 2022 9 风疹 Rubella
+Jiangsu 2022 9 乙肝 Hepatitis B
+Jiangsu 2022 9 丙肝 Hepatitis C
+Jiangsu 2022 10 戊肝 Hepatitis E
+Jiangsu 2022 10 急性出血性结膜炎 AHC
+Jiangsu 2022 10 手足口病 HFMD
+Jiangsu 2022 10 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2022 10 包虫病 Echinococcosis
+Jiangsu 2022 10 斑疹伤寒 Typhus
+Jiangsu 2022 10 流行性腮腺炎 Mumps
+Jiangsu 2022 10 风疹 Rubella
+Jiangsu 2022 10 乙肝 Hepatitis B
+Jiangsu 2022 10 丙肝 Hepatitis C
+Jiangsu 2022 11 戊肝 Hepatitis E
+Jiangsu 2022 11 急性出血性结膜炎 AHC
+Jiangsu 2022 11 手足口病 HFMD
+Jiangsu 2022 11 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2022 11 包虫病 Echinococcosis
+Jiangsu 2022 11 斑疹伤寒 Typhus
+Jiangsu 2022 11 流行性腮腺炎 Mumps
+Jiangsu 2022 11 风疹 Rubella
+Jiangsu 2022 11 乙肝 Hepatitis B
+Jiangsu 2022 11 丙肝 Hepatitis C
+Jiangsu 2022 12 戊肝 Hepatitis E
+Jiangsu 2022 12 急性出血性结膜炎 AHC
+Jiangsu 2022 12 手足口病 HFMD
+Jiangsu 2022 12 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2022 12 包虫病 Echinococcosis
+Jiangsu 2022 12 斑疹伤寒 Typhus
+Jiangsu 2022 12 流行性腮腺炎 Mumps
+Jiangsu 2022 12 风疹 Rubella
+Jiangsu 2022 12 乙肝 Hepatitis B
+Jiangsu 2022 12 丙肝 Hepatitis C
+Jiangsu 2023 1 戊肝 Hepatitis E
+Jiangsu 2023 1 急性出血性结膜炎 AHC
+Jiangsu 2023 1 手足口病 HFMD
+Jiangsu 2023 1 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2023 1 包虫病 Echinococcosis
+Jiangsu 2023 1 斑疹伤寒 Typhus
+Jiangsu 2023 1 流行性腮腺炎 Mumps
+Jiangsu 2023 1 风疹 Rubella
+Jiangsu 2023 1 乙肝 Hepatitis B
+Jiangsu 2023 1 丙肝 Hepatitis C
+Jiangsu 2023 2 戊肝 Hepatitis E
+Jiangsu 2023 2 急性出血性结膜炎 AHC
+Jiangsu 2023 2 手足口病 HFMD
+Jiangsu 2023 2 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2023 2 包虫病 Echinococcosis
+Jiangsu 2023 2 斑疹伤寒 Typhus
+Jiangsu 2023 2 流行性腮腺炎 Mumps
+Jiangsu 2023 2 风疹 Rubella
+Jiangsu 2023 2 乙肝 Hepatitis B
+Jiangsu 2023 2 丙肝 Hepatitis C
+Jiangsu 2023 3 戊肝 Hepatitis E
+Jiangsu 2023 3 急性出血性结膜炎 AHC
+Jiangsu 2023 3 手足口病 HFMD
+Jiangsu 2023 3 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2023 3 包虫病 Echinococcosis
+Jiangsu 2023 3 斑疹伤寒 Typhus
+Jiangsu 2023 3 流行性腮腺炎 Mumps
+Jiangsu 2023 3 风疹 Rubella
+Jiangsu 2023 3 乙肝 Hepatitis B
+Jiangsu 2023 3 丙肝 Hepatitis C
+Jiangsu 2023 4 戊肝 Hepatitis E
+Jiangsu 2023 4 急性出血性结膜炎 AHC
+Jiangsu 2023 4 手足口病 HFMD
+Jiangsu 2023 4 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2023 4 包虫病 Echinococcosis
+Jiangsu 2023 4 斑疹伤寒 Typhus
+Jiangsu 2023 4 流行性腮腺炎 Mumps
+Jiangsu 2023 4 风疹 Rubella
+Jiangsu 2023 4 乙肝 Hepatitis B
+Jiangsu 2023 4 丙肝 Hepatitis C
+Jiangsu 2023 5 戊肝 Hepatitis E
+Jiangsu 2023 5 急性出血性结膜炎 AHC
+Jiangsu 2023 5 手足口病 HFMD
+Jiangsu 2023 5 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2023 5 包虫病 Echinococcosis
+Jiangsu 2023 5 斑疹伤寒 Typhus
+Jiangsu 2023 5 流行性腮腺炎 Mumps
+Jiangsu 2023 5 风疹 Rubella
+Jiangsu 2023 5 乙肝 Hepatitis B
+Jiangsu 2023 5 丙肝 Hepatitis C
+Jiangsu 2023 6 戊肝 Hepatitis E
+Jiangsu 2023 6 急性出血性结膜炎 AHC
+Jiangsu 2023 6 手足口病 HFMD
+Jiangsu 2023 6 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2023 6 包虫病 Echinococcosis
+Jiangsu 2023 6 斑疹伤寒 Typhus
+Jiangsu 2023 6 流行性腮腺炎 Mumps
+Jiangsu 2023 6 风疹 Rubella
+Jiangsu 2023 6 乙肝 Hepatitis B
+Jiangsu 2023 6 丙肝 Hepatitis C
+Jiangsu 2023 7 戊肝 Hepatitis E
+Jiangsu 2023 7 急性出血性结膜炎 AHC
+Jiangsu 2023 7 手足口病 HFMD
+Jiangsu 2023 7 其它感染性腹泻病 Infectious diarrhea
+Jiangsu 2023 7 包虫病 Echinococcosis
+Jiangsu 2023 7 斑疹伤寒 Typhus
+Jiangsu 2023 7 流行性腮腺炎 Mumps
+Jiangsu 2023 7 风疹 Rubella
+Jiangsu 2023 7 乙肝 Hepatitis B
+Jiangsu 2023 7 丙肝 Hepatitis C
+Jiangsu 2023 8 戊肝 Hepatitis E
+Jiangsu 2023 8 乙肝 Hepatitis B
+Jiangsu 2023 8 丙肝 Hepatitis C
+Jiangsu 2023 9 戊肝 Hepatitis E
+Jiangsu 2023 9 乙肝 Hepatitis B
+Jiangsu 2023 9 丙肝 Hepatitis C
+Jiangsu 2023 10 戊肝 Hepatitis E
+Jiangsu 2023 10 乙肝 Hepatitis B
+Jiangsu 2023 10 丙肝 Hepatitis C
+Jiangsu 2023 11 戊肝 Hepatitis E
+Jiangsu 2023 11 乙肝 Hepatitis B
+Jiangsu 2023 11 丙肝 Hepatitis C
+Sichuan 2020 12 疟疾 Malaria
+Xinjiang 2021 9 急性出血性结膜炎 AHC
+Xinjiang 2021 9 手足口病 HFMD
+Xinjiang 2021 9 其它感染性腹泻病 Infectious diarrhea
+Xinjiang 2021 9 包虫病 Echinococcosis
+Xinjiang 2021 9 斑疹伤寒 Typhus
+Xinjiang 2021 9 流行性腮腺炎 Mumps
+Xinjiang 2021 9 风疹 Rubella
+Xinjiang 2022 3 急性出血性结膜炎 AHC
+Xinjiang 2022 3 手足口病 HFMD
+Xinjiang 2022 3 其它感染性腹泻病 Infectious diarrhea
+Xinjiang 2022 3 布病 Brucellosis
+Xinjiang 2022 3 疟疾 Malaria
+Xinjiang 2022 3 包虫病 Echinococcosis
+Xinjiang 2022 3 斑疹伤寒 Typhus
+Xinjiang 2022 3 百日咳 Pertussis
+Xinjiang 2022 3 猩红热 Scarlet fever
+Xinjiang 2022 3 流行性腮腺炎 Mumps
+Xinjiang 2022 3 风疹 Rubella
+Xinjiang 2022 3 淋病 Gonorrhea
+Xinjiang 2022 3 梅毒 Syphilis

@@ -3,7 +3,7 @@ from html import unescape
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-from dataclean import process_files_combined, update_url_column
+from script/get_province_data/dataclean.py import process_files_combined, update_url_column
 
 # The code is scraping data from a website to collect information about infectious diseases in Henan
 # province, China.
