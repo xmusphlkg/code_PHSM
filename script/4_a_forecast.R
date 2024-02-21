@@ -136,7 +136,7 @@ auto_analysis_function <- function(i) {
   outcome_plot_1 <- datafile_single |>
     filter(date >= split_date_0) |>
     as.data.frame()
-  max_case <- max(tail(ts_obse_1, forcast_length + 12))
+  max_case <- max(tail(ts_obse_1, forcast_length + 24))
 
   # Select Method ------------------------------------------------------------
 
