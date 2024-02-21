@@ -157,7 +157,8 @@ plot_single <- function(i) {
       axis.text.x = element_blank(),
       panel.grid.major.y = element_blank(),
       panel.grid.minor.y = element_blank(),
-      axis.text = element_text(size = 10.5, color = "black")
+      axis.text = element_text(size = 10.5, color = "black"),
+      axis.title.y = element_text(size = 11, color = "black", face = 'bold')
     ) +
     labs(
       x = NULL,

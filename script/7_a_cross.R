@@ -128,12 +128,15 @@ plot_function <- function(i, diseases = select_disease) {
                x = 'Lag Time (Month)',
                y = ifelse(i %in% c(1, 5), "Correlation Coefficient", ""),
                title = paste0(LETTERS[i], ': ', diseases[i]),
-               fill = "Correlation"
+               fill = "Correlation group"
           )
      if (i %in% c(1, 5)) {
           fig <- fig +
                theme(
                     axis.text = element_text(color = "black"),
+                    plot.title = element_text(face = "bold", size = 14, hjust = 0),
+                    legend.text = element_text(face = "bold", size = 10),
+                    legend.title = element_text(face = "bold", size = 10),
                     panel.grid.major.x = element_blank(),
                     panel.grid.minor.x = element_blank(),
                     panel.grid.major.y = element_blank(),
@@ -143,6 +146,9 @@ plot_function <- function(i, diseases = select_disease) {
           fig <- fig +
                theme(
                     axis.text = element_text(color = "black"),
+                    plot.title = element_text(face = "bold", size = 14, hjust = 0),
+                    legend.text = element_text(face = "bold", size = 10),
+                    legend.title = element_text(face = "bold", size = 10),
                     panel.grid.major.x = element_blank(),
                     panel.grid.minor.x = element_blank(),
                     axis.text.y = element_blank(),
