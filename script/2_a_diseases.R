@@ -6,16 +6,12 @@ library(ggsci)
 library(paletteer)
 library(patchwork)
 library(tseries)
+library(scales)
 
 # data --------------------------------------------------------------------
 
 source("./script/theme_set.R")
 
-scientific_10 <- function(x) {
-  ifelse(x == 0, 0, parse(text = gsub("[+]", "", gsub("e", "%*%10^", scales::scientific_format()(x)))))
-}
-
-library(scales)
 log_fill <- trans_new(
   name = "log_fill",
   transform = function(x) sign(x) * log1p(abs(x)),

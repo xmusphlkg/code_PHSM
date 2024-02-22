@@ -6,6 +6,10 @@ library(paletteer)
 
 # suppressWarnings(font_import(pattern = "times", prompt = F))
 
+scientific_10 <- function(x) {
+     ifelse(x == 0, 0, parse(text = gsub("[+]", "", gsub("e", "%*%10^", scales::scientific_format()(x)))))
+}
+
 
 theme_set <- function() {
   theme_classic() +

@@ -6,11 +6,6 @@ library(ggtext)
 source("./script/theme_set.R")
 source("./script/ggplot.R")
 
-scientific_10 <- function(x) {
-     ifelse(x == 0, 0, parse(text = gsub("[+]", "", gsub("e", "%*%10^", scales::scientific_format()(x)))))
-}
-
-
 ## set split date
 split_date <- as.Date("2018/1/1")
 split_date_0 <- as.Date("2020/1/1")

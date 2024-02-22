@@ -56,10 +56,6 @@ datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.3 data.xlsx") |>
   arrange(disease)
 datafile_class$id <- 1:nrow(datafile_class)
 
-scientific_10 <- function(x) {
-  ifelse(x == 0, 0, parse(text = gsub("[+]", "", gsub("e", "%*%10^", scales::scientific_format()(x)))))
-}
-
 # data clean --------------------------------------------------------------
 
 auto_analysis_function <- function(i) {

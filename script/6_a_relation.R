@@ -11,7 +11,6 @@ library(scales)
 library(factoextra)
 library(ggdendroplot)
 library(forecast)
-library(NbClust)
 
 remove(list = ls())
 
