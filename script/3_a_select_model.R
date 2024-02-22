@@ -43,10 +43,6 @@ train_length <- 12 * 10
 test_length <- 12 * 2
 forcast_length <- 12 * 4
 
-scientific_10 <- function(x) {
-  ifelse(x == 0, 0, parse(text = gsub("[+]", "", gsub("e", "%*%10^", scales::scientific_format()(x)))))
-}
-
 disease_name <- datafile_class$disease
 
 # data clean --------------------------------------------------------------

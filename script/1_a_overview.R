@@ -11,10 +11,6 @@ library(patchwork)
 
 source('./script/theme_set.R')
 
-scientific_10 <- function(x) {
-     parse(text = gsub("[+]", "", gsub("1e", "10^", scales::scientific_format()(x))))
-}
-
 datafile_analysis <- read.xlsx('./data/nation_and_provinces.xlsx',
                                detectDates = T, sheet = 'Nation')
 datafile_analysis$date <- as.Date(datafile_analysis$date)

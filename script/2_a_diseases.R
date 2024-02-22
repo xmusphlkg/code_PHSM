@@ -6,21 +6,11 @@ library(ggsci)
 library(paletteer)
 library(patchwork)
 library(tseries)
+library(scales)
 
 # data --------------------------------------------------------------------
 
 source("./script/theme_set.R")
-
-scientific_10 <- function(x) {
-  ifelse(x == 0, 0, parse(text = gsub("[+]", "", gsub("e", "%*%10^", scales::scientific_format()(x)))))
-}
-
-library(scales)
-log_fill <- trans_new(
-  name = "log_fill",
-  transform = function(x) sign(x) * log1p(abs(x)),
-  inverse = function(x) sign(x) * (exp(abs(x)) - 1)
-)
 
 datafile_analysis <- read.xlsx("./data/nation_and_provinces.xlsx",
   detectDates = T, sheet = "Nation"
@@ -157,7 +147,8 @@ plot_single <- function(i) {
       axis.text.x = element_blank(),
       panel.grid.major.y = element_blank(),
       panel.grid.minor.y = element_blank(),
-      axis.text = element_text(size = 10.5, color = "black")
+      axis.text = element_text(size = 10.5, color = "black"),
+      axis.title.y = element_text(size = 11, color = "black", face = 'bold')
     ) +
     labs(
       x = NULL,

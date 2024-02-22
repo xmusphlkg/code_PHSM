@@ -56,10 +56,6 @@ datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.3 data.xlsx") |>
   arrange(disease)
 datafile_class$id <- 1:nrow(datafile_class)
 
-scientific_10 <- function(x) {
-  ifelse(x == 0, 0, parse(text = gsub("[+]", "", gsub("e", "%*%10^", scales::scientific_format()(x)))))
-}
-
 # data clean --------------------------------------------------------------
 
 auto_analysis_function <- function(i) {
@@ -136,7 +132,7 @@ auto_analysis_function <- function(i) {
   outcome_plot_1 <- datafile_single |>
     filter(date >= split_date_0) |>
     as.data.frame()
-  max_case <- max(tail(ts_obse_1, forcast_length + 12))
+  max_case <- max(tail(ts_obse_1, forcast_length + 24))
 
   # Select Method ------------------------------------------------------------
 
@@ -336,15 +332,15 @@ auto_analysis_function <- function(i) {
       Observed = "#00A087FF"
     )) +
     scale_fill_manual(values = c(
-      Decreased = "#E64B3550",
-      Increased = "#00A08750",
+      Decreased = "#00A08750",
+      Increased = "#E64B3550",
       back_color
     )) +
     theme_set() +
     theme(legend.position = "bottom") +
     labs(
       x = NULL,
-      y = ifelse(i %in% c(1, 6, 13, 20), "Cases", ""),
+      y = ifelse(i %in% c(1, 8, 13, 18), "Monthly incidence", ""),
       color = "",
       title = paste0(LETTERS[i], ": ", datafile_class$disease[i])
     )

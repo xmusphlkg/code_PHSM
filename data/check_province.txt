@@ -1,0 +1,163 @@
+> print(datafile_check[datafile_check$n != 24,],
++       n = Inf)
+# A tibble: 157 ¡Á 4
+# Groups:   province, year, month [157]
+    province   year month     n
+    <chr>     <dbl> <dbl> <int>
+  1 Anhui      2020     1    23
+  2 Anhui      2020     2    23
+  3 Anhui      2020     4    23
+  4 Anhui      2020     6    23
+  5 Anhui      2020     8    23
+  6 Anhui      2020     9    23
+  7 Anhui      2020    10    23
+  8 Anhui      2020    11    23
+  9 Anhui      2021     1    23
+ 10 Chongqing  2020    10    13
+ 11 Guangdong  2005    12    17
+ 12 Guangdong  2008     5    17
+ 13 Guangdong  2008     6    17
+ 14 Guangdong  2008     7    17
+ 15 Guangdong  2008     8    17
+ 16 Guangdong  2008     9    17
+ 17 Guangdong  2008    10    17
+ 18 Guangdong  2008    11    17
+ 19 Guangdong  2008    12    17
+ 20 Guangdong  2009     1    17
+ 21 Guangdong  2009     2    17
+ 22 Guangdong  2009     3    17
+ 23 Guangdong  2009     4    17
+ 24 Guangdong  2009     5    17
+ 25 Guangdong  2009     6    17
+ 26 Guangdong  2009     7    17
+ 27 Guangdong  2009     8    17
+ 28 Guangdong  2009     9    17
+ 29 Guangdong  2009    10    16
+ 30 Guangdong  2009    11    17
+ 31 Guangdong  2009    12    17
+ 32 Guangdong  2010     2    17
+ 33 Guangdong  2010     3    17
+ 34 Guangdong  2010     4    17
+ 35 Guangdong  2010     5    17
+ 36 Guangdong  2010     6    17
+ 37 Guangdong  2010     7    17
+ 38 Guangdong  2010     8    17
+ 39 Guangdong  2010    11    17
+ 40 Guangdong  2014     1    17
+ 41 Guangdong  2015     1    17
+ 42 Guangdong  2015     2    17
+ 43 Guangdong  2016    11    17
+ 44 Guangdong  2017     3    17
+ 45 Guangdong  2017    10    17
+ 46 Guangdong  2017    11    17
+ 47 Guangdong  2017    12    17
+ 48 Guangdong  2018     2    17
+ 49 Guangdong  2018     3    17
+ 50 Guangdong  2018     4    17
+ 51 Guangdong  2018     5    17
+ 52 Guangdong  2018     6    17
+ 53 Guangdong  2018     7    17
+ 54 Guangdong  2018     8    17
+ 55 Guangdong  2018     9    17
+ 56 Guangdong  2018    10    17
+ 57 Guangdong  2018    11    17
+ 58 Guangdong  2018    12    17
+ 59 Guangdong  2019     1    17
+ 60 Guangdong  2019     2    17
+ 61 Guangdong  2019     3    17
+ 62 Guangdong  2019     4    17
+ 63 Guangdong  2019     5    17
+ 64 Guangdong  2019     6    17
+ 65 Guangdong  2019     7    17
+ 66 Guangdong  2019     8    17
+ 67 Guangdong  2019     9    17
+ 68 Guangdong  2019    10    17
+ 69 Guangdong  2019    11    17
+ 70 Guangdong  2019    12    17
+ 71 Guangdong  2020     1    17
+ 72 Guangdong  2020     2    17
+ 73 Guangdong  2020     3    17
+ 74 Guangdong  2020     4    17
+ 75 Guangdong  2020     5    17
+ 76 Guangdong  2020     6    17
+ 77 Guangdong  2020     7    34
+ 78 Guangdong  2020     8    17
+ 79 Guangdong  2020     9    17
+ 80 Guangdong  2020    10    17
+ 81 Guangdong  2020    11    17
+ 82 Guangdong  2020    12    17
+ 83 Guangdong  2021     1    17
+ 84 Guangdong  2021     2    17
+ 85 Guangdong  2021     3    17
+ 86 Guangdong  2021     4    17
+ 87 Guangdong  2021     5    17
+ 88 Guangdong  2021     6    17
+ 89 Guangdong  2021     7    17
+ 90 Guangdong  2021     8    17
+ 91 Guangdong  2021     9    17
+ 92 Guangdong  2021    11    17
+ 93 Guangdong  2021    12    17
+ 94 Guangdong  2022     2    17
+ 95 Guangdong  2022     5    17
+ 96 Guangdong  2022     6    17
+ 97 Guangdong  2022     7    17
+ 98 Guangdong  2022     8    17
+ 99 Guangdong  2022     9    17
+100 Guangdong  2022    10    17
+101 Guangdong  2022    11    17
+102 Guangdong  2022    12    17
+103 Guangdong  2023     1    17
+104 Guangdong  2023     2    17
+105 Guangdong  2023     3    17
+106 Guangdong  2023     4    17
+107 Guangdong  2023     5    17
+108 Henan      2013    12     6
+109 Henan      2014     3     4
+110 Henan      2014     4     4
+111 Henan      2014     7    20
+112 Henan      2015     8     7
+113 Henan      2016     2     4
+114 Henan      2016     4     5
+115 Henan      2016     6     5
+116 Henan      2016     8     7
+117 Henan      2018     1     6
+118 Jiangsu    2020    10    13
+119 Jiangsu    2020    11    13
+120 Jiangsu    2020    12    13
+121 Jiangsu    2021     1    13
+122 Jiangsu    2021     2    13
+123 Jiangsu    2021     3    13
+124 Jiangsu    2021     4    13
+125 Jiangsu    2021     5    13
+126 Jiangsu    2021     6    13
+127 Jiangsu    2021     7    13
+128 Jiangsu    2021     8    13
+129 Jiangsu    2021     9    13
+130 Jiangsu    2021    10    13
+131 Jiangsu    2021    11    13
+132 Jiangsu    2021    12    13
+133 Jiangsu    2022     1    13
+134 Jiangsu    2022     2    13
+135 Jiangsu    2022     3    13
+136 Jiangsu    2022     4    13
+137 Jiangsu    2022     5    13
+138 Jiangsu    2022     6    13
+139 Jiangsu    2022     7    13
+140 Jiangsu    2022     8    13
+141 Jiangsu    2022     9    13
+142 Jiangsu    2022    10    13
+143 Jiangsu    2022    11    13
+144 Jiangsu    2022    12    13
+145 Jiangsu    2023     1    13
+146 Jiangsu    2023     2    13
+147 Jiangsu    2023     3    13
+148 Jiangsu    2023     4    13
+149 Jiangsu    2023     5    13
+150 Jiangsu    2023     6    13
+151 Jiangsu    2023     7    13
+152 Jiangsu    2023     8    20
+153 Jiangsu    2023     9    20
+154 Jiangsu    2023    10    20
+155 Jiangsu    2023    11    20
+156 Xinjiang   2021     9    17
+157 Xinjiang   2022     3    11
