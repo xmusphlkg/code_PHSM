@@ -1,3 +1,4 @@
+缺的 √
 Anhui 2020 1 手足口病 HFMD
 Anhui 2020 2 手足口病 HFMD
 Anhui 2020 4 手足口病 HFMD
@@ -7,6 +8,8 @@ Anhui 2020 9 手足口病 HFMD
 Anhui 2020 10 手足口病 HFMD
 Anhui 2020 11 手足口病 HFMD
 Anhui 2021 1 手足口病 HFMD
+
+重庆的手动补 √
 Chongqing 2020 10 急性出血性结膜炎 AHC
 Chongqing 2020 10 手足口病 HFMD
 Chongqing 2020 10 其它感染性腹泻病 Infectious diarrhea
@@ -17,6 +20,8 @@ Chongqing 2020 10 风疹 Rubella
 Chongqing 2020 10 艾滋病 AIDS
 Chongqing 2020 10 乙肝 Hepatitis B
 Chongqing 2020 10 丙肝 Hepatitis C
+
+缺的
 Guangdong 2005 12 急性出血性结膜炎 AHC
 Guangdong 2005 12 手足口病 HFMD
 Guangdong 2005 12 其它感染性腹泻病 Infectious diarrhea
@@ -697,6 +702,8 @@ Guangdong 2023 5 包虫病 Echinococcosis
 Guangdong 2023 5 斑疹伤寒 Typhus
 Guangdong 2023 5 流行性腮腺炎 Mumps
 Guangdong 2023 5 风疹 Rubella
+
+
 Henan 2013 12 戊肝 Hepatitis E
 Henan 2013 12 伤寒+副伤寒 Enteric fever
 Henan 2013 12 急性出血性结膜炎 AHC
@@ -860,6 +867,7 @@ Henan 2018 1 流行性腮腺炎 Mumps
 Henan 2018 1 风疹 Rubella
 Henan 2018 1 淋病 Gonorrhea
 Henan 2018 1 梅毒 Syphilis
+
 Jiangsu 2020 10 戊肝 Hepatitis E
 Jiangsu 2020 10 急性出血性结膜炎 AHC
 Jiangsu 2020 10 手足口病 HFMD
@@ -1212,7 +1220,11 @@ Jiangsu 2023 10 丙肝 Hepatitis C
 Jiangsu 2023 11 戊肝 Hepatitis E
 Jiangsu 2023 11 乙肝 Hepatitis B
 Jiangsu 2023 11 丙肝 Hepatitis C
+
+缺了
 Sichuan 2020 12 疟疾 Malaria
+
+新疆手动补
 Xinjiang 2021 9 急性出血性结膜炎 AHC
 Xinjiang 2021 9 手足口病 HFMD
 Xinjiang 2021 9 其它感染性腹泻病 Infectious diarrhea
