@@ -12,12 +12,6 @@ library(scales)
 
 source("./script/theme_set.R")
 
-log_fill <- trans_new(
-  name = "log_fill",
-  transform = function(x) sign(x) * log1p(abs(x)),
-  inverse = function(x) sign(x) * (exp(abs(x)) - 1)
-)
-
 datafile_analysis <- read.xlsx("./data/nation_and_provinces.xlsx",
   detectDates = T, sheet = "Nation"
 ) |>

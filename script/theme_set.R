@@ -3,6 +3,7 @@ library(lubridate)
 library(extrafont)
 library(RColorBrewer)
 library(paletteer)
+library(scales)
 
 # suppressWarnings(font_import(pattern = "times", prompt = F))
 
@@ -10,6 +11,12 @@ scientific_10 <- function(x) {
      ifelse(x == 0, 0, parse(text = gsub("[+]", "", gsub("e", "%*%10^", scales::scientific_format()(x)))))
 }
 
+
+log_fill <- trans_new(
+     name = "log_fill",
+     transform = function(x) sign(x) * log1p(abs(x)),
+     inverse = function(x) sign(x) * (exp(abs(x)) - 1)
+)
 
 theme_set <- function() {
   theme_classic() +

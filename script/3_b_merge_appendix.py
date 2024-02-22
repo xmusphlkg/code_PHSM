@@ -26,6 +26,9 @@ styles['Normal'].fontName = 'Times-Roman'
 styles['Normal'].fontSize = 14
 styles['Normal'].leading = styles['Heading1'].leading
 
+# add space before title
+story.append(Paragraph('<br/>' * 2, styles['Normal']))
+
 # setting title
 title_text = "Supplementary Appendix 1:"
 title = Paragraph(title_text, styles['Title'])
