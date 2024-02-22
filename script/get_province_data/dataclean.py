@@ -110,6 +110,7 @@ def process_files_combined(directory):
                                 [remove_space(df.iloc[i][0]), df.iloc[i][1], df.iloc[i][2], file.split('.')[0]])
                 elif file_type == 'csv':
                     df = pd.read_csv(file_path, encoding='gbk')
+                    df.replace('-', '0', regex=True, inplace=True)
                     for i in range(len(df)):
                         if str(df.iloc[0, 0]) == '0':
                             try:

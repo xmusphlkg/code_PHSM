@@ -135,6 +135,7 @@ for i in range(len(df)):
             print(f'{df["年份"].iloc[i]}-{df["月份"].iloc[i]}不存在传染病信息')
 
 # The code block you provided is performing the following tasks:
+a=[]
 files = os.listdir('./data/province/henan/')
 a=process_files_combined('./data/province/henan/')
 a.to_csv('./data/province/henan/henan.csv',index=False,encoding='gbk')

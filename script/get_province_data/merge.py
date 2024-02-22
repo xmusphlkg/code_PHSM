@@ -25,8 +25,8 @@ for province in provinces:
     df_report = pd.read_csv(f'./data/province/{province}/{province}.csv', encoding='gbk')
     for i in range(len(df_report)):
         data_list.append([pd.to_datetime(f"{df_report['year'][i]}-{df_report['month'][i]:02}", format='%Y-%m'),
-                          df_report['发病数'][i], re.sub('[^\u4e00-\u9fa5a-zA-Z]', '', df_report['疾病病种'][i]), None,
-                          'Report', df_report['url'][i],
+                          df_report['发病数'][i], re.sub('[^\u4e00-\u9fa5a-zA-Z0-9-]', '', df_report['疾病病种'][i]),
+                          None,'Report', df_report['url'][i],
                           df_report['year'][i], df_report['month'][i]])
     df_list = pd.DataFrame(data_list,
                            columns=["date", "value", "disease_cn", "disease_en", "source", "url", "year", "month"])
