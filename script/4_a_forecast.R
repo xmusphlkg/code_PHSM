@@ -340,7 +340,7 @@ auto_analysis_function <- function(i) {
     theme(legend.position = "bottom") +
     labs(
       x = NULL,
-      y = ifelse(i %in% c(1, 6, 13, 20), "Cases", ""),
+      y = ifelse(i %in% c(1, 8, 13, 18), "Monthly incidence", ""),
       color = "",
       title = paste0(LETTERS[i], ": ", datafile_class$disease[i])
     )
