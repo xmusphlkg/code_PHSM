@@ -332,8 +332,8 @@ auto_analysis_function <- function(i) {
       Observed = "#00A087FF"
     )) +
     scale_fill_manual(values = c(
-      Decreased = "#E64B3550",
-      Increased = "#00A08750",
+      Decreased = "#00A08750",
+      Increased = "#E64B3550",
       back_color
     )) +
     theme_set() +
