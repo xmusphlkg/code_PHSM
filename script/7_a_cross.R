@@ -67,7 +67,7 @@ DataAll <- DataAll |>
 
 perform_cross_correlation <- function(diseasename) {
      data <- DataAll[DataAll$disease_en == diseasename,]
-     ccf_result <- ccf(data$index, data$diff, lag.max = 6, plot = F, na.action = na.pass)
+     ccf_result <- Ccf(data$index, data$diff, lag.max = 6, plot = F, na.action = na.pass)
      lag_time <- ccf_result$lag[7:13]
      lag_cor <- ccf_result$acf[7:13]
      return(data.frame(diseasename = diseasename, correlation = lag_cor, lag_time = lag_time))

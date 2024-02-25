@@ -5,6 +5,7 @@ library(openxlsx)
 library(lubridate)
 library(patchwork)
 library(sf)
+library(doParallel)
 
 source('./script/theme_set.R')
 
@@ -96,7 +97,7 @@ fill_color_province <- c('grey', brewer.pal(length(province_sheet), 'Spectral'))
 names(fill_color_province) <- c('Other', province_sheet)
 years <- 2008:2023
 
-for (disease in datafile_class$disease) {
+auto_plot_function <- function(disease) {
      # epidemic curve
      data <- filter(data_province, disease_en == disease)
      fig_c <- ggplot(data = data)+
@@ -227,7 +228,7 @@ for (disease in datafile_class$disease) {
           plot_layout(ncol = 1, heights = c(3, 0.1, 1, 1))&
           theme(axis.title.y = element_text(vjust = -5))
      
-     ggsave(filename = paste0("./outcome/appendix/Supplementary_1/", disease, ".png"),
+     ggsave(filename = paste0("./outcome/appendix/Supplementary Appendix 1_2/", disease, ".png"),
             fig,
             device = 'png',
             width = 14, height = 15,
@@ -236,3 +237,22 @@ for (disease in datafile_class$disease) {
      
      remove(fig, fig_a, fig_b, fig_c, fig_d, data, data_maps, plot_breaks)
 }
+
+cl <- makeCluster(24)
+registerDoParallel(cl)
+clusterEvalQ(cl, {
+  library(tidyverse)
+  library(openxlsx)
+  library(lubridate)
+  library(patchwork)
+  library(sf)
+  library(paletteer)
+  
+  Sys.setlocale(locale = "en")
+})
+
+clusterExport(cl, ls()[ls() != "cl"],
+              envir = environment()
+)
+outcome <- parLapply(cl, datafile_class$disease, auto_plot_function)
+stopCluster(cl)

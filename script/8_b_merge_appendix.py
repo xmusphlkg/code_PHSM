@@ -32,7 +32,7 @@ for index, row in fig1_data_df.iterrows():
     label = nation_and_provinces_df[nation_and_provinces_df['diseasename'] == disease_name]['label'].values[0]
 
     # add figure
-    img_path = f'./outcome/appendix/Supplementary_1/{disease_name}.png'
+    img_path = f'./outcome/appendix/Supplementary Appendix 1_2/{disease_name}.png'
     img = utils.ImageReader(img_path)
     image = Image(img_path, width=14*40, height=15*40)
     story.append(image)

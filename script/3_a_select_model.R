@@ -456,7 +456,7 @@ auto_select_function <- function(i) {
   fig <- cowplot::plot_grid(fig_ts, fig_table, ncol = 1, rel_heights = c(3, 1))
 
   ggsave(
-    filename = paste0("./outcome/appendix/Supplementary_1/", disease_name[i], ".png"),
+    filename = paste0("./outcome/appendix/Supplementary Appendix 1_1/", disease_name[i], ".png"),
     fig,
     device = 'png',
     width = 14, height = 15,

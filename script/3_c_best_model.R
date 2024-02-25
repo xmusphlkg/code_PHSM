@@ -55,12 +55,10 @@ DataClean <- DataClean |>
 DataClean$Best <- as.numeric(DataClean$Method == DataClean$Best)
 DataClean$Method <- factor(DataClean$Method,
                            levels = c(
-                                "Neural Network", "Prophet",
-                                "ETS", "SARIMA", "Hybrid", "Bayesian Structural"
+                                "Neural Network", "ETS", "SARIMA", "Hybrid", "Bayesian Structural", "Prophet"
                            ),
                            labels = c(
-                                "Neural Network", "Prophet",
-                                "ETS", "SARIMA", "Hybrid*", "Bayesian Structural"
+                                "Neural Network", "ETS", "SARIMA", "Hybrid*", "Bayesian Structural", "Prophet"
                            )
 )
 diseases <- datafile_class$disease
