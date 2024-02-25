@@ -24,12 +24,20 @@ data_nation <- read.xlsx("./data/nation_and_provinces.xlsx",
 province_sheet <- getSheetNames("./data/nation_and_provinces.xlsx")[-c(1:4)]
 
 # read all sheet
-data_province <- lapply(province_sheet, function(x) {
+read_xlsx <- function(x) {
      data <- read.xlsx("./data/nation_and_provinces.xlsx", sheet = x, detectDates = T)
      data$province <- x
-     print(x)
      data
-}) |>
+}
+
+cl <- makeCluster(length(province_sheet))
+registerDoParallel(cl)
+clusterEvalQ(cl, {library(openxlsx)})
+clusterExport(cl, ls()[ls() != "cl"], envir = environment())
+outcome <- parLapply(cl, datafile_class$disease, read_xlsx)
+stopCluster(cl)
+
+data_province <- outcome |>
      bind_rows() |> 
      filter(disease_en %in% datafile_class$disease & date >= as.Date("2008-1-1")) |> 
      select(date, year, month, disease_en, value, province)
@@ -174,10 +182,12 @@ auto_plot_function <- function(disease) {
             limitsize = FALSE,
             dpi = 300)
      
+     write.csv(data, paste0("./outcome/appendix/Application/", disease, ".csv"), row.names = F)
+     
      remove(fig, fig_a, fig_b, fig_c, fig_d, data, data_maps, plot_breaks)
 }
 
-cl <- makeCluster(24)
+cl <- makeCluster(length(province_sheet))
 registerDoParallel(cl)
 clusterEvalQ(cl, {
   library(tidyverse)
@@ -190,8 +200,13 @@ clusterEvalQ(cl, {
   Sys.setlocale(locale = "en")
 })
 
-clusterExport(cl, ls()[ls() != "cl"],
-              envir = environment()
-)
+clusterExport(cl, ls()[ls() != "cl"], envir = environment())
 outcome <- parLapply(cl, datafile_class$disease, auto_plot_function)
 stopCluster(cl)
+
+
+# save shiny data ---------------------------------------------------------
+
+
+
+
