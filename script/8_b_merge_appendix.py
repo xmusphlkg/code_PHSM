@@ -34,7 +34,7 @@ for index, row in fig1_data_df.iterrows():
     # add figure
     img_path = f'./outcome/appendix/Supplementary_1/{disease_name}.png'
     img = utils.ImageReader(img_path)
-    image = Image(img_path, width=560, height=280)
+    image = Image(img_path, width=14*40, height=15*40)
     story.append(image)
 
     # add figure title
@@ -43,9 +43,10 @@ for index, row in fig1_data_df.iterrows():
     story.append(title)
 
     # add figure content
-    title_content = f"""<b>(A)</b> The distribution of cases across various provinces during the study period; 
-    <b>(B)</b> The monthly incidence of different provinces; 
-    <b>(C)</b> Temporal variation in the monthly incidence bwtween different provinces. 
+    title_content = f"""<b>(A)</b> The spatial distribution of cases in China; 
+    <b>(B)</b> The distribution of total cases across various provinces; 
+    <b>(C)</b> The monthly incidence of different provinces; 
+    <b>(D)</b> Temporal variation in the monthly incidence bwtween different provinces. 
     The heatmap represents normalized monthly incidence data for each province, 
     with color intensity corresponding to the normalized monthly incidence. 
     Instances where the normalized monthly incidence exceeds the range of -5 to 10 

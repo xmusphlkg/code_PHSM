@@ -33,9 +33,9 @@ DataClean <- DataClean |>
   group_by(disease) |>
   mutate(
     # norR2 = (R_Squared - mean(R_Squared, na.rm = T)) / sd(R_Squared, na.rm = T),
-    norSMAPE = (SMAPE - mean(SMAPE, na.rm = T)) / sd(SMAPE, na.rm = T),
-    norRMSE = (RMSE - mean(RMSE, na.rm = T)) / sd(RMSE, na.rm = T),
-    norMASE = (MASE - mean(MASE, na.rm = T)) / sd(MASE, na.rm = T),
+    norSMAPE = -(SMAPE - mean(SMAPE, na.rm = T)) / sd(SMAPE, na.rm = T),
+    norRMSE = -(RMSE - mean(RMSE, na.rm = T)) / sd(RMSE, na.rm = T),
+    norMASE = -(MASE - mean(MASE, na.rm = T)) / sd(MASE, na.rm = T),
     Index = sum(norSMAPE, norRMSE, norMASE, na.rm = T)
   ) |>
   rowwise() |>
@@ -49,7 +49,7 @@ DataClean <- DataClean |>
 DataClean <- DataClean |>
   group_by(disease) |>
   mutate(
-    Best = Method[which.min(Index)]
+    Best = Method[which.max(Index)]
   ) |>
   ungroup()
 DataClean$Best <- as.numeric(DataClean$Method == DataClean$Best)

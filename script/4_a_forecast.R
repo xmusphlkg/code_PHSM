@@ -154,10 +154,9 @@ auto_analysis_function <- function(i) {
 
   if (datafile_class$Method[i] == "Prophet") {
     mod <- prophet(data.frame(ds = zoo::as.Date(time(ts_train_1)), y = as.numeric(ts_train_1)),
-      interval.width = 0.95,
-      weekly.seasonality = FALSE,
-      daily.seasonality = FALSE
-    )
+                   interval.width = 0.95,
+                   weekly.seasonality = FALSE,
+                   daily.seasonality = FALSE)
     future <- make_future_dataframe(mod, periods = forcast_length, freq = "month")
     outcome <- predict(mod, future)
 
@@ -202,11 +201,12 @@ auto_analysis_function <- function(i) {
   }
 
   if (datafile_class$Method[i] == "Hybrid*") {
-    mod <- hybridModel(ts_train_1,
-      models = c("aesn"),
-      a.args = list(seasonal = T),
-      weights = "equal", parallel = TRUE, num.cores = 10
-    )
+      mod <- hybridModel(ts_train_1,
+                         lambda = 'auto',
+                         models = c("aesn"),
+                         a.args = list(seasonal = T),
+                         weights = "equal", parallel = TRUE, num.cores = 10,
+                         errorMethod = 'MAE')
     outcome <- forecast(mod, h = forcast_length)
 
     outcome_plot_2 <- data.frame(

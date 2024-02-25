@@ -147,7 +147,7 @@ fig2 <- ggplot(data = datafile_plot)+
      theme_plot()+
      theme(legend.position = 'bottom')+
      labs(x = 'Date',
-          y = 'Percentage of diseases',
+          y = 'Percentage of categories',
           title = 'C',
           fill = NULL)
 

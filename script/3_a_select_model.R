@@ -273,11 +273,11 @@ auto_select_function <- function(i) {
   # Mixture ts --------------------------------------------------------------
 
   mod <- hybridModel(ts_train_1,
-    models = c("aesn"),
-    a.args = list(seasonal = T),
-    weights = "equal", parallel = TRUE, num.cores = 10,
-    errorMethod = 'MAE'
-  )
+                     lambda = 'auto',
+                     models = c("aesn"),
+                     a.args = list(seasonal = T),
+                     weights = "equal", parallel = TRUE, num.cores = 10,
+                     errorMethod = 'MAE')
   outcome <- forecast(mod, h = test_length)
 
   outcome_plot_1 <- data.frame(
