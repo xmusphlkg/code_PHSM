@@ -148,13 +148,14 @@ plot_single <- function(i) {
       panel.grid.major.y = element_blank(),
       panel.grid.minor.y = element_blank(),
       axis.text = element_text(size = 10.5, color = "black"),
-      axis.title.y = element_text(size = 11, color = "black", face = 'bold')
+      axis.title.y = element_text(size = 11, color = "black", face = 'bold'),
+      plot.title.position = 'plot'
     ) +
     labs(
       x = NULL,
       y = "Monthly incidence",
       color = NULL,
-      title = LETTERS[i]
+      title = LETTERS[i*2-1]
     )
 
   fig2 <- ggplot(
@@ -191,13 +192,15 @@ plot_single <- function(i) {
     theme(
       legend.position = "bottom",
       panel.grid = element_blank(),
-      axis.text = element_text(size = 10.5, color = "black")
+      axis.text = element_text(size = 10.5, color = "black"),
+      plot.title.position = 'plot'
     ) +
     guides(fill = guide_colourbar(barwidth = 20, barheight = 0.5, color = "black")) +
     labs(
       x = "Date",
       y = NULL,
-      fill = "Normalized monthly incidence"
+      fill = "Normalized monthly incidence",
+      title = LETTERS[i*2]
     )
 
   return(fig1 + fig2 + plot_layout(ncol = 1, heights = c(1, 1)))

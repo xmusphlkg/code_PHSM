@@ -47,8 +47,7 @@ for index, row in fig1_data_df.iterrows():
     <b>(B)</b> Temporal variation in the monthly incidence bwtween different provinces. 
     The heatmap represents normalized monthly incidence data for each province, 
     with color intensity corresponding to the normalized monthly incidence. 
-    Instances where the normalized monthly incidence exceeds the range of -5 to 10 
-    are highlighted with a black box."""
+    * Normalized monthly incidence > 10."""
     title = Paragraph(title_content, styles['Normal'])
     story.append(title)
 
