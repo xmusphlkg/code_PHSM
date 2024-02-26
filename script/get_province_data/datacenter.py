@@ -206,20 +206,28 @@ def process_files(xls_file):
 xls_files = glob.glob(os.path.join(folder_path, '*.xls'))
 xls_files.sort()
 
+csv_files = glob.glob(os.path.join(folder_path, '*.csv'))
+csv_files.sort()
+csv_files_names = [os.path.basename(f) for f in csv_files]
+csv_files_names = [f.split('.')[0] for f in csv_files_names]
+
+xls_files = [f for f in xls_files if os.path.basename(f).split('.')[0] not in csv_files_names]
+print(f"共有 {len(xls_files)} 个文件需要处理")
+
 # multi-threading to process files
-# if xls_files:
-#     import threading
-#     max_threads = 10
+if xls_files:
+    import threading
+    max_threads = 10
 
-#     def process_files_threading(xls_files, start, end):
-#         for i in range(start, end):
-#             process_files(xls_files[i])
+    def process_files_threading(xls_files, start, end):
+        for i in range(start, end):
+            process_files(xls_files[i])
 
-#     threads = []
-#     for i in range(0, len(xls_files), max_threads):
-#         t = threading.Thread(target=process_files_threading, args=(xls_files, i, min(i + max_threads, len(xls_files))))
-#         threads.append(t)
-#         t.start()
+    threads = []
+    for i in range(0, len(xls_files), max_threads):
+        t = threading.Thread(target=process_files_threading, args=(xls_files, i, min(i + max_threads, len(xls_files))))
+        threads.append(t)
+        t.start()
 
 # combine all csv files
 csv_files = glob.glob(os.path.join(folder_path, '*.csv'))

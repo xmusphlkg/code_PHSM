@@ -63,6 +63,7 @@ rsconnect/
 
 #
 data/nation_and_provinces_1.xlsx
+data/province/datacenter
 .git/
 .idea/
 .vscode/

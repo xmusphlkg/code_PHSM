@@ -84,6 +84,19 @@ ggplot(data = data_map)+
      theme_minimal()+
      theme(legend.position = "none")
 
+data_year <- data_all |> 
+     group_by(year, disease_en, province) |>
+     summarise(value = sum(value, na.rm = T),
+               .groups = 'drop') |> 
+     filter(province != "Total") |> 
+     pivot_wider(names_from = province, values_from = value)
+fig_data <- list()
+for (disease in datafile_class$disease) {
+     fig_data[[disease]] <- data_year |> 
+          filter(disease_en == disease)
+}
+write.xlsx(fig_data, "./outcome/appendix/Table S4.xlsx")
+
 # plot --------------------------------------------------------------------
 
 years <- 2008:2023
@@ -140,7 +153,7 @@ auto_plot_function <- function(disease) {
                     vjust = 0.5)+
           scale_fill_gradientn(colors = paletteer_d("awtools::a_palette"),
                                trans = log_fill,
-                               limits = c(-5, 10),
+                               limits = c(-6, 10),
                                na.value = 'white') +
           scale_x_discrete(breaks = paste(seq(2008, 2023), "01", sep = "."),
                            labels = 2008:2023,

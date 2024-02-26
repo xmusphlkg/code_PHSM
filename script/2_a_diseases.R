@@ -91,21 +91,29 @@ group_lists <- levels(datafile_group$class)
 
 for (i in 1:4) {
   group_list <- group_lists[i]
-  datafile_plot_single <- datafile_plot |>
-    filter(class == group_list) |>
-    group_by(disease) |>
-    mutate(
-      value_norm = (value - mean(value, na.rm = T)) / sd(value, na.rm = T),
-      date = format(ymd(date), "%Y.%m")
-    )
-  data_fig[[LETTERS[i]]] <- datafile_plot_single
+  data_fig[[LETTERS[i*2-1]]] <- datafile_group |>
+       filter(class == group_list) |>
+       mutate(
+            year = year(date),
+            month = month(date),
+            date = format(ymd(date), "%Y.%m")
+       )
+  data_fig[[LETTERS[i*2]]] <- datafile_plot |>
+       filter(class == group_list) |>
+       group_by(disease) |>
+       mutate(
+            year = year(date),
+            month = month(date),
+            value_norm = (value - mean(value, na.rm = T)) / sd(value, na.rm = T),
+            date = format(ymd(date), "%Y.%m")
+       )
 }
 
 plot_single <- function(i) {
   group_list <- group_lists[i]
   datafile_group_single <- datafile_group |>
     filter(class == group_list)
-  datafile_plot_single <- data_fig[[LETTERS[i]]] |> 
+  datafile_plot_single <- data_fig[[LETTERS[i*2]]] |> 
     mutate(out_label = if_else(value_norm > 10,
                                '*',
                                ''))
@@ -149,6 +157,7 @@ plot_single <- function(i) {
       panel.grid.minor.y = element_blank(),
       axis.text = element_text(size = 10.5, color = "black"),
       axis.title.y = element_text(size = 11, color = "black", face = 'bold'),
+      plot.title = element_text(face = "bold", size = 12, color = "black"),
       plot.title.position = 'plot'
     ) +
     labs(
@@ -193,6 +202,7 @@ plot_single <- function(i) {
       legend.position = "bottom",
       panel.grid = element_blank(),
       axis.text = element_text(size = 10.5, color = "black"),
+      plot.title = element_text(face = "bold", size = 12, color = "black"),
       plot.title.position = 'plot'
     ) +
     guides(fill = guide_colourbar(barwidth = 20, barheight = 0.5, color = "black")) +
@@ -227,3 +237,8 @@ ggsave(
 write.xlsx(data_fig,
   file = "./outcome/appendix/Figure Data/Fig.2 data.xlsx"
 )
+
+((587402/272938)^(1/11) - 1) * 100
+((260704/118201)^(1/11) - 1) * 100
+((72630/12409)^(1/11) - 1) * 100
+72630/12409
