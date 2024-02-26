@@ -95,8 +95,7 @@ auto_plot_function <- function(disease) {
           group_by(year, province) |>
           summarise(value = mean(value, na.rm = T),
                     .groups = 'drop') |> 
-          filter(province != "Nation")
-     plot_breaks <- pretty(data$value)
+          filter(province != "Total")
      
      data_maps <- lapply(years, function(x) {
           data_map |> 
@@ -105,6 +104,8 @@ auto_plot_function <- function(disease) {
                mutate(year = x)
      }) |> 
           bind_rows()
+     
+     plot_breaks <- pretty(data_maps$value)
      
      fig_a <- ggplot(data = data_maps)+
           geom_sf(mapping = aes(fill = value))+
@@ -191,3 +192,4 @@ clusterEvalQ(cl, {
 clusterExport(cl, ls()[ls() != "cl"], envir = environment())
 outcome <- parLapply(cl, datafile_class$disease, auto_plot_function)
 stopCluster(cl)
+
