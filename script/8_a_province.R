@@ -17,21 +17,25 @@ datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.1 data.xlsx",
   select(-c(value, label))
 
 # all sheet in the file
-data_nation <- read.xlsx("./data/nation_and_provinces.xlsx",
-                               detectDates = T, sheet = "Nation") |>
+data_nation <- read.xlsx("./data/nation_and_provinces.xlsx", detectDates = T, sheet = "Nation") |>
      filter(disease_en %in% datafile_class$disease & date >= as.Date("2008-1-1")) |> 
      mutate(value = as.integer(value))
-province_sheet <- getSheetNames("./data/nation_and_provinces.xlsx")[-c(1:4)]
 
 # read all sheet
-read_xlsx <- function(x) {
-     data <- read.xlsx("./data/nation_and_provinces.xlsx", sheet = x, detectDates = T)
-     data$province <- x
-     print(x)
-     data
-}
-data_province <- lapply(province_sheet, read_xlsx) |>
-     bind_rows() |> 
+data_province_dc <- read.xlsx("./data/nation_and_provinces.xlsx", detectDates = T, sheet = "ProvinceCenter")
+data_province_dc <- data_province_dc |> 
+  select(year, month, disease_en, province, value) |>
+  complete(year, month, disease_en, province, fill = list(value = 0)) |>
+  mutate(date = make_date(year, month, 1)) |> 
+  distinct()
+
+data_province_re <- read.xlsx("./data/nation_and_provinces.xlsx", detectDates = T, sheet = "ProvinceReport")
+data_province_re <- data_province_re |> 
+  select(year, month, disease_en, province, value) |>
+  complete(year, month, disease_en, province, fill = list(value = NA)) |>
+  mutate(date = make_date(year, month, 1))
+
+data_province <- rbind(data_province_dc, data_province_re) |> 
      filter(disease_en %in% datafile_class$disease & date >= as.Date("2008-1-1")) |> 
      select(date, year, month, disease_en, value, province)
 
@@ -48,28 +52,14 @@ datafile_check <- data_province |>
      summarise(date_min = min(date),
                date_max = max(date),
                date_num = n_distinct(date),
-               # date_miss = list(format.Date(seq.Date(min(date), max(date), by = '1 month')[!seq.Date(min(date), max(date), by = '1 month') %in% unique(date)],
-               #                  '%Y-%m')),
+               date_miss = paste(format.Date(seq.Date(min(date), max(date), by = '1 month')[!seq.Date(min(date), max(date), by = '1 month') %in% unique(date)],
+                                '%Y-%m'),
+                                collapse = ' '),
                count = n(),
                .groups = 'drop')
 write.xlsx(datafile_check, "./outcome/appendix/Table S3.xlsx")
 
 # clean data
-data_province_dc <- data_province |> 
-     filter(date < as.Date("2021-1-1")) |> 
-     select(year, month, disease_en, province, value) |>
-     complete(year, month, disease_en, province, fill = list(value = 0)) |>
-     mutate(date = make_date(year, month, 1))
-data_province_rp <- data_province |> 
-     filter(date >= as.Date("2021-1-1")) |> 
-     select(year, month, disease_en, province, value) |>
-     complete(year, month, disease_en, province, fill = list(value = NA)) |>
-     mutate(date = make_date(year, month, 1))
-
-# remove duplicated data
-data_province <- bind_rows(data_province_dc, data_province_rp) |> 
-     distinct()
-
 data_nation <- data_nation |> 
      mutate(month = month(date),
             year = year(date),
@@ -84,6 +74,8 @@ data_all <- bind_rows(data_province, data_nation) |>
      mutate(value_norm = (value - mean(value, na.rm = T)) / sd(value, na.rm = T),
             date = format(ymd(date), "%Y.%m"),
             out_label = if_else(value_norm > 10, '*', ''))
+province_sheet <- unique(data_province_dc$province)
+province_sheet <- province_sheet[province_sheet != 'Total']
 
 # read sf file
 data_map <- st_read("./data/map_data/province.shp")
@@ -118,6 +110,7 @@ auto_plot_function <- function(disease) {
           geom_sf(mapping = aes(fill = value))+
           theme_bw()+
           theme(legend.position = "right",
+                plot.title.position = 'plot',
                 axis.text = element_blank(),
                 axis.title = element_text(size = 10.5, color = "black", face = "bold"),
                 axis.ticks = element_blank(),
@@ -156,6 +149,7 @@ auto_plot_function <- function(disease) {
           theme_bw() +
           theme(legend.position = "right",
                 panel.grid = element_blank(),
+                plot.title.position = 'plot',
                 legend.justification = c(0, 0.5),
                 axis.text = element_text(size = 10.5, color = "black"),
                 axis.title = element_text(size = 10.5, color = "black", face = "bold")) +
