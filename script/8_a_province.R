@@ -57,7 +57,6 @@ datafile_check <- data_province |>
                                 collapse = ' '),
                count = n(),
                .groups = 'drop')
-write.xlsx(datafile_check, "./outcome/appendix/Table S3.xlsx")
 
 # clean data
 data_nation <- data_nation |> 

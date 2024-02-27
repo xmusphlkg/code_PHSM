@@ -102,7 +102,7 @@ plot_function <- function(i, diseases) {
     scale_x_continuous(limits = c(-6, 6))+
     scale_fill_manual(
       values = c("#E64B35FF", "#00A087FF"),
-      labels = c("Alternative Models", "Best Model")
+      labels = c("Alternative Models", "Optimal Model")
     ) +
     theme_bw() +
     labs(

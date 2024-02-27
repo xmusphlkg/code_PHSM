@@ -67,13 +67,16 @@ Data <- DataAll |>
   summarise(
     diff = round(sum(diff), 2),
     percnet = round(sum(diff) / sum(mean), 4),
+    IRR_1 = round(quantile(IRR, 0.25, na.rm = T), 4),
+    IRR_2 = round(quantile(IRR, 0.5, na.rm = T), 4),
+    IRR_3 = round(quantile(IRR, 0.75, na.rm = T), 4),
     .groups = "drop"
   ) |>
   arrange(Periods)
 
 write.xlsx(
   Data,
-  "./outcome/appendix/Table S1.xlsx"
+  "./outcome/appendix/Supplementary Appendix 4.xlsx"
 )
 
 # plot --------------------------------------------------------------------
