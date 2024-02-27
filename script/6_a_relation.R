@@ -89,7 +89,7 @@ for (i in 1:4) {
   # save figure data
   DataTable1 <- DataAll |>
     filter(class == Class) |>
-    mutate(Periods = if_else(Periods == 'Post-epidemic period', 'Post-epidemic period', 'PHSM and epidemic periods')) |> 
+    mutate(Periods = if_else(Periods == 'Post-epidemic period', 'Post-epidemic period', 'PHSMs and epidemic periods')) |> 
     group_by(class, disease_en, Periods) |>
     summarise(
       q2 = quantile(IRR, 0.5, na.rm = T),
