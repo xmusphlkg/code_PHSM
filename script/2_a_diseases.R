@@ -238,7 +238,14 @@ write.xlsx(data_fig,
   file = "./outcome/appendix/Figure Data/Fig.2 data.xlsx"
 )
 
-((587402/272938)^(1/11) - 1) * 100
-((260704/118201)^(1/11) - 1) * 100
-((72630/12409)^(1/11) - 1) * 100
-72630/12409
+data <- datafile_plot |> 
+     mutate(year = year(date)) |> 
+     group_by(disease, year) |>
+     summarise(value = sum(value),
+               .groups = "drop") |> 
+     group_by(disease) |>
+     summarise(value_2008 = value[year == 2008],
+               value_2019 = value[year == 2019],
+               .groups = "drop") |> 
+     mutate(ratio = ((value_2019/value_2008)^(1/11) - 1) * 100) |> 
+     print(n = 24)

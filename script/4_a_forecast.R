@@ -107,9 +107,8 @@ auto_analysis_function <- function(i) {
   
   ## Rubella outbreak from March 2019 to July 2019
   if (datafile_class$disease[i] == 'Rubella') {
-    train_length <- 12 * 12 - 12
-    forcast_length <- 12 * 4 + 12
-    datafile_class$Method[i] <- "SARIMA"
+    train_length <- train_length - 12
+    forcast_length <- forcast_length + 12
   }
 
   ## simulate

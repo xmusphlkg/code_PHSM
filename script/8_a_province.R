@@ -95,7 +95,7 @@ for (disease in datafile_class$disease) {
      fig_data[[disease]] <- data_year |> 
           filter(disease_en == disease)
 }
-write.xlsx(fig_data, "./outcome/appendix/Table S4.xlsx")
+write.xlsx(fig_data, "./outcome/appendix/Supplementary Appendix 3.xlsx")
 
 # plot --------------------------------------------------------------------
 
