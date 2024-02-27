@@ -303,8 +303,8 @@ auto_analysis_function <- function(i) {
     stat_difference(
       mapping = aes(
         x = date,
-        ymin = mean,
-        ymax = value
+        ymin = value,
+        ymax = mean
       ),
       data = outcome_data,
       alpha = 0.3,
