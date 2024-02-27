@@ -176,7 +176,7 @@ auto_plot_function <- function(disease) {
      fig <- fig_a + fig_b + 
           plot_layout(ncol = 1, heights = c(1.7, 1))
      
-     ggsave(filename = paste0("./outcome/appendix/Supplementary Appendix 1_2/", disease, ".png"),
+     ggsave(filename = paste0("./outcome/appendix/Supplementary Appendix 1_1/", disease, ".png"),
             fig,
             device = 'png',
             width = 14, height = 16,

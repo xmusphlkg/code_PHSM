@@ -8,11 +8,11 @@ print("Figure 2 generated")
 rm(list = ls())
 
 source("./script/3_a_select_model.R")
-print("Appendix 1_1 figures generated")
+print("Appendix 1_2 figures generated")
 rm(list = ls())
 
 reticulate::source_python('./script/3_b_merge_appendix.py')
-print("Appendix 1_1 combinded")
+print("Appendix 1_2 combinded")
 rm(list = ls())
 
 source("./script/3_c_best_model.R")
@@ -36,10 +36,10 @@ print("Figure 7 generated")
 rm(list = ls())
 
 source("./script/8_a_province.R")
-print("Appendix 1_2 figures generated")
+print("Appendix 1_1 figures generated")
 rm(list = ls())
 
 reticulate::source_python('./script/8_b_merge_appendix.py')
-print("Appendix 1_2 combinded")
+print("Appendix 1 combinded")
 rm(list = ls())
 
