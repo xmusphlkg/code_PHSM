@@ -27,7 +27,7 @@ datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.1 data.xlsx",
 split_date_0 <- as.Date("2020/1/1")
 split_date_1 <- as.Date("2020/4/1")
 split_date_2 <- as.Date("2022/11/1")
-split_date_3 <- as.Date("2023/4/1")
+split_date_3 <- as.Date("2023/2/1")
 
 # group plot -------------------------------------------------------------
 
@@ -91,32 +91,33 @@ group_lists <- levels(datafile_group$class)
 
 for (i in 1:4) {
   group_list <- group_lists[i]
-  data_fig[[LETTERS[i*2-1]]] <- datafile_group |>
-       filter(class == group_list) |>
-       mutate(
-            year = year(date),
-            month = month(date),
-            date = format(ymd(date), "%Y.%m")
-       )
-  data_fig[[LETTERS[i*2]]] <- datafile_plot |>
-       filter(class == group_list) |>
-       group_by(disease) |>
-       mutate(
-            year = year(date),
-            month = month(date),
-            value_norm = (value - mean(value, na.rm = T)) / sd(value, na.rm = T),
-            date = format(ymd(date), "%Y.%m")
-       )
+  data_fig[[paste("panel", LETTERS[i * 2 - 1])]] <- datafile_group |>
+    filter(class == group_list) |>
+    mutate(
+      year = year(date),
+      month = month(date),
+      date = format(ymd(date), "%Y.%m")
+    )
+  data_fig[[paste("panel", LETTERS[i * 2])]] <- datafile_plot |>
+    filter(class == group_list) |>
+    group_by(disease) |>
+    mutate(
+      year = year(date),
+      month = month(date),
+      value_norm = (value - mean(value, na.rm = T)) / sd(value, na.rm = T),
+      date = format(ymd(date), "%Y.%m")
+    )
 }
 
 plot_single <- function(i) {
   group_list <- group_lists[i]
   datafile_group_single <- datafile_group |>
     filter(class == group_list)
-  datafile_plot_single <- data_fig[[LETTERS[i*2]]] |> 
+  datafile_plot_single <- data_fig[[paste("panel", LETTERS[i * 2])]] |>
     mutate(out_label = if_else(value_norm > 10,
-                               '*',
-                               ''))
+      "*",
+      ""
+    ))
 
   fig1 <- ggplot(data = datafile_group_single) +
     geom_rect(
@@ -156,15 +157,15 @@ plot_single <- function(i) {
       panel.grid.major.y = element_blank(),
       panel.grid.minor.y = element_blank(),
       axis.text = element_text(size = 10.5, color = "black"),
-      axis.title.y = element_text(size = 11, color = "black", face = 'bold'),
+      axis.title.y = element_text(size = 11, color = "black", face = "bold"),
       plot.title = element_text(face = "bold", size = 12, color = "black"),
-      plot.title.position = 'plot'
+      plot.title.position = "plot"
     ) +
     labs(
       x = NULL,
       y = "Monthly incidence",
       color = NULL,
-      title = LETTERS[i*2-1]
+      title = LETTERS[i * 2 - 1]
     )
 
   fig2 <- ggplot(
@@ -181,7 +182,7 @@ plot_single <- function(i) {
         label = out_label
       ),
       vjust = 0.5
-    )+
+    ) +
     coord_equal(3) +
     scale_fill_gradientn(
       colors = paletteer_d("awtools::a_palette"),
@@ -203,14 +204,14 @@ plot_single <- function(i) {
       panel.grid = element_blank(),
       axis.text = element_text(size = 10.5, color = "black"),
       plot.title = element_text(face = "bold", size = 12, color = "black"),
-      plot.title.position = 'plot'
+      plot.title.position = "plot"
     ) +
     guides(fill = guide_colourbar(barwidth = 20, barheight = 0.5, color = "black")) +
     labs(
       x = "Date",
       y = NULL,
       fill = "Normalized monthly incidence",
-      title = LETTERS[i*2]
+      title = LETTERS[i * 2]
     )
 
   return(fig1 + fig2 + plot_layout(ncol = 1, heights = c(1, 1)))
@@ -238,14 +239,18 @@ write.xlsx(data_fig,
   file = "./outcome/appendix/Figure Data/Fig.2 data.xlsx"
 )
 
-data <- datafile_plot |> 
-     mutate(year = year(date)) |> 
-     group_by(disease, year) |>
-     summarise(value = sum(value),
-               .groups = "drop") |> 
-     group_by(disease) |>
-     summarise(value_2008 = value[year == 2008],
-               value_2019 = value[year == 2019],
-               .groups = "drop") |> 
-     mutate(ratio = ((value_2019/value_2008)^(1/11) - 1) * 100) |> 
-     print(n = 24)
+data <- datafile_plot |>
+  mutate(year = year(date)) |>
+  group_by(disease, year) |>
+  summarise(
+    value = sum(value),
+    .groups = "drop"
+  ) |>
+  group_by(disease) |>
+  summarise(
+    value_2008 = value[year == 2008],
+    value_2019 = value[year == 2019],
+    .groups = "drop"
+  ) |>
+  mutate(ratio = ((value_2019 / value_2008)^(1 / 11) - 1) * 100) |>
+  print(n = 24)

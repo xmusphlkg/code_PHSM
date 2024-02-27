@@ -1,3 +1,11 @@
+#####################################
+## @Description: 
+## @version: 
+## @Author: Li Kangguo
+## @Date: 2024-02-16 12:57:28
+## @LastEditors: Li Kangguo
+## @LastEditTime: 2024-02-27 13:51:56
+#####################################
 
 library(openxlsx)
 library(tidyverse)
@@ -7,7 +15,7 @@ library(tidyverse)
 split_date_0 <- as.Date("2020/1/1")
 split_date_1 <- as.Date("2020/4/1")
 split_date_2 <- as.Date("2022/11/1")
-split_date_3 <- as.Date("2023/4/1")
+split_date_3 <- as.Date("2023/2/1")
 
 ## class data
 # Data Structure

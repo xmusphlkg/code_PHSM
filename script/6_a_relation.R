@@ -22,7 +22,7 @@ source("./script/theme_set.R")
 split_date_0 <- as.Date("2020/1/1")
 split_date_1 <- as.Date("2020/4/1")
 split_date_2 <- as.Date("2022/11/1")
-split_date_3 <- as.Date("2023/4/1")
+split_date_3 <- as.Date("2023/2/1")
 
 datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.1 data.xlsx",
   sheet = "panel A"
@@ -35,7 +35,7 @@ DataAll <- list.files(
   full.names = TRUE
 ) |>
   lapply(read.xlsx, detectDates = T) |>
-  bind_rows() |> 
+  bind_rows() |>
   filter(date >= split_date_0)
 
 datafile_class$disease <- factor(datafile_class$disease,
@@ -97,19 +97,21 @@ for (i in 1:4) {
       s = wilcox.test(IRR, mu = 1)$statistic,
       P = round(wilcox.test(IRR, mu = 1)$p.value, 4),
       .groups = "drop"
-    ) |> 
+    ) |>
     as.data.frame()
-  data_fig[[paste('panel', LETTERS[i*2-1])]] <- DataTable1
-  
-  
+  data_fig[[paste("panel", LETTERS[i * 2 - 1])]] <- DataTable1
+
+
   DataTable2 <- DataAll |>
     filter(class == Class) |>
-    mutate(date = format(ymd(date), "%Y.%m"),
-           label = if_else(IRR > 4, '*', '')) |> 
-    select(disease_en, class, Periods, date, value, mean, IRR, label) |> 
+    mutate(
+      date = format(ymd(date), "%Y.%m"),
+      label = if_else(IRR > 4, "*", "")
+    ) |>
+    select(disease_en, class, Periods, date, value, mean, IRR, label) |>
     as.data.frame()
-  data_fig[[paste('panel', LETTERS[i*2])]] <- DataTable2
-  
+  data_fig[[paste("panel", LETTERS[i * 2])]] <- DataTable2
+
   remove(DataTable1, DataTable2)
 }
 
@@ -117,8 +119,10 @@ plot_rr <- function(i) {
   Class <- levels(datafile_class$class)[i]
   Data <- DataAll |>
     filter(class == Class) |>
-    mutate(date = format(ymd(date), "%Y.%m"),
-           label = if_else(IRR > 4, '*', ''))
+    mutate(
+      date = format(ymd(date), "%Y.%m"),
+      label = if_else(IRR > 4, "*", "")
+    )
   fill_value <- fill_color[i]
 
   fig1 <- ggplot(data = filter(Data, Periods %in% c("PHSMs period I", "PHSMs period II", "Epidemic period"))) +
@@ -127,12 +131,14 @@ plot_rr <- function(i) {
       show.legend = F,
       linetype = "longdash"
     ) +
-    geom_boxplot(mapping = aes(
-      y = disease_en,
-      x = IRR,
-      fill = class
-    ),
-    show.legend = F) +
+    geom_boxplot(
+      mapping = aes(
+        y = disease_en,
+        x = IRR,
+        fill = class
+      ),
+      show.legend = F
+    ) +
     scale_y_discrete(limits = rev(datafile_class$disease[datafile_class$class == Class])) +
     scale_x_continuous(limits = c(0, 4), breaks = 0:4) +
     scale_fill_manual(values = fill_value) +
@@ -156,9 +162,9 @@ plot_rr <- function(i) {
     geom_text(
       mapping = aes(
         label = label
-        ),
+      ),
       vjust = 0.5
-    )+
+    ) +
     scale_fill_gradientn(
       colors = paletteer_d("awtools::a_palette"),
       limits = c(0, 4)
@@ -182,7 +188,7 @@ plot_rr <- function(i) {
     labs(
       x = NULL,
       y = NULL,
-      fill = 'Adjusted IRR',
+      fill = "Adjusted IRR",
       title = paste0(LETTERS[2 * i])
     )
   fig1 + fig2 + plot_layout(widths = c(1, 3))
@@ -199,24 +205,31 @@ plot <- do.call(wrap_plots, c(outcome, ncol = 1, byrow = FALSE)) +
 set.seed(20240218)
 
 # cluster for incidence
-datafile_analysis <- read.xlsx('./data/nation_and_provinces.xlsx',
-                               detectDates = T, sheet = 'Nation') |>
+datafile_analysis <- read.xlsx("./data/nation_and_provinces.xlsx",
+  detectDates = T, sheet = "Nation"
+) |>
   filter(date >= as.Date("2008-1-1") & date < split_date_0)
 
-DataMatInci <- datafile_analysis |> 
-  filter(disease_en %in% datafile_class$disease) |> 
-  select(date, disease_en, value) |> 
-  rename(c(disease = 'disease_en')) |> 
-  mutate(disease = factor(disease,
-                          levels = datafile_class$disease,
-                          labels = datafile_class$disease),
-         phase = case_when(date < split_date_1 ~ 'Pre-epidemic Periods',
-                           date >= split_date_1 & date < split_date_2 ~ 'PHSMs Periods',
-                           date >= split_date_2 & date < split_date_3 ~ 'Epidemic Periods',
-                           date >= split_date_3 ~ 'Post-epidemic Period'),
-         phase = factor(phase,
-                        levels = c('Pre-epidemic Periods', 'PHSMs Periods', 'Epidemic Periods', 'Post-epidemic Period')),
-         value = as.integer(value)) |> 
+DataMatInci <- datafile_analysis |>
+  filter(disease_en %in% datafile_class$disease) |>
+  select(date, disease_en, value) |>
+  rename(c(disease = "disease_en")) |>
+  mutate(
+    disease = factor(disease,
+      levels = datafile_class$disease,
+      labels = datafile_class$disease
+    ),
+    phase = case_when(
+      date < split_date_1 ~ "Pre-epidemic Periods",
+      date >= split_date_1 & date < split_date_2 ~ "PHSMs Periods",
+      date >= split_date_2 & date < split_date_3 ~ "Epidemic Periods",
+      date >= split_date_3 ~ "Post-epidemic Period"
+    ),
+    phase = factor(phase,
+      levels = c("Pre-epidemic Periods", "PHSMs Periods", "Epidemic Periods", "Post-epidemic Period")
+    ),
+    value = as.integer(value)
+  ) |>
   select(value, date, disease) |>
   pivot_wider(
     names_from = date,
@@ -231,20 +244,22 @@ rownames(DataMatInci) <- diseasename
 DataMatInci <- scale(DataMatInci)
 
 log_trans_with_zero <- function() {
-  trans_new(name = 'log_with_zero',
-            trans = function(x) log10(ifelse(x == 0, 0.05, x)),
-            inverse = function(x) exp(x))
+  trans_new(
+    name = "log_with_zero",
+    trans = function(x) log10(ifelse(x == 0, 0.05, x)),
+    inverse = function(x) exp(x)
+  )
 }
 
 hcdata <- hkmeans(DataMatInci, 2)
 fig1 <- fviz_dend(hcdata,
-                  cex = 0.6,
-                  k_colors = fill_color_disease[9:8],
-                  rect = TRUE,
-                  rect_fill = TRUE,
-                  horiz = TRUE,
-                  # type = "circular",
-                  main = LETTERS[9]
+  cex = 0.6,
+  k_colors = fill_color_disease[9:8],
+  rect = TRUE,
+  rect_fill = TRUE,
+  horiz = TRUE,
+  # type = "circular",
+  main = LETTERS[9]
 ) +
   theme(
     axis.ticks.y = element_blank(),
@@ -252,13 +267,13 @@ fig1 <- fviz_dend(hcdata,
     plot.title.position = "plot",
     plot.caption.position = "plot",
     plot.title = element_text(face = "bold", size = 14, hjust = 0)
-  )+
+  ) +
   scale_y_continuous(trans = scales::pseudo_log_trans(base = 10))
 
-data_fig[[paste0(LETTERS[9])]] <- data.frame(
+data_fig[[paste("panel", LETTERS[9])]] <- data.frame(
   disease = names(hcdata$cluster),
   cluster = as.integer(hcdata$cluster)
-) |> 
+) |>
   left_join(
     data.frame(
       disease = rownames(hcdata[["data"]]),
@@ -291,16 +306,16 @@ DataMatRR <- scale(DataMatRR)
 ## PHSMs period I
 hcdata <- hkmeans(DataMatRR[, 1:40], 4)
 fig2 <- fviz_cluster(hcdata,
-             data = DataMatRR[, 1:40],
-             main = LETTERS[10],
-             ggtheme = theme_set(),
-             repel = TRUE,
-             k_colors = fill_color_disease[5:3],
-             palette = "npg"
-             )+
-  theme(legend.position = 'none')
+  data = DataMatRR[, 1:40],
+  main = LETTERS[10],
+  ggtheme = theme_set(),
+  repel = TRUE,
+  k_colors = fill_color_disease[5:3],
+  palette = "npg"
+) +
+  theme(legend.position = "none")
 
-data_fig[[paste0(LETTERS[10])]] <- data.frame(
+data_fig[[paste("panel", LETTERS[10])]] <- data.frame(
   disease = names(hcdata$cluster),
   cluster = as.integer(hcdata$cluster)
 ) |>
@@ -313,21 +328,25 @@ data_fig[[paste0(LETTERS[10])]] <- data.frame(
 
 ## PHSMs period II
 fig3 <- fviz_cluster(hcdata,
-                     data = DataMatRR[, 1:40],
-                     main = LETTERS[11],
-                     ggtheme = theme_set(),
-                     repel = TRUE,
-                     k_colors = fill_color_disease[5:3],
-                     palette = "npg"
-)+
-  theme(legend.position = 'none',
-        panel.background = element_rect(fill='transparent'),
-        plot.background = element_rect(fill='transparent', color = 'black'))+
-  labs(color = 'Cluster')+
-  coord_cartesian(xlim = c(0, 5),
-                  ylim = c(-1, 2))
+  data = DataMatRR[, 1:40],
+  main = LETTERS[11],
+  ggtheme = theme_set(),
+  repel = TRUE,
+  k_colors = fill_color_disease[5:3],
+  palette = "npg"
+) +
+  theme(
+    legend.position = "none",
+    panel.background = element_rect(fill = "transparent"),
+    plot.background = element_rect(fill = "transparent", color = "black")
+  ) +
+  labs(color = "Cluster") +
+  coord_cartesian(
+    xlim = c(0, 5),
+    ylim = c(-1, 2)
+  )
 
-data_fig[[paste0(LETTERS[11])]] <- data.frame(
+data_fig[[paste("panel", LETTERS[11])]] <- data.frame(
   disease = names(hcdata$cluster),
   cluster = as.integer(hcdata$cluster)
 ) |>
@@ -347,7 +366,7 @@ ABB
 ABB
 "
 
-plot1 <- fig1 + fig2 + guide_area()+
+plot1 <- fig1 + fig2 + guide_area() +
   plot_layout(design = layout)
 
 
@@ -359,4 +378,5 @@ ggsave("./outcome/publish/fig6.pdf",
 )
 
 write.xlsx(data_fig,
-           file = './outcome/appendix/Figure Data/Fig.6 data.xlsx')
+  file = "./outcome/appendix/Figure Data/Fig.6 data.xlsx"
+)

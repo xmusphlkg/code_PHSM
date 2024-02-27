@@ -48,8 +48,8 @@ datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.1 data.xlsx",
   select(-c(value, label))
 
 datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.3 data.xlsx") |>
-  filter(Best == 1) |> 
-  select(disease, Method) |> 
+  filter(Best == 1) |>
+  select(disease, Method) |>
   left_join(datafile_class, by = c(disease = "disease")) |>
   filter(!is.na(class)) |>
   mutate(disease = factor(disease, levels = datafile_class$disease)) |>
@@ -66,7 +66,7 @@ auto_analysis_function <- function(i) {
   split_date_0 <- as.Date("2020/1/1")
   split_date_1 <- as.Date("2020/4/1")
   split_date_2 <- as.Date("2022/11/1")
-  split_date_3 <- as.Date("2023/4/1")
+  split_date_3 <- as.Date("2023/2/1")
 
   datafile_rect <- data.frame(
     start = c(min(datafile_analysis$date), split_date_0, split_date_1, split_date_2, split_date_3),
@@ -92,7 +92,7 @@ auto_analysis_function <- function(i) {
 
   datafile_single <- datafile_analysis |>
     filter(disease_en == datafile_class$disease[i]) |>
-    select(date, disease_en, value) |> 
+    select(date, disease_en, value) |>
     complete(
       date = seq.Date(
         from = min(date),
@@ -104,9 +104,9 @@ auto_analysis_function <- function(i) {
         disease_en = datafile_class$disease[i]
       )
     )
-  
+
   ## Rubella outbreak from March 2019 to July 2019
-  if (datafile_class$disease[i] == 'Rubella') {
+  if (datafile_class$disease[i] == "Rubella") {
     train_length <- train_length - 12
     forcast_length <- forcast_length + 12
   }
@@ -138,7 +138,7 @@ auto_analysis_function <- function(i) {
   print(datafile_class$disease[i])
   print(datafile_class$Method[i])
   if (datafile_class$Method[i] == "SARIMA") {
-    mod <- auto.arima(ts_train_1, seasonal = T, ic = "aicc", lambda = 'auto')
+    mod <- auto.arima(ts_train_1, seasonal = T, ic = "aicc", lambda = "auto")
     outcome <- forecast(mod, h = forcast_length)
 
     outcome_plot_2 <- data.frame(
@@ -153,9 +153,10 @@ auto_analysis_function <- function(i) {
 
   if (datafile_class$Method[i] == "Prophet") {
     mod <- prophet(data.frame(ds = zoo::as.Date(time(ts_train_1)), y = as.numeric(ts_train_1)),
-                   interval.width = 0.95,
-                   weekly.seasonality = FALSE,
-                   daily.seasonality = FALSE)
+      interval.width = 0.95,
+      weekly.seasonality = FALSE,
+      daily.seasonality = FALSE
+    )
     future <- make_future_dataframe(mod, periods = forcast_length, freq = "month")
     outcome <- predict(mod, future)
 
@@ -171,8 +172,9 @@ auto_analysis_function <- function(i) {
   }
 
   if (datafile_class$Method[i] == "ETS") {
-    outcome <- forecast(ets(ts_train_1, ic = 'aicc', lambda = 'auto'),
-                        h = forcast_length)
+    outcome <- forecast(ets(ts_train_1, ic = "aicc", lambda = "auto"),
+      h = forcast_length
+    )
 
     outcome_plot_2 <- data.frame(
       date = zoo::as.Date(time(outcome$mean)),
@@ -185,7 +187,7 @@ auto_analysis_function <- function(i) {
   }
 
   if (datafile_class$Method[i] == "Neural Network") {
-    mod <- nnetar(ts_train_1, lambda = 'auto')
+    mod <- nnetar(ts_train_1, lambda = "auto")
 
     outcome_2 <- forecast(mod, h = forcast_length)
 
@@ -200,12 +202,13 @@ auto_analysis_function <- function(i) {
   }
 
   if (datafile_class$Method[i] == "Hybrid*") {
-      mod <- hybridModel(ts_train_1,
-                         lambda = 'auto',
-                         models = c("aesn"),
-                         a.args = list(seasonal = T),
-                         weights = "equal", parallel = TRUE, num.cores = 10,
-                         errorMethod = 'MAE')
+    mod <- hybridModel(ts_train_1,
+      lambda = "auto",
+      models = c("aesn"),
+      a.args = list(seasonal = T),
+      weights = "equal", parallel = TRUE, num.cores = 10,
+      errorMethod = "MAE"
+    )
     outcome <- forecast(mod, h = forcast_length)
 
     outcome_plot_2 <- data.frame(
@@ -236,7 +239,7 @@ auto_analysis_function <- function(i) {
       upper_95 = outcome$interval[4, ]
     )
   }
-  
+
   # correct all negative value into zero
   outcome_plot_2[outcome_plot_2 < 0] <- 0
 
