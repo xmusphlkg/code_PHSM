@@ -22,37 +22,186 @@ select_disease <- c('Dengue fever',
                     'Pertussis', 'HFMD',  'Mumps',
                     'Malaria')
 
-# data --------------------------------------------------------------------
+# incidence cluster -------------------------------------------------------
 
-DataAll <- list.files(
-  path = "./outcome/appendix/forecast/",
-  pattern = "*.xlsx",
-  full.names = TRUE
-) |>
-  lapply(read.xlsx, detectDates = T) |>
-  bind_rows()
+set.seed(20240218)
+
+# left border
+split_date_0 <- as.Date("2020/1/1")
+split_date_1 <- as.Date("2020/4/1")
+split_date_2 <- as.Date("2022/11/1")
+split_date_3 <- as.Date("2023/2/1")
 
 datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.1 data.xlsx",
                             sheet = "panel A"
 ) |>
   select(-c(value, label))
 
-DataAll <- DataAll |>
-  left_join(datafile_class,
-    by = c("disease_en" = "disease")
-  ) |>
+datafile_analysis <- read.xlsx("./data/nation_and_provinces.xlsx",
+                               detectDates = T, sheet = "Nation"
+) |>
+  filter(date >= as.Date("2008-1-1") & date < split_date_0)
+
+DataMatInci <- datafile_analysis |>
+  filter(disease_en %in% datafile_class$disease) |>
+  select(date, disease_en, value) |>
+  rename(c(disease = "disease_en")) |>
   mutate(
-    IRR = (value + 1) / (mean + 1),
-    diff = mean - value
-  ) |> 
-     filter(disease_en %in% select_disease)
+    disease = factor(disease,
+                     levels = datafile_class$disease,
+                     labels = datafile_class$disease
+    ),
+    phase = case_when(
+      date < split_date_1 ~ "Pre-epidemic Periods",
+      date >= split_date_1 & date < split_date_2 ~ "PHSMs Periods",
+      date >= split_date_2 & date < split_date_3 ~ "Epidemic Periods",
+      date >= split_date_3 ~ "Post-epidemic Period"
+    ),
+    phase = factor(phase,
+                   levels = c("Pre-epidemic Periods", "PHSMs Periods", "Epidemic Periods", "Post-epidemic Period")
+    ),
+    value = as.integer(value)
+  ) |>
+  select(value, date, disease) |>
+  pivot_wider(
+    names_from = date,
+    values_from = value
+  )
+
+diseasename <- DataMatInci$disease
+DataMatInci <- DataMatInci |>
+  select(-disease) |>
+  as.matrix()
+rownames(DataMatInci) <- diseasename
+DataMatInci <- scale(DataMatInci)
+
+hcdata <- hkmeans(DataMatInci, 2)
+fig1 <- fviz_dend(hcdata,
+                  cex = 0.6,
+                  k_colors = fill_color_disease[9:8],
+                  rect = TRUE,
+                  rect_fill = TRUE,
+                  horiz = TRUE,
+                  # type = "circular",
+                  main = LETTERS[1]
+) +
+  theme(
+    axis.ticks.y = element_blank(),
+    axis.text.x = element_text(size = 12, color = "black"),
+    plot.title.position = "plot",
+    plot.caption.position = "plot",
+    plot.title = element_text(face = "bold", size = 14, hjust = 0)
+  ) +
+  scale_y_continuous(trans = scales::pseudo_log_trans(base = 10))
+
+data_fig <- list()
+
+data_fig[[paste("panel", LETTERS[1])]] <- data.frame(
+  disease = names(hcdata$cluster),
+  cluster = as.integer(hcdata$cluster)
+) |>
+  left_join(
+    data.frame(
+      disease = rownames(hcdata[["data"]]),
+      as.data.frame(hcdata[["data"]])
+    ),
+    by = 'disease'
+  )
+
+# IRR cluster -------------------------------------------------------------
+
+DataAll <- list.files(path = "./outcome/appendix/forecast/",
+                      pattern = "*.xlsx",
+                      full.names = TRUE) |>
+  lapply(read.xlsx, detectDates = T) |>
+  bind_rows() |>
+  left_join(datafile_class,
+            by = c("disease_en" = "disease")) |>
+  mutate(IRR = (value + 1) / (mean + 1),
+         diff = mean - value) |> 
+  filter(date >= split_date_0)
+
+# cluster for IRR
+DataMatRR <- DataAll |>
+  select(IRR, date, disease_en) |>
+  filter(date < split_date_3) |> 
+  pivot_wider(
+    names_from = date,
+    values_from = IRR
+  )
+
+diseasename <- DataMatRR$disease_en
+DataMatRR <- DataMatRR |>
+  select(-disease_en) |>
+  as.matrix()
+rownames(DataMatRR) <- diseasename
+DataMatRR <- log(DataMatRR)
+DataMatRR <- scale(DataMatRR)
+
+## PHSMs period I, II, epidemic period
+hcdata <- hkmeans(DataMatRR, 4)
+fig2 <- fviz_cluster(hcdata,
+                     data = DataMatRR,
+                     main = LETTERS[2],
+                     ggtheme = theme_set(),
+                     repel = TRUE,
+                     k_colors = fill_color_disease[5:3],
+                     palette = "npg"
+) +
+  theme(legend.position = "none")
+
+data_fig[[paste("panel", LETTERS[2])]] <- data.frame(
+  disease = names(hcdata$cluster),
+  cluster = as.integer(hcdata$cluster)
+) |>
+  left_join(
+    data.frame(
+      disease = rownames(hcdata[["data"]]),
+      as.data.frame(hcdata[["data"]])
+    ),
+    by = 'disease'
+  )
+
+fig3 <- fviz_cluster(hcdata,
+                     data = DataMatRR[, 1:37],
+                     main = LETTERS[3],
+                     ggtheme = theme_set(),
+                     repel = TRUE,
+                     k_colors = fill_color_disease[5:3],
+                     palette = "npg"
+) +
+  theme(
+    legend.position = "none",
+    panel.background = element_rect(fill = "transparent"),
+    plot.background = element_rect(fill = "transparent", color = "black")
+  ) +
+  labs(color = "Cluster") +
+  coord_cartesian(
+    xlim = c(0, 5),
+    ylim = c(-1.5, 1)
+  )
+
+data_fig[[paste("panel", LETTERS[3])]] <- data.frame(
+  disease = names(hcdata$cluster),
+  cluster = as.integer(hcdata$cluster)
+) |>
+  left_join(
+    data.frame(
+      disease = rownames(hcdata[["data"]]),
+      as.data.frame(hcdata[["data"]])
+    )
+  )
+
+fig23 <- fig2 + inset_element(fig3, left = 0.03, bottom = 0.2, right = 0.52, top = 1)
+
 
 # cross-correlation analysis ------------------------------------------------------
 
-DataSI <- read.csv('./data/owid-covid-data.csv') |> 
-     filter(iso_code == "CHN")
+DataAll <- DataAll |> 
+  filter(disease_en %in% select_disease)
 
-DataSIm <- DataSI |> 
+DataSI <- read.csv('./data/owid-covid-data.csv') |> 
+     filter(iso_code == "CHN") |> 
      select(date, stringency_index) |> 
      mutate(year = year(date),
             month = month(date)) |> 
@@ -63,11 +212,11 @@ DataSIm <- DataSI |>
      filter(date <= max(DataAll$date))
 
 DataAll <- DataAll |> 
-     left_join(DataSIm, by = 'date')
+     left_join(DataSI, by = 'date')
 
 perform_cross_correlation <- function(diseasename) {
      data <- DataAll[DataAll$disease_en == diseasename,]
-     ccf_result <- Ccf(data$index, data$diff, lag.max = 6, plot = F, na.action = na.pass)
+     ccf_result <- ccf(data$index, data$diff, lag.max = 6, plot = F, na.action = na.pass)
      lag_time <- ccf_result$lag[7:13]
      lag_cor <- ccf_result$acf[7:13]
      return(data.frame(diseasename = diseasename, correlation = lag_cor, lag_time = lag_time))
@@ -127,16 +276,16 @@ plot_function <- function(i, diseases = select_disease) {
           labs(
                x = 'Lag Time (Month)',
                y = ifelse(i %in% c(1, 5), "Correlation Coefficient", ""),
-               title = paste0(LETTERS[i], ': ', diseases[i]),
+               title = paste0(LETTERS[i+3], ': ', diseases[i]),
                fill = "Correlation group"
           )
      if (i %in% c(1, 5)) {
           fig <- fig +
                theme(
-                    axis.text = element_text(color = "black"),
                     plot.title = element_text(face = "bold", size = 14, hjust = 0),
-                    legend.text = element_text(face = "bold", size = 10),
-                    legend.title = element_text(face = "bold", size = 10),
+                    legend.text = element_text(size = 12),
+                    legend.title = element_text(face = "bold", size = 12),
+                    axis.text = element_text(size = 10.5, color = "black"),
                     panel.grid.major.x = element_blank(),
                     panel.grid.minor.x = element_blank(),
                     panel.grid.major.y = element_blank(),
@@ -145,10 +294,10 @@ plot_function <- function(i, diseases = select_disease) {
      } else {
           fig <- fig +
                theme(
-                    axis.text = element_text(color = "black"),
                     plot.title = element_text(face = "bold", size = 14, hjust = 0),
-                    legend.text = element_text(face = "bold", size = 10),
-                    legend.title = element_text(face = "bold", size = 10),
+                    legend.text = element_text(size = 12),
+                    legend.title = element_text(face = "bold", size = 12),
+                    axis.text = element_text(size = 10.5, color = "black"),
                     panel.grid.major.x = element_blank(),
                     panel.grid.minor.x = element_blank(),
                     axis.text.y = element_blank(),
@@ -163,22 +312,27 @@ plot_function <- function(i, diseases = select_disease) {
 outcome <- lapply(1:length(select_disease), plot_function, diseases = select_disease)
 outcome[[length(outcome)+1]] <- guide_area()
 
-plot <- do.call(wrap_plots, outcome) +
+fig4 <- do.call(wrap_plots, outcome) +
      plot_layout(ncol = 4, guides = 'collect')&
      theme(
-          title = element_text(size = 8),
           legend.position = 'right'
      )
 
+layout <- "
+AAAA
+BBBB
+"
+
+fig123 <- cowplot::plot_grid(fig1, fig23, ncol = 2, rel_widths = c(1, 2.5))
+
 ggsave("./outcome/publish/fig7.pdf",
-       plot,
+       cowplot::plot_grid(fig123, fig4, ncol = 1, rel_heights = c(1, 1.2)),
        family = "Times New Roman",
        limitsize = FALSE, device = cairo_pdf,
-       width = 8, height = 5)
+       width = 12, height = 10)
 
-data_fig <- list()
 for (i in 1:length(select_disease)) {
-     data_fig[[paste('panel', LETTERS[i])]] <- cross_correlation_results |> 
+     data_fig[[paste('panel', LETTERS[i+3])]] <- cross_correlation_results |> 
           filter(diseasename == select_disease[i])
 }
 
