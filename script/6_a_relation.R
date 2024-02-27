@@ -158,7 +158,7 @@ plot_rr <- function(i) {
     )
   ) +
     geom_tile() +
-    geom_vline(xintercept = c(3.5, 34.5, 39.5)) +
+    geom_vline(xintercept = c(3.5, 34.5, 37.5)) +
     geom_text(
       mapping = aes(
         label = label
@@ -303,10 +303,10 @@ rownames(DataMatRR) <- diseasename
 DataMatRR <- log(DataMatRR)
 DataMatRR <- scale(DataMatRR)
 
-## PHSMs period I
-hcdata <- hkmeans(DataMatRR[, 1:40], 4)
+## PHSMs period I, II, epidemic period
+hcdata <- hkmeans(DataMatRR[, 1:37], 4)
 fig2 <- fviz_cluster(hcdata,
-  data = DataMatRR[, 1:40],
+  data = DataMatRR[, 1:37],
   main = LETTERS[10],
   ggtheme = theme_set(),
   repel = TRUE,
@@ -326,9 +326,8 @@ data_fig[[paste("panel", LETTERS[10])]] <- data.frame(
     )
   )
 
-## PHSMs period II
 fig3 <- fviz_cluster(hcdata,
-  data = DataMatRR[, 1:40],
+  data = DataMatRR[, 1:37],
   main = LETTERS[11],
   ggtheme = theme_set(),
   repel = TRUE,
@@ -343,7 +342,7 @@ fig3 <- fviz_cluster(hcdata,
   labs(color = "Cluster") +
   coord_cartesian(
     xlim = c(0, 5),
-    ylim = c(-1, 2)
+    ylim = c(-1.5, 1)
   )
 
 data_fig[[paste("panel", LETTERS[11])]] <- data.frame(
@@ -357,7 +356,7 @@ data_fig[[paste("panel", LETTERS[11])]] <- data.frame(
     )
   )
 
-fig2 <- fig2 + inset_element(fig3, left = 0.05, bottom = 0.2, right = 0.55, top = 1)
+fig2 <- fig2 + inset_element(fig3, left = 0.03, bottom = 0.2, right = 0.53, top = 1)
 
 layout <- "
 ACC
