@@ -371,7 +371,7 @@ plot1 <- fig1 + fig2 + guide_area() +
 
 
 ggsave("./outcome/publish/fig6.pdf",
-  cowplot::plot_grid(plot, plot1, ncol = 1, rel_heights = c(2.2, 2)),
+  cowplot::plot_grid(plot, plot1, ncol = 1, rel_heights = c(2.1, 2)),
   family = "Times New Roman",
   limitsize = FALSE, device = cairo_pdf,
   width = 14, height = 14
