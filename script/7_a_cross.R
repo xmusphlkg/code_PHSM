@@ -138,10 +138,10 @@ fig2 <- fviz_cluster(hcdata,
                      main = LETTERS[2],
                      ggtheme = theme_set(),
                      repel = TRUE,
+                     show.clust.cent = F,
                      k_colors = fill_color_disease[5:3],
-                     palette = "npg"
-) +
-     theme(legend.position = "none")
+                     palette = "npg") +
+        theme(legend.position = "right")
 
 data_fig[[paste("panel", LETTERS[2])]] <- data.frame(
      disease = names(hcdata$cluster),
