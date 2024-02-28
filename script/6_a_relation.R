@@ -147,6 +147,7 @@ plot_rr <- function(i) {
     ) +
     scale_fill_gradientn(
       colors = paletteer_d("awtools::a_palette"),
+      trans = log_fill,
       limits = c(0, 4)
     ) +
     scale_x_discrete(

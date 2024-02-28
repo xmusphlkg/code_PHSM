@@ -39,7 +39,8 @@ data_scale <- data_list |>
 
 data <- data_list |>
      group_by(phase, class, disease) |>
-     summarise(diff = sum(diff),
+     summarise(value = sum(value),
+               diff = sum(diff),
                percent = sum(diff)/sum(mean),
                .groups = "drop")
 write.xlsx(data, file = './outcome/appendix/Table S1.xlsx')
