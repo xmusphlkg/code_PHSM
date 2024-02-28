@@ -17,10 +17,10 @@ remove(list = ls())
 
 source("./script/theme_set.R")
 
-select_disease <- c('Dengue fever',
-                    'Rubella', 'Scarlet fever',
-                    'Pertussis', 'HFMD',  'Mumps',
-                    'Malaria')
+select_disease <- c('Dengue fever', 'Rubella',
+                    'Scarlet fever', 'Pertussis',
+                    'HFMD',  'Mumps',
+                    'Malaria', 'JE')
 
 # incidence cluster -------------------------------------------------------
 
@@ -304,18 +304,12 @@ plot_function <- function(i, diseases = select_disease) {
 }
 
 outcome <- lapply(1:length(select_disease), plot_function, diseases = select_disease)
-outcome[[length(outcome)+1]] <- guide_area()
 
 fig4 <- do.call(wrap_plots, outcome) +
      plot_layout(ncol = 4, guides = 'collect')&
      theme(
           legend.position = 'right'
      )
-
-layout <- "
-AAAA
-BBBB
-"
 
 fig123 <- cowplot::plot_grid(fig1, fig23, ncol = 2, rel_widths = c(1, 2.5))
 
