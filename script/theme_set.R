@@ -71,11 +71,11 @@ func_rmse <-
 
 fill_color <- c("#BC3C29FF", "#0072B5FF", "#E18727FF", "#20854EFF")
 fill_color_disease <- paletteer_d("ggsci::nrc_npg")
-back_color <- c('Pre-epidemic Period' = "#3381A850",
-                'PHSMs Period I' = "#E6383350",
-                'PHSMs Period II' = "#5E954650",
-                'Epidemic Period' = "#05215D50",
-                'Post-epidemic Period' = 'grey')
+back_color <- c('Pre-epidemic period' = "#3381A850",
+                'PHSMs period I' = "#E6383350",
+                'PHSMs period II' = "#5E954650",
+                'Epidemic period' = "#05215D50",
+                'Post-epidemic period' = 'grey')
 
 index_labels <- c("SMAPE", "RMSE", "MASE", "R_Squared")
 disease_groups <- c("Intestinal infectious diseases",

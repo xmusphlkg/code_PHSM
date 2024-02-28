@@ -171,7 +171,7 @@ fig3 <- fviz_cluster(hcdata,
      labs(color = "Cluster") +
      coord_cartesian(
           xlim = c(0, 5),
-          ylim = c(-1.5, 1)
+          ylim = c(-1, 1.5)
      )
 
 data_fig[[paste("panel", LETTERS[3])]] <- data.frame(
@@ -186,7 +186,7 @@ data_fig[[paste("panel", LETTERS[3])]] <- data.frame(
           by = 'disease'
      )
 
-fig23 <- fig2 + inset_element(fig3, left = 0.03, bottom = 0.2, right = 0.52, top = 1)
+fig23 <- fig2 + inset_element(fig3, left = 0.01, bottom = 0.1, right = 0.53, top = 0.9)
 
 
 # cross-correlation analysis ------------------------------------------------------
