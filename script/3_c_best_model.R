@@ -53,14 +53,7 @@ DataClean <- DataClean |>
   ) |>
   ungroup()
 DataClean$Best <- as.numeric(DataClean$Method == DataClean$Best)
-DataClean$Method <- factor(DataClean$Method,
-                           levels = c(
-                                "Neural Network", "ETS", "SARIMA", "Hybrid", "Bayesian Structural", "Prophet"
-                           ),
-                           labels = c(
-                                "Neural Network", "ETS", "SARIMA", "Hybrid*", "Bayesian Structural", "Prophet"
-                           )
-)
+DataClean$Method <- factor(DataClean$Method, levels = models, labels = models_label)
 diseases <- datafile_class$disease
 
 ## save normalized composite index

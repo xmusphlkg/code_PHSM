@@ -76,3 +76,20 @@ back_color <- c('Pre-epidemic Period' = "#3381A850",
                 'PHSMs Period II' = "#5E954650",
                 'Epidemic Period' = "#05215D50",
                 'Post-epidemic Period' = 'grey')
+
+index_labels <- c("SMAPE", "RMSE", "MASE", "R_Squared")
+disease_groups <- c("Intestinal infectious diseases",
+                    "Blood borne and sexually transmitted diseases",
+                    "Respiratory infectious diseases",
+                    "Zoonotic infectious diseases")
+models <- c("Neural Network", "ETS", "SARIMA", "Hybrid", "Bayesian Structural", "Prophet")
+models_label <- c("Neural Network", "ETS", "SARIMA", "Hybrid*", "Bayesian Structural", "Prophet")
+
+# Laplace smoothing
+
+add_value <- 1
+
+# left border
+split_dates <- as.Date(c("2020/1/1", "2020/4/1", "2022/11/1", "2023/2/1"))
+split_periods <- c("Pre-epidemic period", "PHSMs period I", "PHSMs period II",
+                   "Epidemic period", "Post-epidemic period")

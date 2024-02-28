@@ -19,7 +19,7 @@ plot_outcome <- function(outcome_plot_1,
      
      fig1 <- ggplot()+
           geom_line(mapping = aes(x = date, y = value, colour = 'Observed'), 
-                    linewidth = 0.7, data = filter(datafile_single, date <= split_date))+
+                    linewidth = 0.7, data = filter(datafile_single, date < split_date))+
           geom_line(mapping = aes(x = date, y = fit, colour = 'Fitted'), 
                     linewidth = 0.7, data = outcome_plot_1)+
           geom_line(mapping = aes(x = date, y = value), color = '#DC0000B2', 
