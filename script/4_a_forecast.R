@@ -182,7 +182,7 @@ auto_analysis_function <- function(i) {
           mod <- bsts(ts_train, state.specification = ss, niter = 500, seed = 20231007)
           
           burn <- SuggestBurn(0.1, mod)
-          outcome <- predict.bsts(mod, horizon = test_length, burn = burn, quantiles = c(0.025, 0.1, 0.9, 0.975))
+          outcome <- predict.bsts(mod, horizon = forcast_length, burn = burn, quantiles = c(0.025, 0.1, 0.9, 0.975))
           
           outcome_plot_2 <- data.frame(date = zoo::as.Date(time(tail(ts_obse, forcast_length))),
                                        mean = outcome$mean - add_value,
