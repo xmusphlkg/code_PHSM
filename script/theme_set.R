@@ -87,7 +87,7 @@ models_label <- c("Neural Network", "ETS", "SARIMA", "Hybrid*", "Bayesian Struct
 
 # Laplace smoothing
 
-add_value <- 1
+add_value <- 0.1
 
 # left border
 split_dates <- as.Date(c("2020/1/1", "2020/4/1", "2022/11/1", "2023/2/1"))

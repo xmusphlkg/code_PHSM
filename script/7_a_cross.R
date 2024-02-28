@@ -110,7 +110,7 @@ DataAll <- list.files(path = "./outcome/appendix/forecast/",
      bind_rows() |>
      left_join(datafile_class,
                by = c("disease_en" = "disease")) |>
-     mutate(IRR = (value + 1) / (mean + 1),
+     mutate(IRR = (value + add_value) / (mean + add_value),
             diff = mean - value) |> 
      filter(date >= split_dates[1])
 

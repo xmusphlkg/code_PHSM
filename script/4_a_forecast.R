@@ -344,7 +344,6 @@ file_list <- paste0("./outcome/appendix/forecast/",
                     datafile_class$disease,
                     ".xlsx")
 data_list <- lapply(file_list, read.xlsx, detectDates = T)
-names(data_list) <-
-     paste0(LETTERS[1:24], " ", datafile_class$disease)
+names(data_list) <- paste0(LETTERS[1:24], " ", datafile_class$disease)
 write.xlsx(data_list,
            file = "./outcome/appendix/Figure Data/Fig.4 data.xlsx")

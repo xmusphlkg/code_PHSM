@@ -39,7 +39,7 @@ datafile_class$class <- factor(datafile_class$class,
 
 DataAll <- DataAll |>
      left_join(datafile_class, by = c("disease_en" = "disease")) |>
-     mutate(IRR = (value + 1) / (mean + 1),
+     mutate(IRR = (value + add_value) / (mean + add_value),
             Periods = case_when(
                  date < split_dates[1] ~ split_periods[1],
                  date >= split_dates[1] & date < split_dates[2] ~ split_periods[2],
