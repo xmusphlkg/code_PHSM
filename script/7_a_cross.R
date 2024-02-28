@@ -26,52 +26,45 @@ select_disease <- c('Dengue fever',
 
 set.seed(20240218)
 
-# left border
-split_date_0 <- as.Date("2020/1/1")
-split_date_1 <- as.Date("2020/4/1")
-split_date_2 <- as.Date("2022/11/1")
-split_date_3 <- as.Date("2023/2/1")
+datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.1 data.xlsx", sheet = "panel A") |>
+     select(-c(value, label))
 
-datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.1 data.xlsx",
-                            sheet = "panel A"
-) |>
-  select(-c(value, label))
-
-datafile_analysis <- read.xlsx("./data/nation_and_provinces.xlsx",
-                               detectDates = T, sheet = "Nation"
-) |>
-  filter(date >= as.Date("2008-1-1") & date < split_date_0)
+datafile_analysis <- read.xlsx("./data/nation_and_provinces.xlsx", detectDates = T, sheet = "Nation") |>
+     filter(date >= as.Date("2008-1-1") & date < split_dates[1])
 
 DataMatInci <- datafile_analysis |>
-  filter(disease_en %in% datafile_class$disease) |>
-  select(date, disease_en, value) |>
-  rename(c(disease = "disease_en")) |>
-  mutate(
-    disease = factor(disease,
-                     levels = datafile_class$disease,
-                     labels = datafile_class$disease
-    ),
-    phase = case_when(
-      date < split_date_1 ~ "Pre-epidemic Periods",
-      date >= split_date_1 & date < split_date_2 ~ "PHSMs Periods",
-      date >= split_date_2 & date < split_date_3 ~ "Epidemic Periods",
-      date >= split_date_3 ~ "Post-epidemic Period"
-    ),
-    phase = factor(phase,
-                   levels = c("Pre-epidemic Periods", "PHSMs Periods", "Epidemic Periods", "Post-epidemic Period")
-    ),
-    value = as.integer(value)
-  ) |>
-  select(value, date, disease) |>
-  pivot_wider(
-    names_from = date,
-    values_from = value
-  )
+     filter(disease_en %in% datafile_class$disease) |>
+     select(date, disease_en, value) |>
+     rename(c(disease = "disease_en")) |>
+     mutate(
+          disease = factor(
+               disease,
+               levels = datafile_class$disease,
+               labels = datafile_class$disease
+          ),
+          phase = case_when(
+               date < split_dates[1] ~ split_periods[1],
+               date >= split_dates[1] &
+                    date < split_dates[2] ~ split_periods[2],
+               date >= split_dates[2] &
+                    date < split_dates[3] ~ split_periods[3],
+               date >= split_dates[3] &
+                    date < split_dates[4] ~ split_periods[4],
+               date >= split_dates[4] ~ split_periods[5]
+          ),
+          phase = factor(phase, levels = split_periods),
+          value = as.integer(value)
+     ) |>
+     select(value, date, disease) |>
+     pivot_wider(
+          names_from = date,
+          values_from = value
+     )
 
 diseasename <- DataMatInci$disease
 DataMatInci <- DataMatInci |>
-  select(-disease) |>
-  as.matrix()
+     select(-disease) |>
+     as.matrix()
 rownames(DataMatInci) <- diseasename
 DataMatInci <- scale(DataMatInci)
 
@@ -85,55 +78,55 @@ fig1 <- fviz_dend(hcdata,
                   # type = "circular",
                   main = LETTERS[1]
 ) +
-  theme(
-    axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 12, color = "black"),
-    plot.title.position = "plot",
-    plot.caption.position = "plot",
-    plot.title = element_text(face = "bold", size = 14, hjust = 0)
-  ) +
-  scale_y_continuous(trans = scales::pseudo_log_trans(base = 10))
+     theme(
+          axis.ticks.y = element_blank(),
+          axis.text.x = element_text(size = 12, color = "black"),
+          plot.title.position = "plot",
+          plot.caption.position = "plot",
+          plot.title = element_text(face = "bold", size = 14, hjust = 0)
+     ) +
+     scale_y_continuous(trans = scales::pseudo_log_trans(base = 10))
 
 data_fig <- list()
 
 data_fig[[paste("panel", LETTERS[1])]] <- data.frame(
-  disease = names(hcdata$cluster),
-  cluster = as.integer(hcdata$cluster)
+     disease = names(hcdata$cluster),
+     cluster = as.integer(hcdata$cluster)
 ) |>
-  left_join(
-    data.frame(
-      disease = rownames(hcdata[["data"]]),
-      as.data.frame(hcdata[["data"]])
-    ),
-    by = 'disease'
-  )
+     left_join(
+          data.frame(
+               disease = rownames(hcdata[["data"]]),
+               as.data.frame(hcdata[["data"]])
+          ),
+          by = 'disease'
+     )
 
 # IRR cluster -------------------------------------------------------------
 
 DataAll <- list.files(path = "./outcome/appendix/forecast/",
                       pattern = "*.xlsx",
                       full.names = TRUE) |>
-  lapply(read.xlsx, detectDates = T) |>
-  bind_rows() |>
-  left_join(datafile_class,
-            by = c("disease_en" = "disease")) |>
-  mutate(IRR = (value + 1) / (mean + 1),
-         diff = mean - value) |> 
-  filter(date >= split_date_0)
+     lapply(read.xlsx, detectDates = T) |>
+     bind_rows() |>
+     left_join(datafile_class,
+               by = c("disease_en" = "disease")) |>
+     mutate(IRR = (value + 1) / (mean + 1),
+            diff = mean - value) |> 
+     filter(date >= split_dates[1])
 
 # cluster for IRR
 DataMatRR <- DataAll |>
-  select(IRR, date, disease_en) |>
-  filter(date < split_date_3) |> 
-  pivot_wider(
-    names_from = date,
-    values_from = IRR
-  )
+     select(IRR, date, disease_en) |>
+     filter(date < split_dates[4]) |> 
+     pivot_wider(
+          names_from = date,
+          values_from = IRR
+     )
 
 diseasename <- DataMatRR$disease_en
 DataMatRR <- DataMatRR |>
-  select(-disease_en) |>
-  as.matrix()
+     select(-disease_en) |>
+     as.matrix()
 rownames(DataMatRR) <- diseasename
 DataMatRR <- log(DataMatRR)
 DataMatRR <- scale(DataMatRR)
@@ -148,19 +141,19 @@ fig2 <- fviz_cluster(hcdata,
                      k_colors = fill_color_disease[5:3],
                      palette = "npg"
 ) +
-  theme(legend.position = "none")
+     theme(legend.position = "none")
 
 data_fig[[paste("panel", LETTERS[2])]] <- data.frame(
-  disease = names(hcdata$cluster),
-  cluster = as.integer(hcdata$cluster)
+     disease = names(hcdata$cluster),
+     cluster = as.integer(hcdata$cluster)
 ) |>
-  left_join(
-    data.frame(
-      disease = rownames(hcdata[["data"]]),
-      as.data.frame(hcdata[["data"]])
-    ),
-    by = 'disease'
-  )
+     left_join(
+          data.frame(
+               disease = rownames(hcdata[["data"]]),
+               as.data.frame(hcdata[["data"]])
+          ),
+          by = 'disease'
+     )
 
 fig3 <- fviz_cluster(hcdata,
                      data = DataMatRR[, 1:37],
@@ -170,27 +163,28 @@ fig3 <- fviz_cluster(hcdata,
                      k_colors = fill_color_disease[5:3],
                      palette = "npg"
 ) +
-  theme(
-    legend.position = "none",
-    panel.background = element_rect(fill = "transparent"),
-    plot.background = element_rect(fill = "transparent", color = "black")
-  ) +
-  labs(color = "Cluster") +
-  coord_cartesian(
-    xlim = c(0, 5),
-    ylim = c(-1.5, 1)
-  )
+     theme(
+          legend.position = "none",
+          panel.background = element_rect(fill = "transparent"),
+          plot.background = element_rect(fill = "transparent", color = "black")
+     ) +
+     labs(color = "Cluster") +
+     coord_cartesian(
+          xlim = c(0, 5),
+          ylim = c(-1.5, 1)
+     )
 
 data_fig[[paste("panel", LETTERS[3])]] <- data.frame(
-  disease = names(hcdata$cluster),
-  cluster = as.integer(hcdata$cluster)
+     disease = names(hcdata$cluster),
+     cluster = as.integer(hcdata$cluster)
 ) |>
-  left_join(
-    data.frame(
-      disease = rownames(hcdata[["data"]]),
-      as.data.frame(hcdata[["data"]])
-    )
-  )
+     left_join(
+          data.frame(
+               disease = rownames(hcdata[["data"]]),
+               as.data.frame(hcdata[["data"]])
+          ),
+          by = 'disease'
+     )
 
 fig23 <- fig2 + inset_element(fig3, left = 0.03, bottom = 0.2, right = 0.52, top = 1)
 
@@ -198,7 +192,7 @@ fig23 <- fig2 + inset_element(fig3, left = 0.03, bottom = 0.2, right = 0.52, top
 # cross-correlation analysis ------------------------------------------------------
 
 DataAll <- DataAll |> 
-  filter(disease_en %in% select_disease)
+     filter(disease_en %in% select_disease)
 
 DataSI <- read.csv('./data/owid-covid-data.csv') |> 
      filter(iso_code == "CHN") |> 

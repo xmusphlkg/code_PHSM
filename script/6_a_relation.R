@@ -18,15 +18,7 @@ source("./script/theme_set.R")
 
 # data --------------------------------------------------------------------
 
-# left border
-split_date_0 <- as.Date("2020/1/1")
-split_date_1 <- as.Date("2020/4/1")
-split_date_2 <- as.Date("2022/11/1")
-split_date_3 <- as.Date("2023/2/1")
-
-datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.1 data.xlsx",
-  sheet = "panel A"
-) |>
+datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.1 data.xlsx", sheet = "panel A") |>
   select(-c(value, label))
 
 DataAll <- list.files(
@@ -36,7 +28,7 @@ DataAll <- list.files(
 ) |>
   lapply(read.xlsx, detectDates = T) |>
   bind_rows() |>
-  filter(date >= split_date_0)
+  filter(date >= split_dates[1])
 
 datafile_class$disease <- factor(datafile_class$disease,
   levels = datafile_class$disease
@@ -46,19 +38,14 @@ datafile_class$class <- factor(datafile_class$class,
 )
 
 DataAll <- DataAll |>
-  left_join(datafile_class,
-    by = c("disease_en" = "disease")
-  ) |>
-  mutate(
-    IRR = (value + 1) / (mean + 1),
-    Periods = case_when(
-      date < split_date_0 ~ "Pre-epidemic period",
-      date >= split_date_0 & date < split_date_1 ~ "PHSMs period I",
-      date >= split_date_1 & date < split_date_2 ~ "PHSMs period II",
-      date >= split_date_2 & date < split_date_3 ~ "Epidemic period",
-      date >= split_date_3 ~ "Post-epidemic period"
-    )
-  )
+     left_join(datafile_class, by = c("disease_en" = "disease")) |>
+     mutate(IRR = (value + 1) / (mean + 1),
+            Periods = case_when(
+                 date < split_dates[1] ~ split_periods[1],
+                 date >= split_dates[1] & date < split_dates[2] ~ split_periods[2],
+                 date >= split_dates[2] & date < split_dates[3] ~ split_periods[3],
+                 date >= split_dates[3] & date < split_dates[4] ~ split_periods[4],
+                 date >= split_dates[4] ~ split_periods[5]))
 
 # summary -----------------------------------------------------------------
 
@@ -85,7 +72,7 @@ write.xlsx(
 data_fig <- list()
 
 for (i in 1:4) {
-  Class <- levels(datafile_class$class)[i]
+  Class <- disease_groups[i]
   # save figure data
   DataTable1 <- DataAll |>
     filter(class == Class) |>
@@ -117,7 +104,7 @@ for (i in 1:4) {
 }
 
 plot_rr <- function(i) {
-  Class <- levels(datafile_class$class)[i]
+  Class <- disease_groups[i]
   fig1 <- ggplot(data = data_fig[[paste("panel", LETTERS[i * 2 - 1])]], 
          mapping = aes(y = disease_en, x = q2, xmin = q1, xmax = q3)) +
     geom_vline(xintercept = 1,
