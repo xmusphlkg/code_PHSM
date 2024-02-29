@@ -54,31 +54,35 @@ auto_select_function <- function(i) {
   datafile_single <- datafile_analysis |>
     filter(disease_en == disease_name[i]) |>
     select(date, disease_en, value)
-  
+
   ## Rubella outbreak from March 2019 to July 2019
-  if (disease_name[i] == 'Rubella') {
-    datafile_single$value[datafile_single$date >= as.Date('2019-01-01')] <- NA
+  if (disease_name[i] == "Rubella") {
+    datafile_single$value[datafile_single$date >= as.Date("2019-01-01")] <- NA
   }
 
   ## simulate date before 2020
-  df_simu <- datafile_single  |>
-    arrange(date)  |>
-    unique()  |>
-    filter(date < split_date)  |>
+  df_simu <- datafile_single |>
+    arrange(date) |>
+    unique() |>
+    filter(date < split_date) |>
     select(value)
 
   max_case <- max(df_simu$value, na.rm = T)
 
-  ts_obse <- ts(df_simu, frequency = 12,
-                  start = c(as.numeric(format(min(datafile_single$date), "%Y")),
-                            as.numeric(format(min(datafile_single$date), "%m"))))
-  
+  ts_obse <- ts(df_simu,
+    frequency = 12,
+    start = c(
+      as.numeric(format(min(datafile_single$date), "%Y")),
+      as.numeric(format(min(datafile_single$date), "%m"))
+    )
+  )
+
   ts_train <- head(ts_obse, train_length) + add_value
   ts_test <- tail(ts_obse, test_length)
 
   # NNET --------------------------------------------------------------------
 
-  mod <- nnetar(ts_train, lambda = 'auto')
+  mod <- nnetar(ts_train, lambda = "auto")
   outcome <- forecast(mod, h = test_length)
 
   outcome_plot_1 <- data.frame(
@@ -119,9 +123,10 @@ auto_select_function <- function(i) {
 
   # Prophet -------------------------------------------------------------------
 
-  mod <- prophet(data.frame(
-       ds = zoo::as.Date(time(ts_train)), 
-       y = as.numeric(ts_train)
+  mod <- prophet(
+    data.frame(
+      ds = zoo::as.Date(time(ts_train)),
+      y = as.numeric(ts_train)
     ),
     interval.width = 0.95,
     weekly.seasonality = FALSE,
@@ -171,7 +176,7 @@ auto_select_function <- function(i) {
 
   # ETS ---------------------------------------------------------------------
 
-  mod <- ets(ts_train, ic = 'aicc', lambda = 'auto')
+  mod <- ets(ts_train, ic = "aicc", lambda = "auto")
   outcome <- forecast(mod, h = test_length)
 
   outcome_plot_1 <- data.frame(
@@ -214,7 +219,7 @@ auto_select_function <- function(i) {
 
   # SARIMA -------------------------------------------------------------------
 
-  mod <- auto.arima(ts_train, seasonal = T, ic = 'aicc', lambda = 'auto')
+  mod <- auto.arima(ts_train, seasonal = T, ic = "aicc", lambda = "auto")
   outcome <- forecast(mod, h = test_length)
 
   outcome_plot_1 <- data.frame(
@@ -257,11 +262,12 @@ auto_select_function <- function(i) {
   # Mixture ts --------------------------------------------------------------
 
   mod <- hybridModel(ts_train,
-                     lambda = 'auto',
-                     models = c("aesn"),
-                     a.args = list(seasonal = T),
-                     weights = "equal", parallel = TRUE, num.cores = 10,
-                     errorMethod = 'MAE')
+    lambda = "auto",
+    models = c("aesn"),
+    a.args = list(seasonal = T),
+    weights = "equal", parallel = TRUE, num.cores = 10,
+    errorMethod = "MAE"
+  )
   outcome <- forecast(mod, h = test_length)
 
   outcome_plot_1 <- data.frame(
@@ -305,7 +311,7 @@ auto_select_function <- function(i) {
     T,
     "Hybrid"
   )
-  
+
   rm(mod, outcome, outcome_plot_1, outcome_plot_2)
 
   # Bayesian --------------------------------------------------------------
@@ -371,22 +377,24 @@ auto_select_function <- function(i) {
     arrange(Method) |>
     select(Method, Train, Test, All, Index)
   datafile_table[is.na(datafile_table)] <- ""
-  
+
   table_build <- function(datafile_table, i) {
     index <- index_labels[i]
     data <- datafile_table[datafile_table$Index == index, 1:4]
     ggtexttable(data,
-                rows = NULL,
-                cols = c("Method", "Train", "Test", "All"),
-                theme = ttheme("blank", base_size = 10, padding = unit(c(5, 5), "mm"))) |>
-         tab_add_hline(at.row = nrow(datafile_table) / 4 + 1, row.side = "bottom", linewidth = 2) |>
-         tab_add_hline(at.row = 1:2, row.side = "top", linewidth = 2) |>
-         tab_add_title(paste(LETTERS[i+6], ":", index, " of Models"), face = "bold", size = 14) |>
-         tab_add_footnote("*Hybrid: Combined SARIMA, ETS, STL\nand Neural Network model",
-                          just = "left", hjust = 1, size = 10)
+      rows = NULL,
+      cols = c("Method", "Train", "Test", "All"),
+      theme = ttheme("blank", base_size = 10, padding = unit(c(5, 5), "mm"))
+    ) |>
+      tab_add_hline(at.row = nrow(datafile_table) / 4 + 1, row.side = "bottom", linewidth = 2) |>
+      tab_add_hline(at.row = 1:2, row.side = "top", linewidth = 2) |>
+      tab_add_title(paste(LETTERS[i + 6], ":", index, " of Models"), face = "bold", size = 14) |>
+      tab_add_footnote("*Hybrid: Combined SARIMA, ETS, STL\nand Neural Network model",
+        just = "left", hjust = 1, size = 10
+      )
   }
-  fig_table <- lapply(1:length(index_labels), table_build, datafile_table = datafile_table) |> 
-       wrap_plots(plot_list, nrow = 1)
+  fig_table <- lapply(1:length(index_labels), table_build, datafile_table = datafile_table) |>
+    wrap_plots(plot_list, nrow = 1)
 
   # save --------------------------------------------------------------------
 
@@ -402,7 +410,7 @@ auto_select_function <- function(i) {
   ggsave(
     filename = paste0("./outcome/appendix/Supplementary Appendix 1_2/", disease_name[i], ".png"),
     fig,
-    device = 'png',
+    device = "png",
     width = 14, height = 15,
     limitsize = FALSE,
     dpi = 300
@@ -446,4 +454,4 @@ outcome <- parLapply(cl, 1:24, auto_select_function)
 stopCluster(cl)
 
 datafile_outcome <- do.call("rbind", outcome)
-write.xlsx(datafile_outcome, "./outcome/appendix/Supplementary Appendix 2.xlsx")
+write.xlsx(datafile_outcome, "./outcome/appendix/Supplementary Appendix 2_1.xlsx")

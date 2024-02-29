@@ -73,10 +73,8 @@ doc.build(story)
 
 
 # merge pdf
-
 import PyPDF2
-
-def merge_pdfs(paths, output):
+def merge_pdf(paths, output):
     pdf_writer = PyPDF2.PdfWriter()
 
     for path in paths:
@@ -86,10 +84,30 @@ def merge_pdfs(paths, output):
             
     with open(output, 'wb') as out:
         pdf_writer.write(out)
+       
+# merge xlsx
+import pandas as pd
+def merge_xlsx(paths, output_file):
+    with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
+        for file_path,i in zip(paths, range(len(paths))):
+            sheet = pd.read_excel(file_path)
+            sheet_name = f"Table {i+1}"
+            sheet.to_excel(writer, sheet_name=sheet_name, index=False)
 
 if __name__ == '__main__':
-    paths = ["./outcome/appendix/Supplementary Appendix 1_1.pdf", './outcome/appendix/Supplementary Appendix 1_2.pdf']
-    output = './outcome/appendix/Supplementary Appendix 1.pdf'
-    merge_pdfs(paths, output)
+    paths_1 = [
+         "./outcome/appendix/Supplementary Appendix 1_1.pdf",
+         './outcome/appendix/Supplementary Appendix 1_2.pdf'
+         ]
+    output_1 = './outcome/appendix/Supplementary Appendix 1.pdf'
+    merge_pdf(paths_1, output_1)
+    
+    paths_2 = [
+         "./outcome/appendix/Supplementary Appendix 2_1.xlsx",
+         "./outcome/appendix/Supplementary Appendix 2_2.xlsx",
+         "./outcome/appendix/Supplementary Appendix 2_3.xlsx"
+         ]
+    output_2 = './outcome/appendix/Supplementary Appendix 2.xlsx'
+    merge_xlsx(paths_2, output_2)
 
 

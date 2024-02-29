@@ -14,7 +14,7 @@ source("./script/ggplot.R")
 
 # data --------------------------------------------------------------------
 
-DataRaw <- read.xlsx("./outcome/appendix/Supplementary Appendix 2.xlsx")
+DataRaw <- read.xlsx("./outcome/appendix/Supplementary Appendix 2_1.xlsx")
 datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.1 data.xlsx",
   sheet = "panel A"
 ) |>

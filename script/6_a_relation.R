@@ -52,6 +52,8 @@ DataAll <- DataAll |>
 Data <- DataAll |>
   group_by(disease_en, class, Periods) |>
   summarise(
+    forecast = sum(mean),
+    value = sum(value),
     diff = round(sum(diff), 2),
     percnet = round(sum(diff) / sum(mean), 4),
     IRR_1 = round(quantile(IRR, 0.25, na.rm = T), 4),
@@ -63,7 +65,7 @@ Data <- DataAll |>
 
 write.xlsx(
   Data,
-  "./outcome/appendix/Supplementary Appendix 4.xlsx"
+  "./outcome/appendix/Supplementary Appendix 2_3.xlsx"
 )
 
 # plot --------------------------------------------------------------------

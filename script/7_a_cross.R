@@ -225,7 +225,7 @@ cross_correlation_results <- do.call('rbind', cross_correlation_results) |>
 diseases <- datafile_class$disease
 
 DataRelation <- data.frame(
-     level = c("No Association", "Weak", "Moderate", "Strong"),
+     level = c("No association", "Weak", "Moderate", "Strong"),
      pl = c(0, 0.2, 0.4, 0.6),
      ph = c(0.2, 0.4, 0.6, 1)
 )

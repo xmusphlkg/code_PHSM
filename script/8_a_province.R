@@ -89,12 +89,7 @@ data_year <- data_all |>
                .groups = 'drop') |> 
      filter(province != "Total") |> 
      pivot_wider(names_from = province, values_from = value)
-fig_data <- list()
-for (disease in datafile_class$disease) {
-     fig_data[[disease]] <- data_year |> 
-          filter(disease_en == disease)
-}
-write.xlsx(fig_data, "./outcome/appendix/Supplementary Appendix 3.xlsx")
+write.xlsx(data_year, "./outcome/appendix/Supplementary Appendix 2_2.xlsx")
 
 # plot --------------------------------------------------------------------
 
