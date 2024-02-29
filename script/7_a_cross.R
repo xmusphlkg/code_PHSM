@@ -220,7 +220,8 @@ cross_correlation_results <- lapply(select_disease,
                                     perform_cross_correlation)
 cross_correlation_results <- do.call('rbind', cross_correlation_results) |> 
      group_by(diseasename) |> 
-     mutate(higher = correlation == max(abs(correlation))|correlation == -max(abs(correlation)))
+     mutate(higher = correlation == max(abs(correlation))|correlation == -max(abs(correlation)),
+            higher = if_else(higher, 'Maximum', 'Others'))
 
 diseases <- datafile_class$disease
 
@@ -261,17 +262,18 @@ plot_function <- function(i, diseases = select_disease) {
           geom_point(mapping = aes(x = lag_time,
                                    y = correlation,
                                    color = higher),
-                     show.legend = F) +
+                     show.legend = T) +
           coord_cartesian(ylim = c(-0.4, 0.8))+
           scale_fill_manual(values = rev(c("#E0F7FAFF", "#80DEEAFF", "#00BCD4FF", "#006064FF")))+
-          scale_color_manual(values = c('#79AF97FF', '#B24745FF'))+
+          scale_color_manual(values = c('#B24745FF', '#79AF97FF'))+
           scale_y_continuous(breaks = seq(-0.4, 0.8, 0.2))+
           theme_bw() +
           labs(
                x = 'Lag time (month)',
                y = ifelse(i %in% c(1, 5), "Correlation coefficient", ""),
                title = paste0(LETTERS[i+3], ': ', diseases[i]),
-               fill = "Correlation group"
+               fill = "Correlation group",
+               color = 'Correlation value'
           )
      if (i %in% c(1, 5)) {
           fig <- fig +
