@@ -117,7 +117,7 @@ DataAll <- list.files(path = "./outcome/appendix/forecast/",
 # cluster for IRR
 DataMatRR <- DataAll |>
      select(IRR, date, disease_en) |>
-     filter(date < split_dates[4]) |> 
+     filter(date < split_dates[3]) |> 
      pivot_wider(
           names_from = date,
           values_from = IRR
