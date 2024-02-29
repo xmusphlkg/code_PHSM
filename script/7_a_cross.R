@@ -268,8 +268,8 @@ plot_function <- function(i, diseases = select_disease) {
           scale_y_continuous(breaks = seq(-0.4, 0.8, 0.2))+
           theme_bw() +
           labs(
-               x = 'Lag Time (Month)',
-               y = ifelse(i %in% c(1, 5), "Correlation Coefficient", ""),
+               x = 'Lag time (month)',
+               y = ifelse(i %in% c(1, 5), "Correlation coefficient", ""),
                title = paste0(LETTERS[i+3], ': ', diseases[i]),
                fill = "Correlation group"
           )
