@@ -23,7 +23,7 @@ styles['Heading2'].fontName = 'Times-Bold'
 styles['Heading3'].fontName = 'Times-Bold'
 styles['BodyText'].fontName = 'Times-Roman'
 styles['Normal'].fontName = 'Times-Roman'
-styles['Normal'].fontSize = 14
+styles['Normal'].fontSize = 12
 styles['Normal'].leading = styles['Heading1'].leading
 
 # insert image and add TOC entries

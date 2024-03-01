@@ -23,7 +23,7 @@ styles['Heading2'].fontName = 'Times-Bold'
 styles['Heading3'].fontName = 'Times-Bold'
 styles['BodyText'].fontName = 'Times-Roman'
 styles['Normal'].fontName = 'Times-Roman'
-styles['Normal'].fontSize = 14
+styles['Normal'].fontSize = 12
 styles['Normal'].leading = styles['Heading1'].leading
 
 # add space before title
@@ -58,10 +58,13 @@ for index, row in fig1_data_df.iterrows():
     story.append(title)
 
     # add figure content
-    title_content = f"""<b>(A)</b> The spatial distribution of cases in China; 
-    <b>(B)</b> Temporal variation in the monthly incidence bwtween different provinces. 
+    title_content = f"""<b>(A)</b> The incidence of {label} in China from January 2008 to December 2023; 
+    <b>(B)</b> The spatial distribution of cases in China; 
+    <b>(C)</b> Temporal variation in the monthly incidence bwtween different provinces. 
     The heatmap represents normalized monthly incidence data for each province, 
     with color intensity corresponding to the normalized monthly incidence. 
+    Provincial data in panel <b>(B)</b> and <b>(C)</b> before January 2020 sourced from the Chinese Public Health Science Data Center, 
+    and data after January 2020 sourced from the provincial Notifiable Infectious Diseases Reports. 
     * Normalized monthly incidence > 10."""
     title = Paragraph(title_content, styles['Normal'])
     story.append(title)
