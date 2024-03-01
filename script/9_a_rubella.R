@@ -178,7 +178,7 @@ for (a in 1:2) {
                ymax = 0,
                ymin = max(plot_breaks) / 10,
                alpha = 0.2,
-               show.legend = F
+               show.legend = T
           ) +
           geom_line(
                mapping = aes(x = date,
@@ -214,11 +214,21 @@ for (a in 1:2) {
                back_color
           )) +
           theme_set() +
-          theme(legend.position = "bottom") +
+          theme(legend.position = "bottom",
+                legend.box = 'vertical') +
+          guides(
+               color = guide_legend(
+                    order = 2
+               ),
+               fill = guide_legend(
+                    order = 1
+               )
+          ) +
           labs(
                x = NULL,
                y = "Monthly incidence",
                color = "",
+               fill = "",
                title = LETTERS[a]
           )
      
@@ -229,7 +239,9 @@ for (a in 1:2) {
 
 plot_1 <- do.call(wrap_plots, fig) +
      plot_layout(guides = "collect") &
-     theme(legend.position = 'bottom')
+     theme(legend.position = "bottom",
+           legend.justification = c(0.6, 0.5),
+           legend.box = 'vertical')
 
 outcome_plot_3 <- outcome_plot_2 |> 
      select(date, mean, model) |> 
@@ -364,7 +376,7 @@ fig2 <- ggplot(
 
 plot_3 <- fig1 + fig2 + plot_layout(widths = c(1.5, 3))
 
-plot <- cowplot::plot_grid(plot_1, plot_2, plot_3, ncol = 1, rel_heights = c(1, 1, 0.7))
+plot <- cowplot::plot_grid(plot_1, plot_2, plot_3, ncol = 1, rel_heights = c(1, 0.7, 0.7))
 
 ggsave(
      "./outcome/appendix/Supplementary Appendix 1_3.png",
@@ -373,3 +385,4 @@ ggsave(
      width = 10,
      height = 10
 )
+

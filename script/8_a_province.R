@@ -62,7 +62,7 @@ datafile_check <- data_province |>
 data_nation <- data_nation |> 
      mutate(month = month(date),
             year = year(date),
-            province = 'Nation',
+            province = 'Nation (Report)',
             date = make_date(year, month, 1),
             disease_en = factor(disease_en,
                                 levels = datafile_class$disease)) |> 
@@ -71,8 +71,9 @@ data_nation <- data_nation |>
 data_all <- bind_rows(data_province, data_nation) |> 
      group_by(disease_en, province) |>
      mutate(value_norm = (value - mean(value, na.rm = T)) / sd(value, na.rm = T),
-            date = format(ymd(date), "%Y.%m"),
+            Date = format(ymd(date), "%Y.%m"),
             out_label = if_else(value_norm > 10, '*', ''))
+data_all$province[data_all$province == "Total"] <- "Nation (Onset)"
 province_sheet <- unique(data_province_dc$province)
 province_sheet <- province_sheet[province_sheet != 'Total']
 
@@ -87,8 +88,8 @@ data_year <- data_all |>
      group_by(year, disease_en, province) |>
      summarise(value = sum(value, na.rm = T),
                .groups = 'drop') |> 
-     filter(province != "Total") |> 
-     pivot_wider(names_from = province, values_from = value)
+     pivot_wider(names_from = province,
+                 values_from = value)
 write.xlsx(data_year, "./outcome/appendix/Supplementary Appendix 2_2.xlsx")
 
 # plot --------------------------------------------------------------------
@@ -96,13 +97,73 @@ write.xlsx(data_year, "./outcome/appendix/Supplementary Appendix 2_2.xlsx")
 years <- 2008:2023
 
 auto_plot_function <- function(disease) {
+     
+     # two epidemic curve
+     data <- data_all |> 
+          filter(province %in% c("Nation (Report)", "Nation (Onset)") & disease_en == disease) |> 
+          mutate(province = factor(province,
+                                   levels = c("Nation (Onset)", "Nation (Report)"),
+                                   labels = c("Onset", "Report")))
+     fig_a <- ggplot(data = data) +
+          geom_rect(
+               data = datafile_rect,
+               aes(
+                    xmin = start,
+                    xmax = end,
+                    fill = label
+               ),
+               ymin = -Inf,
+               ymax = Inf,
+               alpha = 0.2,
+               show.legend = F
+          ) +
+          geom_line(mapping = aes(x = date,
+                                  y = value,
+                                  color = province)) +
+          scale_x_date(
+               expand = expansion(add = c(15, 15)),
+               date_breaks = "1 year",
+               date_labels = "%Y"
+          ) +
+          scale_y_continuous(
+               expand = expansion(mult = c(0.15, 0.25)),
+               breaks = pretty(data$value),
+               labels = scientific_10
+          ) +
+          scale_fill_manual(values = back_color) +
+          scale_color_manual(values = fill_color) +
+          theme_bw() +
+          theme(
+               legend.position = c(0.01, 0.99),
+               legend.justification = c(0, 1),
+               axis.text = element_text(size = 10.5, color = "black"),
+               axis.title.y = element_text(
+                    size = 11,
+                    color = "black",
+                    face = "bold"
+               ),
+               plot.title = element_text(
+                    face = "bold",
+                    size = 12,
+                    color = "black"
+               ),
+               plot.title.position = "plot"
+          ) +
+          labs(
+               x = NULL,
+               y = "Monthly incidence",
+               color = NULL,
+               title = 'A'
+          )
+     
+     
      # map for province
      data <- data_all |> 
           filter(disease_en == disease) |> 
           group_by(year, province) |>
           summarise(value = mean(value, na.rm = T),
                     .groups = 'drop') |> 
-          filter(province != "Total")
+          filter(!province %in% c("Nation (Onset)", "Nation (Report)"))
      
      data_maps <- lapply(years, function(x) {
           data_map |> 
@@ -114,7 +175,7 @@ auto_plot_function <- function(disease) {
      
      plot_breaks <- pretty(data_maps$value)
      
-     fig_a <- ggplot(data = data_maps)+
+     fig_b <- ggplot(data = data_maps)+
           geom_sf(mapping = aes(fill = value))+
           theme_bw()+
           theme(legend.position = "right",
@@ -134,13 +195,13 @@ auto_plot_function <- function(disease) {
           facet_wrap(~year, nrow = 4)+
           guides(fill = guide_colourbar(barwidth = 1, barheight = 40, color = "black")) +
           labs(fill = 'Average\nmonthly\nincidence',
-               title = 'A')
+               title = 'B')
      
      data <- data_all |> 
-          filter(disease_en == disease)
-     fig_b <- ggplot(data = data,
+          filter(disease_en == disease & province != "Nation (Report)" & province != "Nation (Onset)")
+     fig_c <- ggplot(data = data,
                      mapping = aes(fill = value_norm,
-                                   x = date,
+                                   x = Date,
                                    y = province)) +
           geom_tile() +
           geom_text(mapping = aes(label = out_label),
@@ -152,7 +213,7 @@ auto_plot_function <- function(disease) {
           scale_x_discrete(breaks = paste(seq(2008, 2023), "01", sep = "."),
                            labels = 2008:2023,
                            expand = expansion(add = c(0, 0))) +
-          scale_y_discrete(limits = c(province_sheet, 'Nation'),
+          scale_y_discrete(limits = rev(province_sheet),
                            expand = c(0, 0.5)) +
           theme_bw() +
           theme(legend.position = "right",
@@ -161,14 +222,14 @@ auto_plot_function <- function(disease) {
                 legend.justification = c(0, 0.5),
                 axis.text = element_text(size = 10.5, color = "black"),
                 axis.title = element_text(size = 10.5, color = "black", face = "bold")) +
-          guides(fill = guide_colourbar(barwidth = 1, barheight = 20, color = "black")) +
+          guides(fill = guide_colourbar(barwidth = 1, barheight = 15, color = "black")) +
           labs(x = "Date",
                y = NULL,
-               title = 'B',
+               title = 'C',
                fill = "Normalized\nmonthly\nincidence")
      
-     fig <- fig_a + fig_b + 
-          plot_layout(ncol = 1, heights = c(1.7, 1))
+     fig <- fig_a + fig_b + fig_c +
+          plot_layout(ncol = 1, heights = c(0.3, 1.7, 0.7))
      
      ggsave(filename = paste0("./outcome/appendix/Supplementary Appendix 1_1/", disease, ".png"),
             fig,
