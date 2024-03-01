@@ -39,6 +39,14 @@ data_province <- rbind(data_province_dc, data_province_re) |>
      filter(disease_en %in% datafile_class$disease & date >= as.Date("2008-1-1")) |> 
      select(date, year, month, disease_en, value, province)
 
+datafile_rect <-
+  data.frame(
+    start = c(min(data_province$date), split_dates),
+    end = c(split_dates, max(data_province$date)),
+    label = split_periods
+  ) |>
+  mutate(m = as.Date((as.numeric(start) + as.numeric(end)) / 2, origin = "1970-01-01"))
+
 # add column to find data is duplicated
 datafile_check <- data_province |> 
      group_by(date, disease_en, province) |> 
