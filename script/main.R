@@ -11,11 +11,11 @@ source("./script/3_a_select_model.R")
 print("Appendix 1_2 figures generated")
 rm(list = ls())
 
-reticulate::source_python('./script/3_b_merge_appendix_1_1.py')
+reticulate::source_python('./script/3_c_merge_appendix_1_1.py')
 print("Appendix 1_2 combinded")
 rm(list = ls())
 
-source("./script/3_c_best_model.R")
+source("./script/3_d_best_model.R")
 print("Figure 3 generated")
 rm(list = ls())
 
