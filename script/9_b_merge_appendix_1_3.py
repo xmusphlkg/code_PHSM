@@ -80,7 +80,8 @@ if __name__ == '__main__':
     paths_2 = [
          "./outcome/appendix/Supplementary Appendix 2_1.xlsx",
          "./outcome/appendix/Supplementary Appendix 2_2.xlsx",
-         "./outcome/appendix/Supplementary Appendix 2_3.xlsx"
+         "./outcome/appendix/Supplementary Appendix 2_3.xlsx",
+         "./outcome/appendix/Supplementary Appendix 2_4.xlsx"
          ]
     output_2 = './outcome/appendix/Supplementary Appendix 2.xlsx'
     merge_xlsx(paths_2, output_2)

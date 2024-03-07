@@ -18,8 +18,9 @@ datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.1 data.xlsx",
 
 # all sheet in the file
 data_nation <- read.xlsx("./data/nation_and_provinces.xlsx", detectDates = T, sheet = "Nation") |>
-     filter(disease_en %in% datafile_class$disease & date >= as.Date("2008-1-1")) |> 
-     mutate(value = as.integer(value))
+  filter(disease_en %in% datafile_class$disease & date >= as.Date("2008-1-1")) |> 
+  mutate(value = as.integer(value)) |> 
+  filter(source != 'DataCenter')
 
 # read all sheet
 data_province_dc <- read.xlsx("./data/nation_and_provinces.xlsx", detectDates = T, sheet = "ProvinceCenter")
