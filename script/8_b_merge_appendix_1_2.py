@@ -34,7 +34,7 @@ title_text = "Supplementary Appendix 1:"
 title = Paragraph(title_text, styles['Title'])
 story.append(title)
 
-title_content = "Temporal trends and shifts of 24 notifiable infectious diseases in China before and during the COVID-19 pandemic"
+title_content = "Temporal shifts in 24 notifiable infectious diseases in China before and during the COVID-19 pandemic"
 title = Paragraph(title_content, styles['Title'])
 story.append(title)
 story.append(PageBreak())

@@ -1,10 +1,10 @@
 # Introduction
 
-This is the code and data for the paper "Temporal trends and shifts of 24 notifiable infectious diseases in China before and during the COVID-19 epidemic" by Kangguo Li et al. (2023).
+This is the code and data for the paper "Temporal shifts in 24 notifiable infectious diseases in China before and during the COVID-19 pandemic" by Kangguo Li et al. (2024).
 
 ## Data
 
-All data were collected from the monthly Notifiable Infectious Diseases Reports published by the National Health Commission of China. These reports aggregate data derived from the National Notifiable Disease Surveillance System, which was established in 2004. The study period spans from January 2008 to July 2023. However, for specific monthly reports in 2013 (January, February, April, and August), data were sourced directly from the Chinese public health science data center (https://www.phsciencedata.cn/share/ky_sjml.jsp). And avaliable data for the study period is available at [data](./data) folder.
+All data were collected from the monthly Notifiable Infectious Diseases Reports published by the National Health Commission of China. These reports aggregate data derived from the National Notifiable Disease Surveillance System, which was established in 2004. The study period spans from January 2008 to December. However, for specific NIDs, such as HFMD, AHC, infectious diarrhea, mumps, rubella, echinococcosis and typhus, data were collected by the NNDSS from January 2008 to February 2009 but were not reflected in the monthly NIDs Reports. For these diseases, we relied on data provided by the Chinese Public Health Science Data Center (https://www.phsciencedata.cn/share/ky_sjml.jsp), maintained by the Chinese CDC, which also aggregates data from the NNDSS based on onset date and includes early NID data. And available data for the study period is available at [data](./data) folder.
 
 ### Code
 
