@@ -39,14 +39,14 @@ datafile_class <- read.xlsx("./outcome/appendix/Figure Data/Fig.1 data.xlsx",
   select(-c(value, label))
 
 split_date <- split_dates[1]
-train_length <- 12 * seq(10, 6)
+train_length <- seq(12*7, 12*10, 6)
 disease_name <- datafile_class$disease
 
 datafile_length <- expand.grid(
   disease_name = disease_name,
   train_length = train_length
 ) |> 
-  mutate(test_length = 12*12 - train_length)
+  mutate(test_length = 12*2)
 
 # data clean --------------------------------------------------------------
 
@@ -369,4 +369,24 @@ outcome <- parLapply(cl, 1:nrow(datafile_length), auto_select_function)
 stopCluster(cl)
 
 datafile_outcome <- do.call("rbind", outcome)
+# datafile_outcome <- read.xlsx("./outcome/appendix/Supplementary Appendix 2_4.xlsx")
+
+# add best model outcome --------------------------------------------------
+
+datafile_optimal <- read.xlsx("./outcome/appendix/Figure Data/Fig.3 data.xlsx") |> 
+     filter(Best == 1) |>
+     select(disease, Method, Index) |> 
+     rename(BestMethodSelect = Method,
+            BestIndex2years = Index)
+
+datafile_out <- datafile_outcome |>
+     left_join(datafile_optimal, by = "disease") |> 
+     group_by(disease, train_length, test_length) |>
+     summarise(IndexRange = paste(sprintf("%.2f", sort(Index)), collapse = ', '),
+               LocalBest = Method[Best == 1],
+               IndexSelect = sprintf("%.2f", as.numeric(Index[Method == BestMethodSelect])),
+               MethodSelect = unique(BestMethodSelect),
+               .groups = 'drop')
+
+# save data ---------------------------------------------------------------
 write.xlsx(datafile_outcome, "./outcome/appendix/Supplementary Appendix 2_4.xlsx")
