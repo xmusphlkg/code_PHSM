@@ -389,4 +389,4 @@ datafile_out <- datafile_outcome |>
                .groups = 'drop')
 
 # save data ---------------------------------------------------------------
-write.xlsx(datafile_outcome, "./outcome/appendix/Supplementary Appendix 2_4.xlsx")
+write.xlsx(datafile_out, "./outcome/appendix/Supplementary Appendix 2_4.xlsx")
