@@ -1,11 +1,16 @@
+
+library(StanHeaders)
 library(shiny)
 library(shinyWidgets)
 library(shinydashboard)
 library(shinythemes)
 library(DT)
 library(dplyr)
+library(ggplot2)
+library(tidyr)
 library(openxlsx)
 library(datamods)
+library(lubridate)
 
 load("data.RData")
 
@@ -44,13 +49,13 @@ ui <- fluidPage(
           )
      ),
      box(
-          title = 'Step 2: Split Data',
+          title = 'Step 2: Filter Data',
           width = 12,
           collapsible = T,
           status = 'danger',
           box(
                width = 6,
-               title = 'Data Check',
+               title = 'Data Filter',
                status = 'danger',
                uiOutput(
                     outputId = "split_ui",
@@ -81,24 +86,13 @@ ui <- fluidPage(
                conditionalPanel(
                     condition = "output.split_data_ts",
                     column(
-                         4,
+                         10,
                          selectInput(
                               inputId = "model_type",
                               label = "Model Type",
-                              choices = c("SARIMA", "ETS", "Hybrid", "Bayesian structural", "Prophet", 'Bayesian structural'),
+                              choices = c("Neural Network", "SARIMA", "ETS", "Hybrid", "Bayesian structural", "Prophet", 'Bayesian structural'),
                               selected = "SARIMA",
                               multiple = T
-                         )
-                    ),
-                    column(
-                         6,
-                         sliderInput(
-                              inputId = "train_test_split",
-                              label = "Train/Test Split",
-                              min = 0.1,
-                              max = 0.9,
-                              value = 0.7,
-                              step = 0.1
                          )
                     ),
                     column(
@@ -107,6 +101,21 @@ ui <- fluidPage(
                               inputId = "train_model",
                               label = "Train",
                               style = "color: #fff; background-color: #337ab7; border-color: #2e6da4; margin-top: 25px;"
+                         )
+                    ),
+                    column(
+                         10,
+                         tags$div(
+                              dateRangeInput(
+                                   inputId = "train_date",
+                                   label = "Train Date"
+                              ),
+                              dateRangeInput(
+                                   inputId = "test_date",
+                                   label = "Test Date"
+                              ),
+                              # set input in one line
+                              style = "display: flex; justify-content: space-between; align-items: center;"
                          )
                     )
                )
@@ -118,8 +127,8 @@ ui <- fluidPage(
                tags$b("Model Information:"),
                verbatimTextOutput(outputId = "model_info"),
                tags$b("Model:"),
-               verbatimTextOutput(outputId = "model_data"),
-               tags$b("Model Summary:"),
+               DTOutput(outputId = "model_data"),
+               tags$b("Optimal model:"),
                verbatimTextOutput(outputId = "model_summary")
           )
      ),
@@ -135,16 +144,23 @@ ui <- fluidPage(
                conditionalPanel(
                     condition = "output.model_summary",
                     column(
-                         4,
+                         3,
                          selectInput(
                               inputId = "set_model",
                               label = "Model Type",
-                              choices = c("SARIMA", "ETS", "Hybrid", "Bayesian structural", "Prophet", 'Bayesian structural'),
+                              choices = c("Neural Network", "SARIMA", "ETS", "Hybrid", "Bayesian structural", "Prophet", 'Bayesian structural'),
                               multiple = F
                          )
                     ),
                     column(
-                         6,
+                         4,
+                         dateRangeInput(
+                              inputId = "forecast_train",
+                              label = "Train Date"
+                         )
+                    ),
+                    column(
+                         3,
                          numericInput(
                               inputId = "forecast_period",
                               label = "Forecast Period",
@@ -167,11 +183,19 @@ ui <- fluidPage(
                title = 'Model Forecast',
                status = 'danger',
                tags$b("Model Information:"),
-               verbatimTextOutput(outputId = "forecast_info"),
-               tags$b("Forecast:"),
-               DTOutput(outputId = "forecast_data"),
-               tags$b("Forecast Visualization:"),
-               plotlyOutput(outputId = "forecast_plot")
+               verbatimTextOutput(outputId = "forecast_info")
+          ),
+          box(
+               width = 6,
+               title = 'Forecast Data',
+               status = 'danger',
+               DTOutput(outputId = "forecast_data")
+          ),
+          box(
+               width = 6,
+               title = 'Forecast Plot',
+               status = 'danger',
+               plotOutput(outputId = "forecast_plot")
           )
      ),
      # add footer
@@ -207,25 +231,17 @@ ui <- fluidPage(
 
 # Define server
 server <- function(input, output, session) {
+     
+     source('./model.R')
+     
      # global values
      GlobalData <- reactiveValues(
           Data = NULL,
           split_Data = NULL,
           split_Data_ts = NULL,
-          splict_dates = NULL,
-          optimal_model = NULL
+          optimal_model = NULL,
+          forecast_data = NULL
      )
-     detect_frequency <- function(date_vector) {
-          date_diff <- diff(date_vector)
-          min_diff <- as.integer(min(date_diff, na.rm = TRUE))
-          if (min_diff %in% 365:366) {
-               return(365.25)
-          } else if (min_diff %in% 28:31) {
-               return(12)
-          } else {
-               return(1)
-          }
-     }
      
      imported <- import_server(
           id = "InputData",
@@ -267,7 +283,8 @@ server <- function(input, output, session) {
                if (!is.numeric(Data$value)) {
                     return("Import failed, because 'value' column is not numeric or integer type")
                }
-               GlobalData$Data <- Data
+               GlobalData$Data <- Data |> 
+                    arrange(date)
                return("Import success")
           })
           output$name <- renderPrint({
@@ -384,7 +401,7 @@ server <- function(input, output, session) {
                })
           }
           output$split_data <- renderPrint({
-               head(Data)
+               str(Data)
           })
           # auto detect frequency
           # browser()
@@ -417,10 +434,195 @@ server <- function(input, output, session) {
                output$split_data_ts <- renderPrint({
                     GlobalData$split_Data_ts
                })
+               showNotification(
+                    ui = "Data has been converted to time-series",
+                    type = "message",
+                    duration = 5
+               )
           }, error = function(e) {
                output$split_data_ts <- renderPrint({
                     paste("Error:", e)
                })
+               showNotification(
+                    ui = "Data cannot be converted to time-series",
+                    type = "error",
+                    duration = 60
+               )
+          })
+          
+          # update date range
+          train_period <- round(nrow(Data) * 0.7)
+          test_period <- nrow(Data) - train_period
+          train_date <- Data$date[1:train_period]
+          test_date <- Data$date[(train_period + 1):nrow(Data)]
+          updateDateRangeInput(
+               session = session,
+               inputId = "train_date",
+               start = min(train_date),
+               end = max(train_date)
+          )
+          updateDateRangeInput(
+               session = session,
+               inputId = "test_date",
+               start = min(test_date),
+               end = max(test_date)
+          )
+     })
+     
+     observeEvent(input$train_model, {
+          Data <- GlobalData$split_Data
+          DataTS <- GlobalData$split_Data_ts
+          train_date <- as.Date(input$train_date)
+          test_date <- as.Date(input$test_date)
+          model_type <- input$model_type
+          
+          # check date range is legal
+          if (test_date[1] < train_date[2]) {
+               showNotification(
+                    ui = "Test date should be later than train date",
+                    type = "error",
+                    duration = 60
+               )
+          } else {
+               train_id <- which(Data$date >= train_date[1] & Data$date <= train_date[2])
+               test_id <- which(Data$date >= test_date[1] & Data$date <= test_date[2])
+               all_id <- which(Data$date >= train_date[1] & Data$date <= test_date[2])
+               train_ts <- DataTS[train_id]
+               test_ts <- DataTS[test_id]
+               all_ts <- DataTS[all_id]
+               
+               outcome <- auto_select_function(train_ts, test_ts, all_ts, 0.1, model_type)
+               
+               output$model_info <- renderPrint({
+                    paste("Model type:", paste(model_type, collapse = ", "))
+               })
+               
+               DataIndex <- get_norm_index(outcome[['goodness']])
+               output$model_data <- renderDT(DataIndex,
+                                             options = list(
+                                                  pageLength = 10,
+                                                  autoWidth = TRUE,
+                                                  ordering = TRUE,
+                                                  scrollX = TRUE,
+                                                  scrollY = TRUE,
+                                                  fixedColumns = TRUE,
+                                                  searching = TRUE,
+                                                  info = TRUE,
+                                                  dom = "Bfrtip",
+                                                  buttons = list(
+                                                       "copy",
+                                                       "csv",
+                                                       "excel",
+                                                       "pdf",
+                                                       "print"
+                                                  )
+                                             ),
+                                             rownames = FALSE,
+                                             class = "display",
+                                             extensions = c("Buttons"))
+               
+               output$model_summary <- renderPrint({
+                    DataIndex[DataIndex$Best == 1, 1:4]
+               })
+               
+               GlobalData$optimal_model <- as.character(DataIndex[DataIndex$Best == 1, 'Method'])
+               
+               # update forecast model
+               updateSelectInput(
+                    session = session,
+                    inputId = "set_model",
+                    selected = GlobalData$optimal_model
+               )
+               updateDateRangeInput(
+                    session = session,
+                    inputId = "forecast_train",
+                    start = min(train_date),
+                    end = max(test_date)
+               )
+          }
+     })
+     
+     observeEvent(input$forecast_model, {
+          Data <- GlobalData$split_Data
+          DataTS <- GlobalData$split_Data_ts
+          train_date <- as.Date(input$forecast_train)
+          forecast_period <- input$forecast_period
+          model_type <- input$set_model
+          
+          train_id <- which(Data$date >= train_date[1] & Data$date <= train_date[2])
+          train_ts <- DataTS[train_id]
+          freq <- frequency(DataTS)
+          if (freq == 365.25) {
+               start_date <- c(year(train_date[1]), yday(train_date[1]))
+               end_date <- c(year(train_date[2]), yday(train_date[2]))
+          } else if (freq == 12) {
+               start_date <- c(year(train_date[1]), month(train_date[1]))
+               end_date <- c(year(train_date[2]), month(train_date[2]))
+          } else {
+               start_date <- year(train_date[1])
+               end_date <- year(train_date[2])
+          }
+          train_ts <- ts(train_ts, start = start_date, end = end_date, frequency = freq)
+          outcome <- auto_forecast_function(train_ts, forecast_period, 0.1, model_type)
+          
+          output$forecast_info <- renderPrint({
+               summary(outcome$mod)
+          })
+          GlobalData$forecast_data <- outcome$outcome_plot_2
+          
+          output$forecast_data <- renderDT(GlobalData$forecast_data,
+                                           options = list(
+                                                pageLength = 5,
+                                                autoWidth = TRUE,
+                                                ordering = TRUE,
+                                                scrollX = TRUE,
+                                                scrollY = TRUE,
+                                                fixedColumns = TRUE,
+                                                searching = TRUE,
+                                                info = TRUE,
+                                                dom = "Bfrtip",
+                                                buttons = list(
+                                                     "copy",
+                                                     "csv",
+                                                     "excel",
+                                                     "pdf",
+                                                     "print"
+                                                )
+                                           ),
+                                           rownames = FALSE,
+                                           class = "display",
+                                           extensions = c("Buttons"))
+          
+          output$forecast_plot <- renderPlot({
+               ggplot(GlobalData$split_Data) +
+                    geom_line(
+                         mapping = aes(x = date,
+                                       y = value,
+                                       colour = "Observed"),
+                         linewidth = 0.7
+                    ) +
+                    geom_line(
+                         mapping = aes(x = date,
+                                       y = mean,
+                                       colour = "Forecasted"),
+                         linewidth = 0.7,
+                         data = outcome$outcome_plot_2
+                    ) +
+                    scale_x_date(
+                         expand = expansion(add = c(0, 0)),
+                         date_labels = "%Y"
+                    ) +
+                    scale_color_manual(values = c(
+                         Forecasted = "#E64B35FF",
+                         Observed = "#00A087FF"
+                    )) +
+                    theme_classic()+
+                    theme(legend.position = "bottom") +
+                    labs(
+                         x = 'Date',
+                         y = 'Value',
+                         color = ""
+                    )
           })
      })
 }
