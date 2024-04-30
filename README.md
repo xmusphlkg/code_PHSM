@@ -101,19 +101,5 @@ The code and data are released under GNU General Public License v3.0.
 If you find this work useful in your research, please cite the following paper:
 
 ```
-@misc{doi:10.21203/rs.3.rs-3637503/v1,
-	doi = {10.21203/rs.3.rs-3637503/v1},
-	publisher = {Research Square Platform LLC},
-	title = {Temporal trends and shifts of 24 notifiable infectious diseases in China before and during the COVID-19 epidemic},
-	author = {Chen, Tianmu and Li, Kangguo and Rui, Jia and Song, Wentao and Liu, Chan and Zhao, Yunkang and Qu, Huimin and Wei, Hongjie and Zhang, Ruixin and Abudunaibi, Buasiyamu and Wang, Yao and Zhou, Zecheng and Liu, Hong and Xiang, Tianxin},
-	note = {[Online; accessed 2023-12-01]},
-	date = {2023-11-23},
-	year = {2023},
-	month = {11},
-	day = {23},
-}
-```
-
-```
-Chen, Tianmu, et al. Temporal Trends and Shifts of 24 Notifiable Infectious Diseases in China before and during the COVID-19 Epidemic. Research Square Platform LLC, 23 Nov. 2023. Accessed 1 Dec. 2023.
+Kangguo Li, et al. Temporal shifts in 24 notifiable infectious diseases in China before and during the COVID-19 pandemic. Nature Communications. https://doi.org/10.1038/s41467-024-48201-8 2024.
 ```
