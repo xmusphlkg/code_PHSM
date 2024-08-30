@@ -85,12 +85,13 @@ The CPU offering no fewer than 30 threads and a minimum of 32GB of operating mem
 The code for the analysis is available at [code](./code) folder. The code is organized as follows:
 
 - [1](./script/1_a_overview.R): data preparation and analysis
-- [2](./script/2_b_diseases.R): analysis each disease
-- [3](./script/3_a_forecast.R): training and testing time series models
-- [4](./script/3_a_select_model.R): select the best model for each disease
+- [2](./script/2_a_diseases.R): analysis each disease
+- [3](./script/3_a_select_model.R): training and testing time series models
+- [4](./script/3_c_best_model.R): select the best model for each disease
 - [5](./script/4_a_forecast.R): forecast the incidence of each disease
-- [6](./script/5_a_relation.R): analysis the relationship between monthly incidence and PHSMs index
-- [7](./script/6_a_cross.R): cross-correlation analysis
+- [6](./script/6_a_relation.R): analysis the relationship between monthly incidence and PHSMs index
+- [7](./script/7_a_cross.R): cross-correlation analysis
+- [8](./script/8_a_province.R): visualization of 31 provinces
 
 # Lisence
 
@@ -101,5 +102,9 @@ The code and data are released under GNU General Public License v3.0.
 If you find this work useful in your research, please cite the following paper:
 
 ```
-Kangguo Li, et al. Temporal shifts in 24 notifiable infectious diseases in China before and during the COVID-19 pandemic. Nature Communications. https://doi.org/10.1038/s41467-024-48201-8 2024.
+Kangguo Li, et al. Temporal shifts in 24 notifiable infectious diseases in China before and during the COVID-19 pandemic. Nature Communications. https://doi.org/10.1038/s41467-024-48201-8
+        
+        
+        
+         2024.
 ```
